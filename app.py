@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, flash, Markup, send_file
-import socket # Get local IP address
+import socket  # Get local IP address
 import recorder
 import os
 
@@ -12,12 +12,14 @@ video_recorder = recorder.VideoRecorder(config)
 
 is_recording = False
 
+
 @app.route('/')
 def index():
     return render_template(
-            'index.html',
-            ip_address=get_local_ip()
-            )
+        'index.html',
+        ip_address=get_local_ip()
+    )
+
 
 @app.route('/start', methods=['GET'])
 def record():
@@ -31,6 +33,7 @@ def record():
         flash(Markup('<div class="alert alert-warning" role="alert">Already recording</div>'))
     return redirect(url_for('index'))
 
+
 @app.route('/stop', methods=['GET'])
 def stop():
     global is_recording
@@ -43,14 +46,17 @@ def stop():
         flash(Markup('<div class="alert alert-warning" role="alert">Not recording</div>'))
     return redirect(url_for('index'))
 
+
 @app.route('/download', methods=['GET'])
 def download():
     output_file = config.get_value('output_video_file')
     if os.path.isfile(output_file):
         return send_file(output_file, as_attachment=True)
     else:
-        flash(Markup('<div class="alert alert-warning" role="alert">No recording to download. Maybe it\'s still processing.</div>'))
+        flash(Markup(
+            '<div class="alert alert-warning" role="alert">No recording to download. Maybe it\'s still processing.</div>'))
         return redirect(url_for('index'))
+
 
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -64,6 +70,7 @@ def get_local_ip():
     finally:
         s.close()
     return ip
+
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')

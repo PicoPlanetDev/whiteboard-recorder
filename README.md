@@ -3,6 +3,10 @@
 
 ![Screenshot of web interface](/screenshots/web-interface.png)
 
+## Requirements
+- Python 3
+- Packages installed in `requirements.txt`: `pyyaml, opencv-contrib-python, flask`
+
 ## Usage
 1. Start `app.py` on a host computer
 2. If requested, follow the configuration prompts in the terminal.
