@@ -6,6 +6,7 @@
 ## Requirements
 - Python 3
 - Packages installed in `requirements.txt`: `pyyaml, opencv-contrib-python, flask`
+- ffmpeg.exe is included, see instructions below for Linux setup
 
 ## Usage
 1. Start `app.py` on a host computer
@@ -24,5 +25,13 @@ My code relies on ffmpeg.exe (working to make it cross-platform) for video manip
 - Recording
 - Converting to audio
 - Adding audio tracks to video
+
+#### Installing ffmpeg on Linux
+```
+sudo apt install software-properties-common
+sudo apt update
+sudo add-apt-repository ppa:jonathonf/ffmpeg-4
+sudo apt install ffmpeg
+```
 
 Some ffmpeg commands generated using https://www.mrfdev.com/ffmpeg-command-generator
