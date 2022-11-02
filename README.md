@@ -35,3 +35,22 @@ sudo apt install ffmpeg
 ```
 
 Some ffmpeg commands generated using https://www.mrfdev.com/ffmpeg-command-generator
+
+## Camera mounting
+TODO:
+- Create 3D models for some camera mounting solutions
+- Determine what angles and distances different cameras support
+
+Your camera should be mounted with an unobstructed view of the whiteboard. Ideally it is placed in a way that allows it some view even when someone is writing on the board, however, any angle that captures the entire whiteboard should work. 
+
+*Some considerations:*
+- Many surfaces get shiny when you look at them from a very shallow angle. Try to adjust the camera's angle for an ideal tradeoff between a space and shininess.
+- At a very shallow angle, the ArUco markers may not be detected and manual corner selection (a trivial task) would be required.
+
+## Hardware
+- A capable computer with the software requirements installed
+- A webcam with a relatively high resolution (preferable 1920x1080 or better)
+- (Optional) A USB cable extender rated for the USB version that the camera communicates with, to mount the camera far from the computer.
+
+## Future
+I intend to expand this to two whiteboards (thus two cameras) in the very near future, as this is one of my core functionality goals. In the meantime, one whiteboard is a proof of concept.
