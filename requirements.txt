@@ -1,3 +1,5 @@
 pyyaml
 opencv-contrib-python
 flask
+numpy
+qrcode[pil]

@@ -168,3 +168,6 @@ cython_debug/
 
 # Old
 old/*
+
+# IP address specific QR code
+static/qr/*

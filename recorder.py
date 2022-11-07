@@ -5,9 +5,11 @@ import cv2
 import numpy as np
 import os
 
-class Configuration():
+
+class Configuration:
     def __init__(self):
-        self.get_av_splits()
+        self.av_splits = self.get_av_splits()
+        self.video_devices = self.get_video_devices()
 
         self.load_config()
 
@@ -18,21 +20,19 @@ class Configuration():
         # import shlex
         # shlex.split("ffmpeg -list_devices true -f dshow -i dummy")
         # Immediate exit requested, so stderr is used
-        output = subprocess.run(
-            ['ffmpeg', '-list_devices', 'true', '-f', 'dshow', '-i', 'dummy'],
-            capture_output=True).stderr.decode('utf-8')
+        output = subprocess.run(['ffmpeg', '-list_devices', 'true', '-f', 'dshow', '-i', 'dummy'],capture_output=True).stderr.decode('utf-8')
 
-        self.av_splits = output.split('(video)')
+        return output.split('(video)')
 
     def get_video_devices(self):
         video_section = self.av_splits[:len(self.av_splits) - 1]
 
         # Since we split by (video), each video device is in a separate item
-        self.video_devices = []
+        video_devices = []
         for item in video_section:
-            self.video_devices.append(item.split('"')[-2])
+            video_devices.append(item.split('"')[-2])
 
-        return self.video_devices
+        return video_devices
 
     def get_audio_devices(self):
         audio_section = self.av_splits[len(self.av_splits) - 1:]
@@ -69,11 +69,12 @@ class Configuration():
             'temp_processed_video_file': 'temp_processed_recording.mp4',
             'output_video_file': 'final_recording.mp4',
             'temp_audio_file': 'temp_audio.mp3',
+            'ip': '127.0.0.1'
         }
         with open('config.yaml', 'w') as file:
             yaml.dump(default_config, file)
         self.config = default_config
-    
+
     def save_config(self):
         with open('config.yaml', 'w') as file:
             yaml.dump(self.config, file)
@@ -106,7 +107,7 @@ class Configuration():
 
             Returns:
                 str: The user's input, or the default if the user didn't input anything.
-            """            
+            """
             user_input = input(prompt)
             if user_input == '': return default
             return user_input
@@ -134,10 +135,10 @@ class Configuration():
         Args:
             key (str): The key to set the value of.
             value (any): The value to set.
-        """        
+        """
         self.config[key] = value
         self.save_config()
-    
+
     def get_value(self, key):
         """Gets a value from the config.
 
@@ -149,6 +150,7 @@ class Configuration():
         """
         return self.config[key]
 
+
 class VideoRecorder():
     def __init__(self, config):
         self.config = config
@@ -157,8 +159,10 @@ class VideoRecorder():
         video_device = self.config.get_value('video')
         audio_device = self.config.get_value('audio')
         input_resolution = self.config.get_value('input_resolution')
-        self.recording_process = subprocess.Popen(['ffmpeg', '-y', '-f', 'dshow', '-i', f'video={video_device}:audio={audio_device}', '-s', input_resolution, self.config.get_value('temp_video_file')], stdin=subprocess.PIPE)
-        
+        self.recording_process = subprocess.Popen(
+            ['ffmpeg', '-y', '-f', 'dshow', '-i', f'video={video_device}:audio={audio_device}', '-s', input_resolution,
+             self.config.get_value('temp_video_file')], stdin=subprocess.PIPE)
+
     def stop_recording(self):
         # Tell ffmpeg to stop recording
         self.recording_process.communicate(str.encode('q'))
@@ -166,7 +170,8 @@ class VideoRecorder():
         self.recording_process.terminate()
 
         # Convert the video to mp3
-        subprocess.run(['ffmpeg', '-i', self.config.get_value('temp_video_file'), '-y', '-codec:a', 'libmp3lame', self.config.get_value('temp_audio_file')])
+        subprocess.run(['ffmpeg', '-i', self.config.get_value('temp_video_file'), '-y', '-codec:a', 'libmp3lame',
+                        self.config.get_value('temp_audio_file')])
 
     def clear_files(self):
         os.remove(self.config.get_value('temp_video_file'))
@@ -174,20 +179,21 @@ class VideoRecorder():
         os.remove(self.config.get_value('temp_processed_video_file'))
         os.remove(self.config.get_value('output_video_file'))
 
+
 class Processing():
     def __init__(self, config):
         self.config = config
-        
+
         self.get_corners()
         self.process_recording()
         self.combine_video_and_audio()
-    
+
     def process_recording(self):
         video = cv2.VideoCapture(self.config.get_value('temp_video_file'))
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out_file = cv2.VideoWriter(self.config.get_value('temp_processed_video_file'), fourcc, 30.0, (1920, 1080))
-        
+
         while video.isOpened():
             ret, frame = video.read()
 
@@ -195,12 +201,14 @@ class Processing():
 
             output = self.birds_eye_view(frame)
             out_file.write(output)
-        
+
         video.release()
         out_file.release()
 
     def combine_video_and_audio(self):
-        subprocess.run(['ffmpeg', '-i', self.config.get_value('temp_audio_file'), '-i', self.config.get_value('temp_processed_video_file'), '-y', '-codec:a', 'copy', '-codec:v', 'copy', self.config.get_value('output_video_file')])
+        subprocess.run(['ffmpeg', '-i', self.config.get_value('temp_audio_file'), '-i',
+                        self.config.get_value('temp_processed_video_file'), '-y', '-codec:a', 'copy', '-codec:v',
+                        'copy', self.config.get_value('output_video_file')])
         print(f'Video saved to {self.config.get_value("output_video_file")}')
 
     def get_corners_aruco(self):
@@ -217,21 +225,21 @@ class Processing():
             Returns:
                 list: Corners of the markers
             """
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # convert to grayscale
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # convert to grayscale
 
             # detect markers
             arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_50)
             arucoParam = cv2.aruco.DetectorParameters_create()
-            bounding_boxes, ids, rejected = cv2.aruco.detectMarkers(gray, arucoDict, parameters = arucoParam)
+            bounding_boxes, ids, rejected = cv2.aruco.detectMarkers(gray, arucoDict, parameters=arucoParam)
             # cv2.aruco.drawDetectedMarkers(img, bounding_boxes, ids) # debugging
 
             # verify that four  markers were detected
             if len(bounding_boxes) != 4:
                 raise ValueError(f"Wrong number of markers detected {len(bounding_boxes)}/4 expected")
 
-            ids = ids.flatten() # flatten ids list
-            
-            markers = [] # create a blank list of marker corners to be populated
+            ids = ids.flatten()  # flatten ids list
+
+            markers = []  # create a blank list of marker corners to be populated
 
             # loop over the detected ArUCo corners
             # The sort is so corners indexes are in the same order as the ids
@@ -240,7 +248,7 @@ class Processing():
                 # 0 1
                 # 3 2
 
-                corners = marker_corners.reshape((4, 2)) # reshape the boxes into an array of 4 (x, y) coordinates
+                corners = marker_corners.reshape((4, 2))  # reshape the boxes into an array of 4 (x, y) coordinates
                 (topLeft, topRight, bottomRight, bottomLeft) = corners
 
                 # convert each of the (x, y)-coordinate pairs to integers
@@ -284,24 +292,26 @@ class Processing():
             if event == cv2.EVENT_LBUTTONDOWN:
                 if len(corners) < 4:
                     x_scaled, y_scaled = int(x / scale_factor), int(y / scale_factor)
-                    corners.append([x_scaled,y_scaled])
+                    corners.append([x_scaled, y_scaled])
                     print(f'Added corner {x},{y}')
-                    cv2.circle(frame, (x,y), 5, (255,0,0), -1)
+                    cv2.circle(frame, (x, y), 5, (255, 0, 0), -1)
                     cv2.imshow('Select corners', frame)
-                
+
                 if len(corners) >= 4:
-                    cv2.putText(frame, 'Press any key to continue', (10, 240), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                    cv2.putText(frame, 'Press any key to continue', (10, 240), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0),
+                                2)
                     cv2.imshow('Select corners', frame)
 
         cv2.namedWindow('Select corners')
         cv2.setMouseCallback('Select corners', mouse_callback)
 
-        frame = cv2.putText(frame, 'Click corners clockwise from top left', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+        frame = cv2.putText(frame, 'Click corners clockwise from top left', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                            (0, 0, 255), 1, cv2.LINE_AA)
 
         cv2.imshow('Select corners', frame)
         cv2.waitKey(0)
         return corners
-                    
+
     def birds_eye_view(self, img):
         # Corners should be in this order
         # 0 1
@@ -310,9 +320,10 @@ class Processing():
         # The problem right now is that the corners are rich from the aruco
         # but only points from the manual selection        
 
-        init_corners = np.array(self.corners, dtype="float32") # initial corners from the arguments
-        dest_corners = np.array([[0, 0], [800, 0], [800, 800], [0, 800]], dtype="float32") # destination corners in a square
-        
+        init_corners = np.array(self.corners, dtype="float32")  # initial corners from the arguments
+        dest_corners = np.array([[0, 0], [800, 0], [800, 800], [0, 800]],
+                                dtype="float32")  # destination corners in a square
+
         # Compute the perspective transform matrix and then apply it
         transform_matrix = cv2.getPerspectiveTransform(init_corners, dest_corners)
         warped = cv2.warpPerspective(img, transform_matrix, (800, 800))
@@ -331,7 +342,8 @@ class Processing():
                     self.corners = self.get_corners_manual()
                     break
             else:
-                self.corners = [self.config.get_value('top_left'), self.config.get_value('top_right'), self.config.get_value('bottom_right'), self.config.get_value('bottom_left')]
+                self.corners = [self.config.get_value('top_left'), self.config.get_value('top_right'),
+                                self.config.get_value('bottom_right'), self.config.get_value('bottom_left')]
 
         # Save the corners for later in the config file
         top_left, top_right, bottom_right, bottom_left = self.corners
@@ -340,9 +352,11 @@ class Processing():
         self.config.set_value('bottom_right', bottom_right)
         self.config.set_value('bottom_left', bottom_left)
 
+
 if __name__ == '__main__':
     print("Whiteboard Recorder")
-    print("If you'd like to change the configuration, change the is_configured value to False in config.yaml and restart the program")
+    print(
+        "If you'd like to change the configuration, change the is_configured value to False in config.yaml and restart the program")
     config = Configuration()
     recorder = VideoRecorder(config)
     recorder.start_recording()

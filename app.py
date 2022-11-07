@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, flash, Markup, send
 import socket  # Get local IP address
 import recorder
 import os
+import qrcode
 
 app = Flask(__name__)
 app.secret_key = 'secret'
@@ -12,9 +13,9 @@ video_recorder = recorder.VideoRecorder(config)
 
 is_recording = False
 
-
 @app.route('/')
 def index():
+    create_url_qr_code()
     return render_template(
         'index.html',
         ip_address=get_local_ip()
@@ -72,5 +73,14 @@ def get_local_ip():
     return ip
 
 
+def create_url_qr_code():
+    qr = qrcode.make(f'http://{get_local_ip()}:5000')
+    qr.save('static/qr/qr.png')
+
+
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0')
+    if config.get_value('ip') != get_local_ip():
+        config.set_value('ip', get_local_ip())
+        create_url_qr_code()
+
+    app.run(debug=False, host='0.0.0.0', port=5000)
