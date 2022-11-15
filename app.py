@@ -75,6 +75,9 @@ def get_local_ip():
 
 def create_url_qr_code():
     qr = qrcode.make(f'http://{get_local_ip()}:5000')
+    # if the qr code folder doesn't exist, create it
+    if not os.path.exists('static/qr'):
+        os.makedirs('static/qr')
     qr.save('static/qr/qr.png')
 
 

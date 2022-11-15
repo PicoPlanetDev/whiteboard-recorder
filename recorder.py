@@ -174,10 +174,13 @@ class VideoRecorder():
                         self.config.get_value('temp_audio_file')])
 
     def clear_files(self):
-        os.remove(self.config.get_value('temp_video_file'))
-        os.remove(self.config.get_value('temp_audio_file'))
-        os.remove(self.config.get_value('temp_processed_video_file'))
-        os.remove(self.config.get_value('output_video_file'))
+        try:
+            os.remove(self.config.get_value('temp_video_file'))
+            os.remove(self.config.get_value('temp_audio_file'))
+            os.remove(self.config.get_value('temp_processed_video_file'))
+            os.remove(self.config.get_value('output_video_file'))
+        except:
+            print('Error while clearing files. One may not be present.')
 
 
 class Processing():
