@@ -15,7 +15,7 @@ is_recording = False
 
 @app.route('/')
 def index():
-    create_url_qr_code()
+    # create_url_qr_code()
     return render_template(
         'index.html',
         ip_address=get_local_ip()
