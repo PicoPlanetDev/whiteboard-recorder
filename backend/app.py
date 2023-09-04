@@ -1,11 +1,15 @@
 from flask import Flask, send_file, jsonify
+from flask_cors import CORS
 import socket  # Get local IP address
 import recorder
 import os
 import qrcode
+import io
 
 app = Flask(__name__)
 app.secret_key = 'secret'
+
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # recorder
 config = recorder.Configuration()
@@ -48,7 +52,7 @@ def stop():
     return jsonify({'status': "success"})
 
 
-@app.route('api/download_recording', methods=['GET'])
+@app.route('/api/download_recording', methods=['GET'])
 def download():
     output_file = config.get_value('output_video_file')
     if os.path.isfile(output_file):
@@ -73,9 +77,16 @@ def get_local_ip():
 
 @app.route('/api/get_qr_code', methods=['GET'])
 def create_url_qr_code():
-    qr = qrcode.make(f'http://{get_local_ip()}:5000')
-    return send_file(qr, mimetype="image/png")
+    qr = qrcode.make(f'http://{get_local_ip()}:5173')
+    buf = io.BytesIO()
+    qr.save(buf)
+    buf.seek(0)
+    return send_file(buf, mimetype="image/jpeg")
 
+@app.route('/api/recording_status', methods=['GET'])
+def recording_status():
+    global is_recording
+    return jsonify({'recording_status': is_recording})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

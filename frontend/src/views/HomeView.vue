@@ -20,7 +20,7 @@ import Header from '../components/Header.vue';
           <p class="fs-6 font-monospace">Connected to server at {{ ip_address }}</p>
         </div>
         <div class="col">
-          <img :src="qrCodeUrl" alt="QR code for URL" height="200px">
+          <img :src="qrCodeUrl" alt="QR code for URL" height="200" class="rounded">
         </div>
       </div>
 
