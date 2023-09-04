@@ -3,4 +3,4 @@ pyyaml
 opencv-python
 flask
 numpy
-qrcode[pil]
+qrcode
