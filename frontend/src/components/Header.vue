@@ -8,7 +8,11 @@ import { RouterLink, RouterView } from 'vue-router'
             <img src="favicon/favicon.svg" width="40" class="me-2" alt="Whiteboard recorder logo">
             <span class="fs-4">Whiteboard Recorder</span>
         </RouterLink>
-        <RouterLink to="/settings" class="ms-auto fs-4 text-body text-decoration-none">
+        <RouterLink to="/" class="ms-auto fs-4 text-body text-decoration-none me-5">
+                <i class="bi bi-house-fill"></i>
+                Home
+            </RouterLink>
+        <RouterLink to="/settings" class="fs-4 text-body text-decoration-none">
             <i class="bi bi-gear-fill"></i>
             Settings
         </RouterLink>
