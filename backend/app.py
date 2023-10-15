@@ -22,6 +22,7 @@ is_recording = False
 def index():
     return f"Reached the backend, go to {get_local_ip()}:5173 to use Whiteboard Recorder"
 
+# Start recording
 @app.route('/api/start_recording', methods=['POST'])
 def record():
     global is_recording
@@ -36,7 +37,8 @@ def record():
         print("already recording")
     return jsonify({'status': "success"})
 
-
+# Stop recording
+# TODO: Simplify this and above into one route
 @app.route('/api/stop_recording', methods=['POST'])
 def stop():
     global is_recording
@@ -51,7 +53,7 @@ def stop():
         print("not recording")
     return jsonify({'status': "success"})
 
-
+# Download recording video (if exists)
 @app.route('/api/download_recording', methods=['GET'])
 def download():
     output_file = config.get_value('output_video_file')
@@ -62,6 +64,7 @@ def download():
         print("no file")
         return jsonify({'status': "error"})
 
+# Gets the local IP address of the machine running the backend
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.settimeout(0)
@@ -75,6 +78,7 @@ def get_local_ip():
         s.close()
     return ip
 
+# Gets a QR code for the frontend URL
 @app.route('/api/get_qr_code', methods=['GET'])
 def create_url_qr_code():
     qr = qrcode.make(f'http://{get_local_ip()}:5173')
@@ -83,21 +87,26 @@ def create_url_qr_code():
     buf.seek(0)
     return send_file(buf, mimetype="image/jpeg")
 
+# Returns whether or not the backend is recording
 @app.route('/api/recording_status', methods=['GET'])
 def recording_status():
     global is_recording
     return jsonify({'recording_status': is_recording})
 
+# Returns the current settings
 @app.route('/api/settings', methods=['GET','POST'])
 def settings():
+    global config
     if request.method == 'POST':
         # update settings
-        pass
+        request_data = request.get_json()
+        print(request_data)
+        config.update_all(request_data)
+        return jsonify({'status': "success"})
+
     elif request.method == 'GET':
         # get settings
-        global config
-        
-        pass
+        return jsonify(config.get_all())
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

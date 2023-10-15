@@ -164,7 +164,7 @@ cython_debug/
 *.mp3
 
 # Configuration
-*.yaml
+config.toml
 
 # Old
 old/*

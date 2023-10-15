@@ -5,3 +5,4 @@ flask
 numpy
 qrcode
 flask_cors
+toml
