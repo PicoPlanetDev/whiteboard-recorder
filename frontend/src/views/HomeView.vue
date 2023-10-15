@@ -12,7 +12,7 @@ import Header from '../components/Header.vue';
     <!-- Alerts -->
 
     <main>
-      <div class="row">
+      <div class="row mb-3">
         <div class="col-md-8">
           <h1>Control panel</h1>
           <p class="fs-5">Start, stop, and download whiteboard recordings from this page.
@@ -20,7 +20,7 @@ import Header from '../components/Header.vue';
           <p class="fs-6 font-monospace">Connected to server at {{ ip_address }}</p>
         </div>
         <div class="col">
-          <img :src="qrCodeUrl" alt="QR code for URL" height="200" class="rounded">
+          <img :src="qrCodeUrl" alt="QR code for URL" height="200" class="rounded-4">
         </div>
       </div>
 

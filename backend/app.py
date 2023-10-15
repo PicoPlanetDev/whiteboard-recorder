@@ -1,4 +1,4 @@
-from flask import Flask, send_file, jsonify
+from flask import Flask, send_file, jsonify, request
 from flask_cors import CORS
 import socket  # Get local IP address
 import recorder
@@ -87,6 +87,17 @@ def create_url_qr_code():
 def recording_status():
     global is_recording
     return jsonify({'recording_status': is_recording})
+
+@app.route('/api/settings', methods=['GET','POST'])
+def settings():
+    if request.method == 'POST':
+        # update settings
+        pass
+    elif request.method == 'GET':
+        # get settings
+        global config
+        
+        pass
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

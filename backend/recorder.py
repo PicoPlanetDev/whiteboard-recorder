@@ -4,7 +4,7 @@ import yaml
 import cv2
 import numpy as np
 import os
-
+import contextlib
 
 class Configuration:
     def __init__(self):
@@ -149,6 +149,16 @@ class Configuration:
             any: The value of the key.
         """
         return self.config[key]
+    
+    def get_all(self):
+        all = {
+            'video_devices': self.get_video_devices(),
+            'audio_devices': self.get_audio_devices(),
+            'video1': {
+                'video_device': self.get_value('video'),
+                'resolution': self.get_value('input_resolution')
+            }
+        }
 
 
 class VideoRecorder():
@@ -174,10 +184,11 @@ class VideoRecorder():
                         self.config.get_value('temp_audio_file')])
 
     def clear_files(self):
-        os.remove(self.config.get_value('temp_video_file'))
-        os.remove(self.config.get_value('temp_audio_file'))
-        os.remove(self.config.get_value('temp_processed_video_file'))
-        os.remove(self.config.get_value('output_video_file'))
+        with contextlib.suppress(FileNotFoundError):
+            os.remove(self.config.get_value('temp_video_file'))
+            os.remove(self.config.get_value('temp_audio_file'))
+            os.remove(self.config.get_value('temp_processed_video_file'))
+            os.remove(self.config.get_value('output_video_file'))
 
 
 class Processing():
