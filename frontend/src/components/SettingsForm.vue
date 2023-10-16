@@ -151,7 +151,7 @@ import { RouterLink, RouterView } from 'vue-router'
                     <div class="row mb-2">
                         <div class="col">
                             <!-- <div><img :src="configurator.capturedFrame" class="img-fluid rounded"></div> -->
-                            <div id="pointerDiv" class=""
+                            <div id="pointerDiv" class="border rounded"
                                 :style="'background-image: url(' + configurator.capturedFrame + '); width: 100%; aspect-ratio: ' + getVideoAspectRatio(configurator.currentVideoDevice) + '; background-size: contain;'"
                                 @click="imageClicked">
                                 <i id="pointerDot" class="bi bi-plus text-primary"
