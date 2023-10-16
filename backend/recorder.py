@@ -11,6 +11,10 @@ TEMP_AUDIO_FILE = 'temp_audio.mp3'
 TEMP_PROCESSED_VIDEO_FILE = 'temp_processed_video.mp4'
 OUTPUT_VIDEO_FILE = 'output_video.mp4'
 
+def convert_to_jpeg(frame):
+    ret, buffer = cv2.imencode('.jpg', frame)
+    return buffer.tobytes()
+
 def get_av_splits():
     # import shlex
     # shlex.split("ffmpeg -list_devices true -f dshow -i dummy")
@@ -163,9 +167,6 @@ class Processing():
     def __init__(self, config):
         self.config = config
 
-        self.process_recording()
-        self.combine_video_and_audio()
-
     def process_recording(self):
         video = cv2.VideoCapture(TEMP_VIDEO_FILE)
 
@@ -211,3 +212,13 @@ class Processing():
         resized = cv2.resize(warped, (1920, 1080))
 
         return resized
+    
+    def capture_frame(self, video_device=0):
+        cap = cv2.VideoCapture(video_device, cv2.CAP_DSHOW)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.config['video0']['resolution'][0])
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.config['video0']['resolution'][1])
+        while True:
+            ret, frame = cap.read()
+            if ret:
+                cap.release()
+                return frame
