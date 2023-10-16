@@ -5,6 +5,7 @@ import recorder
 import os
 import qrcode
 import io
+import base64
 
 app = Flask(__name__)
 app.secret_key = 'secret'
@@ -14,6 +15,7 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 # recorder
 config = recorder.Configuration()
 video_recorder = recorder.VideoRecorder(config)
+processing = recorder.Processing(config)
 
 is_recording = False
 
@@ -107,6 +109,38 @@ def settings():
     elif request.method == 'GET':
         # get settings
         return jsonify(config.get_all())
+
+@app.route('/api/capture_frame', methods=['POST'])
+def capture_frame():
+    video_device = int(request.get_json()['video_device'])
+    global processing
+    frame_jpeg = recorder.convert_to_jpeg(processing.capture_frame(video_device))
+    return "data:image/png;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
+
+@app.route('/api/corners', methods=['GET','POST'])
+def corners():
+    global config
+    if request.method == 'POST':
+        # update settings
+        request_data = request.get_json()
+        video_device = request_data['video_device']
+        if int(video_device) != 0 and int(video_device) != 1:
+            return jsonify({'status': "error"})
+        
+        corners = request_data['corners']
+        config.config['video' + str(video_device)]['corners'] = corners
+        config.save_config()
+
+        return jsonify({'status': "success"})
+
+    # shouldn't be used yet
+    elif request.method == 'GET':
+        # get settings
+        corner_dict = {
+            'video0': config.config['video0']['corners'],
+            'video1': config.config['video1']['corners']
+        }
+        return jsonify(corner_dict)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
