@@ -6,10 +6,11 @@ import os
 import contextlib
 import toml
 
-TEMP_VIDEO_FILE = 'temp_video.mp4'
+TEMP_VIDEO_FILE_0 = 'temp_video_0.mp4'
+TEMP_VIDEO_FILE_1 = 'temp_video_1.mp4'
 TEMP_AUDIO_FILE = 'temp_audio.mp3'
 TEMP_PROCESSED_VIDEO_FILE = 'temp_processed_video.mp4'
-OUTPUT_VIDEO_FILE = 'output_video.mp4'
+OUTPUT_VIDEO_FILE_0 = 'output_video_0.mp4'
 
 def convert_to_jpeg(frame):
     ret, buffer = cv2.imencode('.jpg', frame)
@@ -143,7 +144,7 @@ class VideoRecorder():
         # Start the recording process using ffmpeg
         self.recording_process = subprocess.Popen(
             ['ffmpeg', '-y', '-f', 'dshow', '-i', f'video={video_device}:audio={audio_device}', '-s', input_resolution,
-             TEMP_VIDEO_FILE], stdin=subprocess.PIPE)
+             TEMP_VIDEO_FILE_0], stdin=subprocess.PIPE)
 
     def stop_recording(self):
         # Tell ffmpeg to stop recording
@@ -152,23 +153,23 @@ class VideoRecorder():
         self.recording_process.terminate()
 
         # Extract the audio from the video
-        subprocess.run(['ffmpeg', '-i', TEMP_VIDEO_FILE, '-y', '-codec:a', 'libmp3lame',
+        subprocess.run(['ffmpeg', '-i', TEMP_VIDEO_FILE_0, '-y', '-codec:a', 'libmp3lame',
                         TEMP_AUDIO_FILE])
 
     def clear_files(self):
         with contextlib.suppress(FileNotFoundError):
-            os.remove(TEMP_VIDEO_FILE)
+            os.remove(TEMP_VIDEO_FILE_0)
             os.remove(TEMP_AUDIO_FILE)
             os.remove(TEMP_PROCESSED_VIDEO_FILE)
-            os.remove(OUTPUT_VIDEO_FILE)
+            os.remove(OUTPUT_VIDEO_FILE_0)
 
 
 class Processing():
     def __init__(self, config):
         self.config = config
 
-    def process_recording(self):
-        video = cv2.VideoCapture(TEMP_VIDEO_FILE)
+    def process_recording(self, video_device=0):
+        video = cv2.VideoCapture(TEMP_VIDEO_FILE_0)
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out_file = cv2.VideoWriter(TEMP_PROCESSED_VIDEO_FILE, fourcc, 30.0, (1920, 1080))
@@ -189,10 +190,10 @@ class Processing():
         # Use ffmpeg to combine the new silent video with the audio from the original video
         subprocess.run(['ffmpeg', '-i', TEMP_AUDIO_FILE, '-i',
                         TEMP_PROCESSED_VIDEO_FILE, '-y', '-codec:a', 'copy', '-codec:v',
-                        'copy', OUTPUT_VIDEO_FILE])
-        print(f'Video saved to {OUTPUT_VIDEO_FILE}')
+                        'copy', OUTPUT_VIDEO_FILE_0])
+        print(f'Video saved to {OUTPUT_VIDEO_FILE_0}')
 
-    def birds_eye_view(self, img):
+    def birds_eye_view(self, img, video_device=0):
         # Corners should be in this order
         # 0 1
         # 2 3
@@ -200,7 +201,7 @@ class Processing():
         # The problem right now is that the corners are rich from the aruco
         # but only points from the manual selection
 
-        corners = self.config.config['video0']['corners']
+        corners = self.config.config['video'+str(video_device)]['corners']
         # Make a copy of the corners
         corners = corners.copy()
         corners[2], corners[3] = corners[3], corners[2]
