@@ -16,6 +16,7 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 config = recorder.Configuration()
 video_recorder = recorder.VideoRecorder(config)
 processing = recorder.Processing(config)
+preview = recorder.Preview(config, processing)
 
 is_recording = False
 
@@ -113,8 +114,8 @@ def settings():
 @app.route('/api/capture_frame', methods=['POST'])
 def capture_frame():
     video_device = int(request.get_json()['video_device'])
-    global processing
-    frame_jpeg = recorder.convert_to_jpeg(processing.capture_frame(video_device))
+    global preview
+    frame_jpeg = recorder.convert_to_jpeg(preview.capture_frame(video_device))
     return "data:image/png;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 
 @app.route('/api/corners', methods=['GET','POST'])
@@ -128,6 +129,11 @@ def corners():
             return jsonify({'status': "error"})
         
         corners = request_data['corners']
+        # Convert the corners to ints
+        for corner in corners:
+            corner[0] = int(corner[0])
+            corner[1] = int(corner[1])
+            
         config.config['video' + str(video_device)]['corners'] = corners
         config.save_config()
 
@@ -141,6 +147,13 @@ def corners():
             'video1': config.config['video1']['corners']
         }
         return jsonify(corner_dict)
+    
+@app.route('/api/preview_warped', methods=['POST'])
+def preview_warped():
+    video_device = int(request.get_json()['video_device'])
+    global preview
+    frame_jpeg = recorder.convert_to_jpeg(preview.warp_frame(video_device))
+    return "data:image/png;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
