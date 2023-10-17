@@ -47,7 +47,7 @@ import { RouterLink, RouterView } from 'vue-router'
                         <div class="input-group">
                             <input type="number" class="form-control" id="resolution-x" placeholder="1920"
                                 v-model="video0.resolutionX">
-                            <span class="input-group-text">x</span>
+                            <span class="input-group-text">Y</span>
                             <input type="number" class="form-control" id="resolution-y" placeholder="1080"
                                 v-model="video0.resolutionY">
                         </div>
@@ -83,7 +83,7 @@ import { RouterLink, RouterView } from 'vue-router'
                         <div class="input-group">
                             <input type="number" class="form-control" id="resolution-x" placeholder="1920"
                                 v-model="video1.resolutionX">
-                            <span class="input-group-text">x</span>
+                            <span class="input-group-text">Y</span>
                             <input type="number" class="form-control" id="resolution-y" placeholder="1080"
                                 v-model="video1.resolutionY">
                         </div>
@@ -104,11 +104,11 @@ import { RouterLink, RouterView } from 'vue-router'
         <div class="row mb-3">
             <div class="col">
                 <button type="reset" class="btn btn-outline-danger me-2" @click="resetForm()">
-                    <i class="bi bi-trash"></i>
+                    <i class="bi bi-trash me-1"></i>
                     Discard
                 </button>
                 <button type="submit" class="btn btn-primary me-2" @click="saveSettings()">
-                    <i class="bi bi-check2"></i>
+                    <i class="bi bi-check2 me-1"></i>
                     Save
                 </button>
             </div>
@@ -143,8 +143,13 @@ import { RouterLink, RouterView } from 'vue-router'
                             </form>
                         </div>
                         <div class="col"><button type="reset" class="btn btn-primary me-2" @click="captureFrame">
-                                <i class="bi bi-camera"></i>
+                                <i class="bi bi-camera me-1"></i>
                                 Capture frame
+                            </button>
+                        </div>
+                        <div class="col"><button type="reset" class="btn btn-primary me-2" @click="previewWarped">
+                                <i class="bi bi-bounding-box me-1"></i>
+                                Preview warped
                             </button>
                         </div>
                     </div>
@@ -153,7 +158,7 @@ import { RouterLink, RouterView } from 'vue-router'
                             <!-- <div><img :src="configurator.capturedFrame" class="img-fluid rounded"></div> -->
                             <div id="pointerDiv" class="border rounded"
                                 :style="'background-image: url(' + configurator.capturedFrame + '); width: 100%; aspect-ratio: ' + getVideoAspectRatio(configurator.currentVideoDevice) + '; background-size: contain;'"
-                                @click="imageClicked">
+                                @click="imageClicked" ref="pointerDiv">
                                 <i id="pointerDot" class="bi bi-plus text-primary"
                                     :style="'left: ' + configurator.crosshairPositions[0][0] + 'px; top: ' + configurator.crosshairPositions[0][1] + 'px; visibility: ' + configurator.crosshairVisibility[0] + ';'"></i>
                                 <i id="pointerDot" class="bi bi-plus text-success"
@@ -165,6 +170,7 @@ import { RouterLink, RouterView } from 'vue-router'
                             </div>
                         </div>
                     </div>
+                    <!-- All the position entry boxes -->
                     <div class="row">
                         <div class="row mb-2">
                             <div class="col">
@@ -177,9 +183,10 @@ import { RouterLink, RouterView } from 'vue-router'
                                         class="bi bi-cursor-fill"></i></label>
 
                                 <div class="input-group">
+                                    <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
                                         v-model="configurator.corners[0][0]">
-                                    <span class="input-group-text">x</span>
+                                    <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
                                         v-model="configurator.corners[0][1]">
                                 </div>
@@ -194,9 +201,10 @@ import { RouterLink, RouterView } from 'vue-router'
                                         class="bi bi-cursor-fill"></i></label>
 
                                 <div class="input-group">
+                                    <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
                                         v-model="configurator.corners[1][0]">
-                                    <span class="input-group-text">x</span>
+                                    <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
                                         v-model="configurator.corners[1][1]">
                                 </div>
@@ -213,9 +221,10 @@ import { RouterLink, RouterView } from 'vue-router'
                                         class="bi bi-cursor-fill"></i></label>
 
                                 <div class="input-group">
+                                    <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
                                         v-model="configurator.corners[2][0]">
-                                    <span class="input-group-text">x</span>
+                                    <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
                                         v-model="configurator.corners[2][1]">
                                 </div>
@@ -230,9 +239,10 @@ import { RouterLink, RouterView } from 'vue-router'
                                         class="bi bi-cursor-fill"></i></label>
 
                                 <div class="input-group">
+                                    <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
                                         v-model="configurator.corners[3][0]">
-                                    <span class="input-group-text">x</span>
+                                    <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
                                         v-model="configurator.corners[3][1]">
                                 </div>
@@ -243,11 +253,11 @@ import { RouterLink, RouterView } from 'vue-router'
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-outline-danger me-2" data-bs-dismiss="modal" @click="">
-                        <i class="bi bi-trash"></i>
+                        <i class="bi bi-trash me-1"></i>
                         Discard
                     </button>
                     <button type="submit" class="btn btn-primary me-2" @click="saveCorners">
-                        <i class="bi bi-check2"></i>
+                        <i class="bi bi-check2 me-1"></i>
                         Save
                     </button>
                 </div>
@@ -367,7 +377,7 @@ export default {
             });
         },
         crosshairOffset([x, y]) {
-            return [x - 3, y + 46];
+            return [x - 3, y + 48];
         },
         // This is very hacky, and I can't even say it works
         imageClicked(event) {
@@ -400,6 +410,7 @@ export default {
             } else {
                 this.configurator.corners = this.video1.corners;
             }
+            this.configurator.corners = this.unscaleCorners(this.configurator.corners);
 
             this.configurator.currentCorner = 0;
 
@@ -415,11 +426,30 @@ export default {
                 this.configurator.crosshairVisibility = ['hidden', 'hidden', 'hidden', 'hidden'];
             }
         },
+        scaleCorners(corners) {
+            var scaledCorners = [];
+            // Use the pointerDiv's pixel width to scale the corners to the original video resolution
+            var pointerDivWidth = this.$refs.pointerDiv.offsetWidth;
+            for (var i = 0; i < this.configurator.corners.length; i++) {
+                scaledCorners[i] = [this.configurator.corners[i][0] * this.video0.resolutionX / pointerDivWidth, this.configurator.corners[i][1] * this.video0.resolutionX / pointerDivWidth];
+            }
+            return scaledCorners;
+        },
+        unscaleCorners(scaledCorners) {
+            // Reverse the scaling done in scaleCorners()
+            var pointerDivWidth = this.$refs.pointerDiv.offsetWidth;
+            var corners = [];
+            for (var i = 0; i < scaledCorners.length; i++) {
+                corners[i] = [scaledCorners[i][0] * pointerDivWidth / this.video0.resolutionX, scaledCorners[i][1] * pointerDivWidth / this.video0.resolutionX];
+            }
+            return corners;
+        },
         saveCorners() {
+            var scaledCorners = this.scaleCorners(this.configurator.corners);
             axios.post('/corners', {
 
                 video_device: this.configurator.currentVideoDevice,
-                corners: this.configurator.corners,
+                corners: scaledCorners,
             }).then(response => {
                 if (response.data.success) {
                     this.getCorners();
@@ -438,7 +468,17 @@ export default {
             }).catch(error => {
                 console.log(error);
             });
-        }
+        },
+        previewWarped() {
+            axios.post('/preview_warped', {
+                video_device: this.configurator.currentVideoDevice,
+            }).then(response => {
+                this.configurator.capturedFrame = response.data;
+
+            }).catch(error => {
+                console.log(error);
+            });
+        },
     },
     mounted() {
         this.resetForm();
