@@ -431,7 +431,7 @@ export default {
             // Use the pointerDiv's pixel width to scale the corners to the original video resolution
             var pointerDivWidth = this.$refs.pointerDiv.offsetWidth;
             for (var i = 0; i < this.configurator.corners.length; i++) {
-                scaledCorners[i] = [this.configurator.corners[i][0] * this.video0.resolutionX / pointerDivWidth, this.configurator.corners[i][1] * this.video0.resolutionX / pointerDivWidth];
+                scaledCorners[i] = [parseInt(this.configurator.corners[i][0] * this.video0.resolutionX / pointerDivWidth), parseInt(this.configurator.corners[i][1] * this.video0.resolutionX / pointerDivWidth)];
             }
             return scaledCorners;
         },
@@ -440,7 +440,7 @@ export default {
             var pointerDivWidth = this.$refs.pointerDiv.offsetWidth;
             var corners = [];
             for (var i = 0; i < scaledCorners.length; i++) {
-                corners[i] = [scaledCorners[i][0] * pointerDivWidth / this.video0.resolutionX, scaledCorners[i][1] * pointerDivWidth / this.video0.resolutionX];
+                corners[i] = [parseInt(scaledCorners[i][0] * pointerDivWidth / this.video0.resolutionX), parseInt(scaledCorners[i][1] * pointerDivWidth / this.video0.resolutionX)];
             }
             return corners;
         },
