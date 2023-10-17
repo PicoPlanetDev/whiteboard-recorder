@@ -6,11 +6,10 @@ import os
 import contextlib
 import toml
 
-TEMP_VIDEO_FILE_0 = 'temp_video_0.mp4'
-TEMP_VIDEO_FILE_1 = 'temp_video_1.mp4'
+TEMP_VIDEO_FILES = ['temp_video_0.mp4', 'temp_video_1.mp4']
 TEMP_AUDIO_FILE = 'temp_audio.mp3'
 TEMP_PROCESSED_VIDEO_FILE = 'temp_processed_video.mp4'
-OUTPUT_VIDEO_FILE_0 = 'output_video_0.mp4'
+OUTPUT_VIDEO_FILE = 'output_video.mp4'
 
 def convert_to_jpeg(frame):
     ret, buffer = cv2.imencode('.jpg', frame)
@@ -132,19 +131,24 @@ class Configuration:
 
 
 class VideoRecorder():
-    def __init__(self, config):
+    def __init__(self, config, video_device_index=0):
         self.config = config
+        self.video_device_index = video_device_index
+        self.recording_process = None
 
     def start_recording(self):
+        # Get the video device config string
+        video_device_config = 'video'+str(self.video_device_index)
+
         # Get the configuration values
-        video_device = self.config['video0']['video_device']
+        video_device = self.config[video_device_config]['video_device']
         audio_device = self.config['audio_device']
-        input_resolution = self.config['video0']['resolution']
+        input_resolution = self.config[video_device_config]['resolution']
 
         # Start the recording process using ffmpeg
         self.recording_process = subprocess.Popen(
             ['ffmpeg', '-y', '-f', 'dshow', '-i', f'video={video_device}:audio={audio_device}', '-s', input_resolution,
-             TEMP_VIDEO_FILE_0], stdin=subprocess.PIPE)
+             TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
 
     def stop_recording(self):
         # Tell ffmpeg to stop recording
@@ -153,23 +157,23 @@ class VideoRecorder():
         self.recording_process.terminate()
 
         # Extract the audio from the video
-        subprocess.run(['ffmpeg', '-i', TEMP_VIDEO_FILE_0, '-y', '-codec:a', 'libmp3lame',
+        subprocess.run(['ffmpeg', '-i', TEMP_VIDEO_FILES[self.video_device_index], '-y', '-codec:a', 'libmp3lame',
                         TEMP_AUDIO_FILE])
 
     def clear_files(self):
-        with contextlib.suppress(FileNotFoundError):
-            os.remove(TEMP_VIDEO_FILE_0)
+        with contextlib.suppress(FileNotFoundError): # Ignore if the file doesn't exist (likely)
+            os.remove(TEMP_VIDEO_FILES[self.video_device_index])
             os.remove(TEMP_AUDIO_FILE)
             os.remove(TEMP_PROCESSED_VIDEO_FILE)
-            os.remove(OUTPUT_VIDEO_FILE_0)
+            os.remove(OUTPUT_VIDEO_FILE)
 
 
 class Processing():
     def __init__(self, config):
         self.config = config
 
-    def process_recording(self, video_device=0):
-        video = cv2.VideoCapture(TEMP_VIDEO_FILE_0)
+    def process_recording(self, video_device_index=0):
+        video = cv2.VideoCapture(TEMP_VIDEO_FILES[video_device_index])
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out_file = cv2.VideoWriter(TEMP_PROCESSED_VIDEO_FILE, fourcc, 30.0, (1920, 1080))
@@ -190,8 +194,8 @@ class Processing():
         # Use ffmpeg to combine the new silent video with the audio from the original video
         subprocess.run(['ffmpeg', '-i', TEMP_AUDIO_FILE, '-i',
                         TEMP_PROCESSED_VIDEO_FILE, '-y', '-codec:a', 'copy', '-codec:v',
-                        'copy', OUTPUT_VIDEO_FILE_0])
-        print(f'Video saved to {OUTPUT_VIDEO_FILE_0}')
+                        'copy', OUTPUT_VIDEO_FILE])
+        print(f'Video saved to {OUTPUT_VIDEO_FILE}')
 
     def birds_eye_view(self, img, video_device=0):
         # Corners should be in this order
@@ -224,9 +228,11 @@ class Preview():
         self.processing = Processing(config)
 
     def capture_frame(self, video_device=0):
-        cap = cv2.VideoCapture(video_device, cv2.CAP_DSHOW)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.config['video'+str(video_device)]['resolution'][0])
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.config['video'+str(video_device)]['resolution'][1])
+        video_device_config = 'video'+str(video_device)
+
+        cap = cv2.VideoCapture(video_device, cv2.CAP_DSHOW) # remove CAP_DSHOW if you want to use the default camera driver, slower to start?
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.config[video_device_config]['resolution'][0]) # set the X resolution
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.config[video_device_config]['resolution'][1]) # set the Y resolution
         while True:
             ret, frame = cap.read()
             if ret:
@@ -234,7 +240,7 @@ class Preview():
                 self.frame = frame
                 return frame
             
-    def warp_frame(self, video_device=0):
+    def warp_frame(self):
         # Debug
         # warped_frame = self.frame
         # for corner in self.config.config['video'+str(video_device)]['corners']:
