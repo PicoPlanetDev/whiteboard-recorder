@@ -155,10 +155,20 @@ import { RouterLink, RouterView } from 'vue-router'
                     </div>
                     <div class="row mb-2">
                         <div class="col">
-                            <!-- <div><img :src="configurator.capturedFrame" class="img-fluid rounded"></div> -->
+                            <!-- Image div -->
                             <div id="pointerDiv" class="border rounded"
                                 :style="'background-image: url(' + configurator.capturedFrame + '); width: 100%; aspect-ratio: ' + getVideoAspectRatio(configurator.currentVideoDevice) + '; background-size: contain;'"
                                 @click="imageClicked" ref="pointerDiv">
+
+                                <!-- Spinner -->
+                                <div class="h-100 d-flex align-items-center justify-content-center"
+                                    :style="'visibility:' + configurator.spinnerVisibility + ';'">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+
+                                <!-- Corner crosshairs -->
                                 <i id="pointerDot" class="bi bi-plus text-primary"
                                     :style="'left: ' + configurator.crosshairPositions[0][0] + 'px; top: ' + configurator.crosshairPositions[0][1] + 'px; visibility: ' + configurator.crosshairVisibility[0] + ';'"></i>
                                 <i id="pointerDot" class="bi bi-plus text-success"
@@ -310,6 +320,7 @@ export default {
                 crosshairVisibility: ['hidden', 'hidden', 'hidden', 'hidden'],
                 currentCorner: 0,
                 corners: [[0, 0], [0, 0], [0, 0], [0, 0],],
+                spinnerVisibility: 'hidden',
             }
         }
     },
@@ -366,10 +377,12 @@ export default {
             });
         },
         captureFrame() {
+            this.configurator.spinnerVisibility = 'visible';
             axios.post('/capture_frame', {
 
                 video_device: this.configurator.currentVideoDevice,
             }).then(response => {
+                this.configurator.spinnerVisibility = 'hidden';
                 this.configurator.capturedFrame = response.data;
 
             }).catch(error => {
@@ -470,9 +483,11 @@ export default {
             });
         },
         previewWarped() {
+            this.configurator.spinnerVisibility = 'visible';
             axios.post('/preview_warped', {
                 video_device: this.configurator.currentVideoDevice,
             }).then(response => {
+                this.configurator.spinnerVisibility = 'hidden';
                 this.configurator.capturedFrame = response.data;
 
             }).catch(error => {
