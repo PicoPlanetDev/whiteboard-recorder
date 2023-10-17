@@ -200,25 +200,42 @@ class Processing():
         # The problem right now is that the corners are rich from the aruco
         # but only points from the manual selection
 
-        corners = self.config['video0']['corners']    
+        corners = self.config.config['video0']['corners']
+        # Make a copy of the corners
+        corners = corners.copy()
+        corners[2], corners[3] = corners[3], corners[2]
 
         init_corners = np.array(corners, dtype="float32")  # initial corners from the arguments
-        dest_corners = np.array([[0, 0], [800, 0], [800, 800], [0, 800]],
+        dest_corners = np.array([[0, 0], [1000, 0], [1000, 1000], [0, 1000]],
                                 dtype="float32")  # destination corners in a square
 
         # Compute the perspective transform matrix and then apply it
         transform_matrix = cv2.getPerspectiveTransform(init_corners, dest_corners)
-        warped = cv2.warpPerspective(img, transform_matrix, (800, 800))
+        warped = cv2.warpPerspective(img, transform_matrix, (1000, 1000))
         resized = cv2.resize(warped, (1920, 1080))
 
         return resized
     
+class Preview():
+    def __init__(self, config, processing):
+        self.config = config
+        self.frame = None
+        self.processing = Processing(config)
+
     def capture_frame(self, video_device=0):
         cap = cv2.VideoCapture(video_device, cv2.CAP_DSHOW)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.config['video0']['resolution'][0])
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.config['video0']['resolution'][1])
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.config['video'+str(video_device)]['resolution'][0])
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.config['video'+str(video_device)]['resolution'][1])
         while True:
             ret, frame = cap.read()
             if ret:
                 cap.release()
+                self.frame = frame
                 return frame
+            
+    def warp_frame(self, video_device=0):
+        # Debug
+        # warped_frame = self.frame
+        # for corner in self.config.config['video'+str(video_device)]['corners']:
+        #     warped_frame = cv2.circle(self.frame, corner, 10, (0, 0, 255), -1)
+        return self.processing.birds_eye_view(self.frame)
