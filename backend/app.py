@@ -25,36 +25,6 @@ is_recording = False
 def index():
     return f"Reached the backend, go to {get_local_ip()}:5173 to use Whiteboard Recorder"
 
-# Start recording
-@app.route('/api/start_recording', methods=['POST'])
-def record():
-    global is_recording
-    if not is_recording:
-        video_recorder.clear_files()
-        video_recorder.start_recording()
-        is_recording = True
-        # notify recording
-        print("recording")
-    else:
-        # notify already recording
-        print("already recording")
-    return jsonify({'status': "success", 'recording_status': is_recording})
-
-# Stop recording
-# TODO: Simplify this and above into one route
-@app.route('/api/stop_recording', methods=['POST'])
-def stop():
-    global is_recording
-    if is_recording:
-        is_recording = False
-        video_recorder.stop_recording()
-        # notify processing
-        print("processing recording")
-    else:
-        # notify not recording
-        print("not recording")
-    return jsonify({'status': "success", 'recording_status': is_recording})
-
 @app.route('/api/toggle_recording', methods=['POST'])
 def toggle_recording():
     new_recording_status = request.get_json()['recording_status']
