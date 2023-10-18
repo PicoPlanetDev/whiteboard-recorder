@@ -103,11 +103,11 @@ import { RouterLink, RouterView } from 'vue-router'
         <!-- Discard and save buttons -->
         <div class="row mb-3">
             <div class="col">
-                <button type="reset" class="btn btn-outline-danger me-2" @click="resetForm()">
+                <button type="button" class="btn btn-outline-danger me-2" @click="resetForm">
                     <i class="bi bi-trash me-1"></i>
                     Discard
                 </button>
-                <button type="submit" class="btn btn-primary me-2" @click="saveSettings()">
+                <button type="button" class="btn btn-primary me-2" @click="saveSettings">
                     <i class="bi bi-check2 me-1"></i>
                     Save
                 </button>
@@ -357,16 +357,12 @@ export default {
                     video_device: this.videoDevices[this.video0.videoDevice],
                     resolution: [this.video0.resolutionX, this.video0.resolutionY],
                     enabled: this.video0.enabled,
-                }
-
-                ,
+                },
                 video1: {
                     video_device: this.videoDevices[this.video1.videoDevice],
                     resolution: [this.video1.resolutionX, this.video1.resolutionY],
                     enabled: this.video1.enabled,
                 }
-
-                ,
             }).then(response => {
                 if (response.data.success) {
                     this.resetForm();
