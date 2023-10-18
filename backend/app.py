@@ -45,6 +45,9 @@ def toggle_recording():
         if not new_recording_status:
             video_recorder.stop_recording()
             is_recording = False
+            global processing
+            processing.process_recording()
+            processing.combine_video_and_audio()
         # if recording and request to start recording (something went wrong)
         if new_recording_status:
             return jsonify({'status': "error", 'recording_status': is_recording})
@@ -54,7 +57,8 @@ def toggle_recording():
 # Download recording video (if exists)
 @app.route('/api/download_recording', methods=['GET'])
 def download():
-    output_file = config.get_value('output_video_file')
+    global config
+    output_file = config.config['output_video_file']
     if os.path.isfile(output_file):
         return send_file(output_file, as_attachment=True)
     else:
@@ -123,6 +127,7 @@ def corners():
             return jsonify({'status': "error"})
         
         corners = request_data['corners']
+        print(corners)
         # Convert the corners to ints
         for corner in corners:
             corner[0] = int(corner[0])

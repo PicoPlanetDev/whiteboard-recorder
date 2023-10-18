@@ -9,6 +9,10 @@
         <i class="bi bi-stop-circle-fill"></i>
         Stop recording
     </button>
+    <button type="button" class="btn btn-warning btn-lg px-3 me-2 my-2" v-if="recording_status === 'processing'">
+        <div class="spinner-border spinner-border-sm" role="status"></div>
+        Processing
+    </button>
 </template>
 
 <script>
@@ -33,7 +37,11 @@ export default {
                 });
         },
         toggleRecording() {
-            return axios.post('/toggle_recording', { recording_status: !this.recording_status })
+            var newRecordingStatus = !this.recording_status;
+            if (!newRecordingStatus) {
+                this.recording_status = 'processing';
+            }
+            return axios.post('/toggle_recording', { recording_status: newRecordingStatus })
                 .then(response => {
                     this.recording_status = response.data.recording_status;
 

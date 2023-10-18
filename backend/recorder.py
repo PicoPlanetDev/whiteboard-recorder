@@ -9,7 +9,6 @@ import toml
 TEMP_VIDEO_FILES = ['temp_video_0.mp4', 'temp_video_1.mp4']
 TEMP_AUDIO_FILE = 'temp_audio.mp3'
 TEMP_PROCESSED_VIDEO_FILE = 'temp_processed_video.mp4'
-OUTPUT_VIDEO_FILE = 'output_video.mp4'
 
 def convert_to_jpeg(frame):
     ret, buffer = cv2.imencode('.jpg', frame)
@@ -91,7 +90,8 @@ class Configuration:
                 'video_device': default_video_device,
                 'resolution': (1920, 1080),
                 'corners': [(0, 0), (0, 0), (0, 0), (0, 0)]
-            }
+            },
+            'output_video_file': 'output_video.mp4'
         }
         self.config = default_config
         self.save_config()
@@ -115,7 +115,8 @@ class Configuration:
                 'video_device': self.config['video1']['video_device'],
                 'resolution': self.config['video1']['resolution'],
                 'enabled': self.config['video1']['enabled']
-            }
+            },
+            'output_video_file': self.config['output_video_file']
         }
         return all
     
@@ -147,9 +148,13 @@ class VideoRecorder():
         input_resolution = f"{self.config.config[video_device_config]['resolution'][0]}x{self.config.config[video_device_config]['resolution'][1]}"
 
         # Start the recording process using ffmpeg
+        # self.recording_process = subprocess.Popen(
+        #     ['ffmpeg', '-y', '-f', 'dshow', '-video_size', input_resolution, '-pixel_format', 'yuyv422', '-i', f'video={video_device}:audio={audio_device}', 
+        #      TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+        
+        # Obviously this is not gonna fly on linux
         self.recording_process = subprocess.Popen(
-            ['ffmpeg', '-y', '-f', 'dshow', '-i', f'video={video_device}:audio={audio_device}', '-s', input_resolution,
-             TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+            ['ffmpeg','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
 
     def stop_recording(self):
         # Tell ffmpeg to stop recording
@@ -166,7 +171,7 @@ class VideoRecorder():
             os.remove(TEMP_VIDEO_FILES[self.video_device_index])
             os.remove(TEMP_AUDIO_FILE)
             os.remove(TEMP_PROCESSED_VIDEO_FILE)
-            os.remove(OUTPUT_VIDEO_FILE)
+            os.remove(self.config.config['output_video_file'])
 
 
 class Processing():
@@ -181,7 +186,6 @@ class Processing():
 
         while video.isOpened():
             ret, frame = video.read()
-
             if not ret: break
 
             # Replace the frame with the birds eye view
@@ -192,11 +196,12 @@ class Processing():
         out_file.release()
 
     def combine_video_and_audio(self):
+        output_filename = self.config.config['output_video_file']
         # Use ffmpeg to combine the new silent video with the audio from the original video
         subprocess.run(['ffmpeg', '-i', TEMP_AUDIO_FILE, '-i',
                         TEMP_PROCESSED_VIDEO_FILE, '-y', '-codec:a', 'copy', '-codec:v',
-                        'copy', OUTPUT_VIDEO_FILE])
-        print(f'Video saved to {OUTPUT_VIDEO_FILE}')
+                        'copy', output_filename])
+        print('Video saved to ' + output_filename)
 
     def birds_eye_view(self, img, video_device=0):
         # Corners should be in this order
@@ -218,6 +223,10 @@ class Processing():
         # Compute the perspective transform matrix and then apply it
         transform_matrix = cv2.getPerspectiveTransform(init_corners, dest_corners)
         warped = cv2.warpPerspective(img, transform_matrix, (1000, 1000))
+
+        # Debug:
+        # for corner in corners:
+        #     img = cv2.circle(img, corner, 10, (0, 0, 255), -1)
         resized = cv2.resize(warped, (1920, 1080))
 
         return resized
