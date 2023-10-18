@@ -262,11 +262,11 @@ import { RouterLink, RouterView } from 'vue-router'
 
                 </div>
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-outline-danger me-2" data-bs-dismiss="modal" @click="">
+                    <button type="button" class="btn btn-outline-danger me-2" data-bs-dismiss="modal" @click="">
                         <i class="bi bi-trash me-1"></i>
                         Discard
                     </button>
-                    <button type="submit" class="btn btn-primary me-2" @click="saveCorners">
+                    <button type="button" class="btn btn-primary me-2" @click="saveCorners">
                         <i class="bi bi-check2 me-1"></i>
                         Save
                     </button>

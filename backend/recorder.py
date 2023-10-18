@@ -118,6 +118,7 @@ class Configuration:
             }
         }
         return all
+    
     # TODO: work for both video1 and video2
     def update_all(self, data):
         self.config['audio_device'] = data['audio_input_device']
@@ -141,9 +142,9 @@ class VideoRecorder():
         video_device_config = 'video'+str(self.video_device_index)
 
         # Get the configuration values
-        video_device = self.config[video_device_config]['video_device']
-        audio_device = self.config['audio_device']
-        input_resolution = self.config[video_device_config]['resolution']
+        video_device = self.config.config[video_device_config]['video_device'][1]
+        audio_device = self.config.config['audio_device'][1]
+        input_resolution = f"{self.config.config[video_device_config]['resolution'][0]}x{self.config.config[video_device_config]['resolution'][1]}"
 
         # Start the recording process using ffmpeg
         self.recording_process = subprocess.Popen(

@@ -38,7 +38,7 @@ def record():
     else:
         # notify already recording
         print("already recording")
-    return jsonify({'status': "success"})
+    return jsonify({'status': "success", 'recording_status': is_recording})
 
 # Stop recording
 # TODO: Simplify this and above into one route
@@ -48,13 +48,38 @@ def stop():
     if is_recording:
         is_recording = False
         video_recorder.stop_recording()
-        processing = recorder.Processing(config)
         # notify processing
         print("processing recording")
     else:
         # notify not recording
         print("not recording")
-    return jsonify({'status': "success"})
+    return jsonify({'status': "success", 'recording_status': is_recording})
+
+@app.route('/api/toggle_recording', methods=['POST'])
+def toggle_recording():
+    new_recording_status = request.get_json()['recording_status']
+
+    global is_recording
+    if not is_recording:
+        # if not recording and request to start recording
+        if new_recording_status:
+            video_recorder.clear_files()
+            video_recorder.start_recording()
+            is_recording = True
+        # if not recording and request to stop recording (something went wrong)
+        if not new_recording_status:
+            return jsonify({'status': "error", 'recording_status': is_recording})
+    # if recording and request to stop recording
+    if is_recording:
+        # if recording and request to stop recording
+        if not new_recording_status:
+            video_recorder.stop_recording()
+            is_recording = False
+        # if recording and request to start recording (something went wrong)
+        if new_recording_status:
+            return jsonify({'status': "error", 'recording_status': is_recording})
+    
+    return jsonify({'status': "success", 'recording_status': is_recording})
 
 # Download recording video (if exists)
 @app.route('/api/download_recording', methods=['GET'])
@@ -100,14 +125,13 @@ def recording_status():
 @app.route('/api/settings', methods=['GET','POST'])
 def settings():
     global config
-    if request.method == 'POST':
+    if request.method == 'POST': # update settings
         # update settings
         request_data = request.get_json()
-        print(request_data)
         config.update_all(request_data)
         return jsonify({'status': "success"})
 
-    elif request.method == 'GET':
+    elif request.method == 'GET': # fetch settings
         # get settings
         return jsonify(config.get_all())
 
@@ -133,7 +157,7 @@ def corners():
         for corner in corners:
             corner[0] = int(corner[0])
             corner[1] = int(corner[1])
-            
+
         config.config['video' + str(video_device)]['corners'] = corners
         config.save_config()
 
@@ -150,9 +174,9 @@ def corners():
     
 @app.route('/api/preview_warped', methods=['POST'])
 def preview_warped():
-    video_device = int(request.get_json()['video_device'])
+    #video_device = int(request.get_json()['video_device'])
     global preview
-    frame_jpeg = recorder.convert_to_jpeg(preview.warp_frame(video_device))
+    frame_jpeg = recorder.convert_to_jpeg(preview.warp_frame())
     return "data:image/png;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 
 if __name__ == '__main__':
