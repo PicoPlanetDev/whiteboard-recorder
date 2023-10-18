@@ -19,6 +19,7 @@ export default {
     data() {
         return {
             recording_status: false,
+            show_error: false,
         }
     },
     methods: {
@@ -32,25 +33,15 @@ export default {
                 });
         },
         toggleRecording() {
-            if (this.recording_status === false) {
-                this.startRecording();
-            } else {
-                this.stopRecording();
-            }
-        },
-        startRecording() {
-            return axios.post('/start_recording')
+            return axios.post('/toggle_recording', { recording_status: !this.recording_status })
                 .then(response => {
                     this.recording_status = response.data.recording_status;
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        },
-        stopRecording() {
-            return axios.post('/stop_recording')
-                .then(response => {
-                    this.recording_status = response.data.recording_status;
+
+                    if (response.data.status === 'error') {
+                        this.show_error = true;
+                    } else {
+                        this.show_error = false;
+                    }
                 })
                 .catch(error => {
                     console.log(error);
