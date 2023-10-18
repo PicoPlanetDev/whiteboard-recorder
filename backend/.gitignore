@@ -171,3 +171,6 @@ old/*
 
 # IP address specific QR code
 qrcode.png
+
+# ffmpeg binary
+ffmpeg.exe
