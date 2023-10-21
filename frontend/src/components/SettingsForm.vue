@@ -387,8 +387,9 @@ export default {
                 this.video0.resolutionY = response.data.video0.resolution[1];
                 this.video0.enabled = response.data.video0.enabled;
                 this.video0.customVideoDevice = response.data.video0.custom_video_device;
-                this.video0.customVideoDeviceIndex = response.data.video0.custom_video_device_index;
+
                 // If the custom video device index is -1, set it to blank so it looks better
+                this.video0.customVideoDeviceIndex = response.data.video0.custom_video_device_index;
                 if (this.video0.customVideoDeviceIndex == -1) {
                     this.video0.customVideoDeviceIndex = '';
                 }
@@ -398,6 +399,7 @@ export default {
                 this.video1.resolutionY = response.data.video1.resolution[1];
                 this.video1.enabled = response.data.video1.enabled;
                 this.video1.customVideoDevice = response.data.video1.custom_video_device;
+
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video1.customVideoDeviceIndex = response.data.video1.custom_video_device_index;
                 if (this.video1.customVideoDeviceIndex == -1) {
@@ -410,8 +412,8 @@ export default {
         },
         saveSettings() {
             // convert a blank custom video device index to -1
-            var video0CustomVideoDeviceIndex = this.video0.customVideoDeviceIndex == '' ? -1 : this.video0.customVideoDeviceIndex;
-            var video1CustomVideoDeviceIndex = this.video1.customVideoDeviceIndex == '' ? -1 : this.video1.customVideoDeviceIndex;
+            var video0CustomVideoDeviceIndex = this.video0.customVideoDeviceIndex === '' ? -1 : this.video0.customVideoDeviceIndex;
+            var video1CustomVideoDeviceIndex = this.video1.customVideoDeviceIndex === '' ? -1 : this.video1.customVideoDeviceIndex;
 
             axios.post('/settings', {
                 audio_input_device: this.audioDevices[this.audioInputDevice],
