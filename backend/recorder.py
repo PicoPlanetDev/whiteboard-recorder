@@ -294,7 +294,10 @@ class Preview():
     def capture_frame(self, video_device=0):
         video_device_config = 'video'+str(video_device)
 
-        cap = cv2.VideoCapture(video_device, cv2.CAP_DSHOW) # remove CAP_DSHOW if you want to use the default camera driver, slower to start?
+        if os.name == 'nt':
+            cap = cv2.VideoCapture(video_device, cv2.CAP_DSHOW) # remove CAP_DSHOW if you want to use the default camera driver, slower to start?
+        else:
+            cap = cv2.VideoCapture(self.config.get_video_device_index(video_device))
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.config[video_device_config]['resolution'][0]) # set the X resolution
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.config[video_device_config]['resolution'][1]) # set the Y resolution
         while True:
