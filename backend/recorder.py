@@ -24,9 +24,15 @@ def get_av_splits():
 
 class Configuration:
     def __init__(self):
-        self.av_splits = get_av_splits()
-        self.video_devices = self.get_video_devices()
-        self.audio_devices = self.get_audio_devices()
+        if os.name == 'nt':
+            self.av_splits = get_av_splits()
+            self.video_devices = self.get_video_devices()
+            self.audio_devices = self.get_audio_devices()
+        else:
+            # Must be entered manually
+            self.av_splits = []
+            self.video_devices = [[0, '/dev/video0']] # an actual thing
+            self.audio_devices = [[0, 'default']] # Not an actual thing
 
         self.config = self.load_config()
         
@@ -83,13 +89,17 @@ class Configuration:
                 'enabled': True,
                 'video_device': default_video_device,
                 'resolution': (1920, 1080),
-                'corners': [(0, 0), (0, 0), (0, 0), (0, 0)]
+                'corners': [(0, 0), (0, 0), (0, 0), (0, 0)],
+                'custom_video_device': "",
+                'custom_video_device_index': -1
             },
             'video1': {
                 'enabled': False,
                 'video_device': default_video_device,
                 'resolution': (1920, 1080),
-                'corners': [(0, 0), (0, 0), (0, 0), (0, 0)]
+                'corners': [(0, 0), (0, 0), (0, 0), (0, 0)],
+                'custom_video_device': "",
+                'custom_video_device_index': -1
             },
             'output_video_file': 'output_video.mp4'
         }
@@ -108,13 +118,17 @@ class Configuration:
             'video0': {
                 'video_device': self.config['video0']['video_device'],
                 'resolution': self.config['video0']['resolution'],
-                'enabled': self.config['video0']['enabled']
+                'enabled': self.config['video0']['enabled'],
+                'custom_video_device': self.config['video0']['custom_video_device'],
+                'custom_video_device_index': self.config['video0']['custom_video_device_index'],
             },
             # TODO: Add video2
             'video1': {
                 'video_device': self.config['video1']['video_device'],
                 'resolution': self.config['video1']['resolution'],
-                'enabled': self.config['video1']['enabled']
+                'enabled': self.config['video1']['enabled'],
+                'custom_video_device': self.config['video1']['custom_video_device'],
+                'custom_video_device_index': self.config['video1']['custom_video_device_index'],
             },
             'output_video_file': self.config['output_video_file']
         }
@@ -122,13 +136,21 @@ class Configuration:
     
     # TODO: work for both video1 and video2
     def update_all(self, data):
+        # Audio is global
         self.config['audio_device'] = data['audio_input_device']
+        # Video 0 options
         self.config['video0']['video_device'] = data['video0']['video_device']
         self.config['video0']['resolution'] = data["video0"]["resolution"]
         self.config['video0']['enabled'] = data['video0']['enabled']
+        self.config['video0']['custom_video_device'] = data['video0']['custom_video_device']
+        self.config['video0']['custom_video_device_index'] = data['video0']['custom_video_device_index']
+        # Video 1 options
         self.config['video1']['video_device'] = data['video1']['video_device']
         self.config['video1']['resolution'] = data["video1"]["resolution"]
         self.config['video1']['enabled'] = data['video1']['enabled']
+        self.config['video1']['custom_video_device'] = data['video0']['custom_video_device']
+        self.config['video1']['custom_video_device_index'] = data['video0']['custom_video_device_index']
+
         self.save_config()
 
 

@@ -33,18 +33,32 @@ import { RouterLink, RouterView } from 'vue-router'
                 <!-- Video 0 -->
                 <div class="row" v-if="video0.enabled">
                     <div class="mb-3">
-                        Video device
-                        <select class="form-select" v-model="video0.videoDevice">
-                            <option disabled value="">Please select one</option>
-                            <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
-                                {{ device[1] }}
-                            </option>
-                        </select>
+                        <div class="mb-1">
+                            Video device
+                            <select class="form-select" v-model="video0.videoDevice">
+                                <option disabled value="">Please select one</option>
+                                <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
+                                    {{ device[1] }}
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            Custom video device (disabled if blank)
+                            <div class="input-group">
+                                <span class="input-group-text">Name</span>
+                                <input type="text" class="form-control" placeholder="/dev/video0"
+                                    aria-label="Custom video device name" v-model="video0.customVideoDevice">
+                                <span class="input-group-text">Index</span>
+                                <input type="number" class="form-control" placeholder="0"
+                                    aria-label="Custom video device index" v-model="video0.customVideoDeviceIndex">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="resolution-x" class="form-label">Video resolution</label>
                         <div class="input-group">
+                            <span class="input-group-text">X</span>
                             <input type="number" class="form-control" id="resolution-x" placeholder="1920"
                                 v-model="video0.resolutionX">
                             <span class="input-group-text">Y</span>
@@ -69,18 +83,33 @@ import { RouterLink, RouterView } from 'vue-router'
                 </div>
                 <div class="row" v-if="video1.enabled">
                     <div class="mb-3">
-                        Video device
-                        <select class="form-select" v-model="video1.videoDevice">
-                            <option disabled value="">Please select one</option>
-                            <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
-                                {{ device[1] }}
-                            </option>
-                        </select>
+                        <div class="mb-1">
+                            Video device
+                            <select class="form-select" v-model="video1.videoDevice">
+                                <option disabled value="">Please select one</option>
+                                <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
+                                    {{ device[1] }}
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            Custom video device (disabled if blank)
+                            <div class="input-group">
+                                <span class="input-group-text">Name</span>
+                                <input type="text" class="form-control" placeholder="/dev/video0"
+                                    aria-label="Custom video device name" v-model="video1.customVideoDevice">
+                                <span class="input-group-text">Index</span>
+                                <input type="number" class="form-control" placeholder="0"
+                                    aria-label="Custom video device index" v-model="video1.customVideoDeviceIndex">
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="mb-3">
                         <label for="resolution-x" class="form-label">Video resolution</label>
                         <div class="input-group">
+                            <span class="input-group-text">X</span>
                             <input type="number" class="form-control" id="resolution-x" placeholder="1920"
                                 v-model="video1.resolutionX">
                             <span class="input-group-text">Y</span>
@@ -304,7 +333,8 @@ export default {
                 resolutionY: '',
                 enabled: false,
                 corners: [[0, 0], [0, 0], [0, 0], [0, 0],],
-
+                customVideoDevice: '',
+                customVideoDeviceIndex: 0,
             },
             video1: {
                 videoDevice: 0,
@@ -312,6 +342,8 @@ export default {
                 resolutionY: '',
                 enabled: false,
                 corners: [[0, 0], [0, 0], [0, 0], [0, 0],],
+                customVideoDevice: '',
+                customVideoDeviceIndex: 0,
             },
             configurator: {
                 capturedFrame: '',
@@ -339,29 +371,49 @@ export default {
                 this.video0.resolutionX = response.data.video0.resolution[0];
                 this.video0.resolutionY = response.data.video0.resolution[1];
                 this.video0.enabled = response.data.video0.enabled;
+                this.video0.customVideoDevice = response.data.video0.custom_video_device;
+                this.video0.customVideoDeviceIndex = response.data.video0.custom_video_device_index;
+                // If the custom video device index is -1, set it to blank so it looks better
+                if (this.video0.customVideoDeviceIndex == -1) {
+                    this.video0.customVideoDeviceIndex = '';
+                }
 
                 this.video1.videoDevice = response.data.video1.video_device[0];
                 this.video1.resolutionX = response.data.video1.resolution[0];
                 this.video1.resolutionY = response.data.video1.resolution[1];
                 this.video1.enabled = response.data.video1.enabled;
+                this.video1.customVideoDevice = response.data.video1.custom_video_device;
+                // If the custom video device index is -1, set it to blank so it looks better
+                this.video1.customVideoDeviceIndex = response.data.video1.custom_video_device_index;
+                if (this.video1.customVideoDeviceIndex == -1) {
+                    this.video1.customVideoDeviceIndex = '';
+                }
 
             }).catch(error => {
                 console.log(error);
             });
         },
         saveSettings() {
-            axios.post('/settings', {
+            // convert a blank custom video device index to -1
+            var video0CustomVideoDeviceIndex = this.video0.customVideoDeviceIndex == '' ? -1 : this.video0.customVideoDeviceIndex;
+            var video1CustomVideoDeviceIndex = this.video1.customVideoDeviceIndex == '' ? -1 : this.video1.customVideoDeviceIndex;
 
+            axios.post('/settings', {
                 audio_input_device: this.audioDevices[this.audioInputDevice],
                 video0: {
                     video_device: this.videoDevices[this.video0.videoDevice],
                     resolution: [this.video0.resolutionX, this.video0.resolutionY],
                     enabled: this.video0.enabled,
+                    custom_video_device: this.video0.customVideoDevice,
+                    custom_video_device_index: video0CustomVideoDeviceIndex,
+
                 },
                 video1: {
                     video_device: this.videoDevices[this.video1.videoDevice],
                     resolution: [this.video1.resolutionX, this.video1.resolutionY],
                     enabled: this.video1.enabled,
+                    custom_video_device: this.video1.customVideoDevice,
+                    custom_video_device_index: video1CustomVideoDeviceIndex,
                 }
             }).then(response => {
                 if (response.data.success) {
