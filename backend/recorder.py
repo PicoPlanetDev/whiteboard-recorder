@@ -264,8 +264,8 @@ class Processing():
 
         # The problem right now is that the corners are rich from the aruco
         # but only points from the manual selection
-
-        corners = self.config.config['video'+str(video_device)]['corners']
+        video_device_config = self.config.config['video'+str(video_device)]
+        corners = video_device_config['corners']
         # Make a copy of the corners
         corners = corners.copy()
         corners[2], corners[3] = corners[3], corners[2]
@@ -281,7 +281,7 @@ class Processing():
         # Debug:
         # for corner in corners:
         #     img = cv2.circle(img, corner, 10, (0, 0, 255), -1)
-        resized = cv2.resize(warped, (1920, 1080))
+        resized = cv2.resize(warped, video_device_config['resolution'], interpolation=cv2.INTER_AREA)
 
         return resized
     
@@ -305,7 +305,7 @@ class Preview():
             if ret:
                 cap.release()
                 self.frame = frame
-                print(frame.shape)
+                # print(frame.shape) # Debug to see the resolution
                 return frame
             
     def warp_frame(self):
