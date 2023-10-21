@@ -200,7 +200,7 @@ class VideoRecorder():
                 ['ffmpeg','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
         elif os.name == 'posix':
             # Put together the custom audio device string
-            linux_audio_device = f'hw:CARD={self.config.config["custom_audio_device_card"]}'
+            linux_audio_device = f'sysdefault:CARD={self.config.config["custom_audio_device_card"]}'
             if self.config.config['custom_audio_device_dev'] != '':
                 linux_audio_device += f',DEV={self.config.config["custom_audio_device_dev"]}'
             # Start the recording process using ffmpeg
