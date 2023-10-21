@@ -28,11 +28,13 @@ class Configuration:
             self.av_splits = get_av_splits()
             self.video_devices = self.get_video_devices()
             self.audio_devices = self.get_audio_devices()
-        else:
+        elif os.name == 'posix':
             # Must be entered manually
             self.av_splits = []
             self.video_devices = [[0, '/dev/video0']] # an actual thing
             self.audio_devices = [[0, 'default']] # Not an actual thing
+        else:
+            raise Exception('OS not supported')
 
         self.config = self.load_config()
         
@@ -175,8 +177,15 @@ class VideoRecorder():
         #      TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
         
         # Obviously this is not gonna fly on linux
-        self.recording_process = subprocess.Popen(
-            ['ffmpeg','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+        if os.name == 'nt':
+            self.recording_process = subprocess.Popen(
+                ['ffmpeg','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+        elif os.name == 'posix':
+            self.recording_process = subprocess.Popen(
+                ['ffmpeg','-y','-f','v4l2','-framerate','30','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-ac','2','-i',f'hw:CARD={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+        else:
+            raise Exception('OS not supported')
+
 
     def stop_recording(self):
         # Tell ffmpeg to stop recording
