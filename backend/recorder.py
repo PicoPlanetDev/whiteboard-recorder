@@ -143,17 +143,17 @@ class Configuration:
     # TODO: work for both video1 and video2
     def update_all(self, data):
         # Audio is global
-        self.config['audio_device'] = data['audio_input_device']
+        self.config['audio_device'] = [str(i) for i in data['audio_device']]
         self.config['custom_audio_device_card'] = data['custom_audio_device_card']
         self.config['custom_audio_device_dev'] = str(data['custom_audio_device_dev'])
         # Video 0 options
-        self.config['video0']['video_device'] = data['video0']['video_device']
+        self.config['video0']['video_device'] = [str(i) for i in data['video0']['video_device']]
         self.config['video0']['resolution'] = data["video0"]["resolution"]
         self.config['video0']['enabled'] = data['video0']['enabled']
         self.config['video0']['custom_video_device'] = data['video0']['custom_video_device']
         self.config['video0']['custom_video_device_index'] = data['video0']['custom_video_device_index']
         # Video 1 options
-        self.config['video1']['video_device'] = data['video1']['video_device']
+        self.config['video1']['video_device'] = [str(i) for i in data['video1']['video_device']]
         self.config['video1']['resolution'] = data["video1"]["resolution"]
         self.config['video1']['enabled'] = data['video1']['enabled']
         self.config['video1']['custom_video_device'] = data['video0']['custom_video_device']
