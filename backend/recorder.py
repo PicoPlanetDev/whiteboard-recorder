@@ -82,11 +82,13 @@ class Configuration:
             return self.load_config()
 
     def create_default_config(self):
-        default_video_device = [str(self.video_devices[0]),str(self.video_devices[0])]
-        default_audio_device = [str(self.audio_devices[0]),str(self.audio_devices[0])]
+        default_video_device = [str(self.video_devices[0][0]),str(self.video_devices[0][1])]
+        default_audio_device = [str(self.audio_devices[0][0]),str(self.audio_devices[0][1])]
 
         default_config = {
             'audio_device': default_audio_device,
+            'custom_audio_device_card': '',
+            'custom_audio_device_dev': '',
             'video0': {
                 'enabled': True,
                 'video_device': default_video_device,
@@ -117,6 +119,8 @@ class Configuration:
             'video_devices': self.video_devices,
             'audio_devices': self.audio_devices,
             'audio_input_device': self.config['audio_device'],
+            'custom_audio_device_card': self.config['custom_audio_device_card'],
+            'custom_audio_device_dev': self.config['custom_audio_device_dev'],
             'video0': {
                 'video_device': self.config['video0']['video_device'],
                 'resolution': self.config['video0']['resolution'],
@@ -140,6 +144,8 @@ class Configuration:
     def update_all(self, data):
         # Audio is global
         self.config['audio_device'] = data['audio_input_device']
+        self.config['custom_audio_device_card'] = data['custom_audio_device_card']
+        self.config['custom_audio_device_dev'] = str(data['custom_audio_device_dev'])
         # Video 0 options
         self.config['video0']['video_device'] = data['video0']['video_device']
         self.config['video0']['resolution'] = data["video0"]["resolution"]
@@ -155,6 +161,18 @@ class Configuration:
 
         self.save_config()
 
+    def get_video_device_index(self, video_device):
+        if self.config['video'+str(video_device)]["custom_video_device_index"] != -1:
+            return self.config['video'+str(video_device)]["custom_video_device_index"]
+        else:
+            return int(self.config['video'+str(video_device)]["video_device"][0])
+        
+    def get_video_device_name(self, video_device):
+        if self.config['video'+str(video_device)]["custom_video_device"] != "":
+            return self.config['video'+str(video_device)]["custom_video_device"]
+        else:
+            return self.config['video'+str(video_device)]["video_device"][1]
+
 
 class VideoRecorder():
     def __init__(self, config, video_device_index=0):
@@ -167,7 +185,7 @@ class VideoRecorder():
         video_device_config = 'video'+str(self.video_device_index)
 
         # Get the configuration values
-        video_device = self.config.config[video_device_config]['video_device'][1]
+        video_device = self.config.get_video_device_name(self.video_device_index)
         audio_device = self.config.config['audio_device'][1]
         input_resolution = f"{self.config.config[video_device_config]['resolution'][0]}x{self.config.config[video_device_config]['resolution'][1]}"
 
@@ -181,8 +199,13 @@ class VideoRecorder():
             self.recording_process = subprocess.Popen(
                 ['ffmpeg','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
         elif os.name == 'posix':
+            # Put together the custom audio device string
+            linux_audio_device = f'hw:CARD={self.config.config["custom_audio_device_card"]}'
+            if self.config.config['custom_audio_device_dev'] != '':
+                linux_audio_device += f',DEV={self.config.config["custom_audio_device_dev"]}'
+            # Start the recording process using ffmpeg
             self.recording_process = subprocess.Popen(
-                ['ffmpeg','-y','-f','v4l2','-framerate','30','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-ac','2','-i',f'hw:CARD={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+                ['ffmpeg','-y','-f','v4l2','-framerate','30','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-ac','2','-i',linux_audio_device,TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
         else:
             raise Exception('OS not supported')
 

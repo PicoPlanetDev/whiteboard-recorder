@@ -6,7 +6,7 @@ import { RouterLink, RouterView } from 'vue-router';
     <form>
         <div class="row border rounded mb-3">
             <div class="col">
-                <div class="mb-3">
+                <div class="mb-1">
                     Audio input device
                     <select class="form-select" v-model="audioInputDevice">
                         <option disabled value="">Please select one</option>
@@ -14,6 +14,17 @@ import { RouterLink, RouterView } from 'vue-router';
                             {{ device[1] }}
                         </option>
                     </select>
+                </div>
+                <div class="mb-3">
+                    Custom audio device (disabled if blank)
+                    <div class="input-group">
+                        <span class="input-group-text">CARD</span>
+                        <input type="text" class="form-control" placeholder="" aria-label="Custom audio device CARD"
+                            v-model="customAudioDeviceCard">
+                        <span class="input-group-text">DEV</span>
+                        <input type="number" class="form-control" placeholder="" aria-label="Custom audio device DEV"
+                            v-model="customAudioDeviceDev">
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,10 +57,10 @@ import { RouterLink, RouterView } from 'vue-router';
                             Custom video device (disabled if blank)
                             <div class="input-group">
                                 <span class="input-group-text">Name</span>
-                                <input type="text" class="form-control" placeholder="/dev/video0"
-                                    aria-label="Custom video device name" v-model="video0.customVideoDevice">
+                                <input type="text" class="form-control" placeholder="" aria-label="Custom video device name"
+                                    v-model="video0.customVideoDevice">
                                 <span class="input-group-text">Index</span>
-                                <input type="number" class="form-control" placeholder="0"
+                                <input type="number" class="form-control" placeholder=""
                                     aria-label="Custom video device index" v-model="video0.customVideoDeviceIndex">
                             </div>
                         </div>
@@ -96,10 +107,10 @@ import { RouterLink, RouterView } from 'vue-router';
                             Custom video device (disabled if blank)
                             <div class="input-group">
                                 <span class="input-group-text">Name</span>
-                                <input type="text" class="form-control" placeholder="/dev/video0"
-                                    aria-label="Custom video device name" v-model="video1.customVideoDevice">
+                                <input type="text" class="form-control" placeholder="" aria-label="Custom video device name"
+                                    v-model="video1.customVideoDevice">
                                 <span class="input-group-text">Index</span>
-                                <input type="number" class="form-control" placeholder="0"
+                                <input type="number" class="form-control" placeholder=""
                                     aria-label="Custom video device index" v-model="video1.customVideoDeviceIndex">
                             </div>
                         </div>
@@ -326,6 +337,8 @@ export default {
             audioDevices: [],
             videoDevices: [],
             audioInputDevice: 0,
+            customAudioDeviceCard: '',
+            customAudioDeviceDev: '',
 
             video0: {
                 videoDevice: 0,
@@ -366,6 +379,8 @@ export default {
                 this.videoDevices = response.data.video_devices;
 
                 this.audioInputDevice = response.data.audio_input_device[0];
+                this.customAudioDeviceCard = response.data.custom_audio_device_card;
+                this.customAudioDeviceDev = response.data.custom_audio_device_dev;
 
                 this.video0.videoDevice = response.data.video0.video_device[0];
                 this.video0.resolutionX = response.data.video0.resolution[0];
@@ -400,6 +415,8 @@ export default {
 
             axios.post('/settings', {
                 audio_input_device: this.audioDevices[this.audioInputDevice],
+                custom_audio_device_card: this.customAudioDeviceCard,
+                custom_audio_device_dev: this.customAudioDeviceDev,
                 video0: {
                     video_device: this.videoDevices[this.video0.videoDevice],
                     resolution: [this.video0.resolutionX, this.video0.resolutionY],
