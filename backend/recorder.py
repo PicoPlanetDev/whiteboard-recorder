@@ -82,8 +82,8 @@ class Configuration:
             return self.load_config()
 
     def create_default_config(self):
-        default_video_device = self.video_devices[0]
-        default_audio_device = self.audio_devices[0]
+        default_video_device = [str(self.video_devices[0]),str(self.video_devices[0])]
+        default_audio_device = [str(self.audio_devices[0]),str(self.audio_devices[0])]
 
         default_config = {
             'audio_device': default_audio_device,
