@@ -305,6 +305,7 @@ class Preview():
             if ret:
                 cap.release()
                 self.frame = frame
+                print(frame.shape)
                 return frame
             
     def warp_frame(self):
