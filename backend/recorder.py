@@ -217,6 +217,7 @@ class VideoRecorder():
         self.recording_process.terminate()
 
         # Extract the audio from the video
+        # run ffmpeg with input temp file, overwrite true, codec audio libmp3lame, output temp audio file
         subprocess.run(['ffmpeg', '-i', TEMP_VIDEO_FILES[self.video_device_index], '-y', '-codec:a', 'libmp3lame',
                         TEMP_AUDIO_FILE])
 
@@ -240,11 +241,14 @@ class Processing():
 
         while video.isOpened():
             ret, frame = video.read()
-            if not ret: break
+            if not ret:
+                raise Exception('Error reading video')
 
             # Replace the frame with the birds eye view
-            output = self.birds_eye_view(frame)
+            output = self.birds_eye_view(frame, video_device_index)
             out_file.write(output)
+            cv2.imshow('frame', output)
+            cv2.waitKey(0)
 
         video.release()
         out_file.release()
