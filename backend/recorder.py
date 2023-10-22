@@ -242,14 +242,15 @@ class Processing():
         while video.isOpened():
             ret, frame = video.read()
             if not ret:
-                raise Exception('Error reading video')
+                break # Break if there is no more video
 
             # Replace the frame with the birds eye view
             output = self.birds_eye_view(frame, video_device_index)
             out_file.write(output)
             cv2.imshow('frame', output)
-            cv2.waitKey(0)
+            cv2.waitKey(1)
 
+        cv2.destroyAllWindows()
         video.release()
         out_file.release()
 
