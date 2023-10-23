@@ -246,11 +246,9 @@ class Processing():
 
             # Replace the frame with the birds eye view
             output = self.birds_eye_view(frame, video_device_index)
+            output = cv2.resize(output, (1920, 1080), interpolation=cv2.INTER_AREA) # apparently necessary on linux???
             out_file.write(output)
-            cv2.imshow('frame', output)
-            cv2.waitKey(1)
 
-        cv2.destroyAllWindows()
         video.release()
         out_file.release()
 
