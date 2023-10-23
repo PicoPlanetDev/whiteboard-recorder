@@ -235,9 +235,10 @@ class Processing():
 
     def process_recording(self, video_device_index=0):
         video = cv2.VideoCapture(TEMP_VIDEO_FILES[video_device_index])
+        video_fps = video.get(cv2.CAP_PROP_FPS)
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out_file = cv2.VideoWriter(TEMP_PROCESSED_VIDEO_FILE, fourcc, 30.0, (1920, 1080))
+        out_file = cv2.VideoWriter(TEMP_PROCESSED_VIDEO_FILE, fourcc, video_fps, (1920, 1080))
 
         while video.isOpened():
             ret, frame = video.read()
