@@ -197,7 +197,7 @@ class VideoRecorder():
         # Obviously this is not gonna fly on linux
         if os.name == 'nt':
             self.recording_process = subprocess.Popen(
-                ['ffmpeg','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+                ['ffmpeg','-hide_banner','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
         elif os.name == 'posix':
             # Put together the custom audio device string
             linux_audio_device = f'sysdefault:CARD={self.config.config["custom_audio_device_card"]}'
@@ -205,7 +205,7 @@ class VideoRecorder():
                 linux_audio_device += f',DEV={self.config.config["custom_audio_device_dev"]}'
             # Start the recording process using ffmpeg
             self.recording_process = subprocess.Popen(
-                ['ffmpeg','-y','-f','v4l2','-framerate','30','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+                ['ffmpeg','-hide_banner','-y','-f','v4l2','-framerate','30','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
         else:
             raise Exception('OS not supported')
 
@@ -218,7 +218,7 @@ class VideoRecorder():
 
         # Extract the audio from the video
         # run ffmpeg with input temp file, overwrite true, codec audio libmp3lame, output temp audio file
-        subprocess.run(['ffmpeg', '-i', TEMP_VIDEO_FILES[self.video_device_index], '-y', '-codec:a', 'libmp3lame',
+        subprocess.run(['ffmpeg','-hide_banner','-i', TEMP_VIDEO_FILES[self.video_device_index], '-y', '-codec:a', 'libmp3lame',
                         TEMP_AUDIO_FILE])
 
     def clear_files(self):
@@ -255,7 +255,7 @@ class Processing():
     def combine_video_and_audio(self):
         output_filename = self.config.config['output_video_file']
         # Use ffmpeg to combine the new silent video with the audio from the original video
-        subprocess.run(['ffmpeg', '-i', TEMP_AUDIO_FILE, '-i',
+        subprocess.run(['ffmpeg','-hide_banner','-i', TEMP_AUDIO_FILE, '-i',
                         TEMP_PROCESSED_VIDEO_FILE, '-y', '-codec:a', 'copy', '-codec:v',
                         'copy', output_filename])
         print('Video saved to ' + output_filename)
