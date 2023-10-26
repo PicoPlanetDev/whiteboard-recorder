@@ -5,6 +5,7 @@ import numpy as np
 import os
 import contextlib
 import toml
+import time
 
 TEMP_VIDEO_FILES = ['temp_video_0.mp4', 'temp_video_1.mp4']
 TEMP_AUDIO_FILE = 'temp_audio.mp3'
@@ -240,6 +241,8 @@ class Processing():
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out_file = cv2.VideoWriter(TEMP_PROCESSED_VIDEO_FILE, fourcc, video_fps, (1920, 1080))
 
+        self.transform_matrix = self.get_warp_matrix(video_device_index)
+
         while video.isOpened():
             ret, frame = video.read()
             if not ret:
@@ -261,7 +264,7 @@ class Processing():
                         'copy', output_filename])
         print('Video saved to ' + output_filename)
 
-    def birds_eye_view(self, img, video_device=0):
+    def get_warp_matrix(self, video_device=0):
         # Corners should be in this order
         # 0 1
         # 2 3
@@ -280,12 +283,21 @@ class Processing():
 
         # Compute the perspective transform matrix and then apply it
         transform_matrix = cv2.getPerspectiveTransform(init_corners, dest_corners)
-        warped = cv2.warpPerspective(img, transform_matrix, (1000, 1000))
+        return transform_matrix
+
+    def birds_eye_view(self, img, video_device=0):
+        # start_time = time.time()
+        video_device_config = self.config.config['video'+str(video_device)]
+        
+        warped = cv2.warpPerspective(img, self.transform_matrix, (1000, 1000))
 
         # Debug:
         # for corner in corners:
         #     img = cv2.circle(img, corner, 10, (0, 0, 255), -1)
         resized = cv2.resize(warped, video_device_config['resolution'], interpolation=cv2.INTER_AREA)
+
+        # finish_time = time.time()
+        # print(f"Time to process frame: {finish_time - start_time}")
 
         return resized
     

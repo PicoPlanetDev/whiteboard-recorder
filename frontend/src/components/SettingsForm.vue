@@ -485,12 +485,11 @@ export default {
             }
 
             // Set new corner values based on current video device
-            if (parseInt(this.configurator.currentVideoDevice) === 0) {
-                this.configurator.corners = this.video0.corners;
+            if (parseInt(this.configurator.currentVideoDevice) == 0) {
+                this.configurator.corners = this.unscaleCorners(this.video0.corners);
             } else {
-                this.configurator.corners = this.video1.corners;
+                this.configurator.corners = this.unscaleCorners(this.video1.corners);
             }
-            this.configurator.corners = this.unscaleCorners(this.configurator.corners);
 
             this.configurator.currentCorner = 0;
 
@@ -500,18 +499,18 @@ export default {
             }
 
             // Set crosshair visibility
-            if (this.configurator.corners != [[0, 0], [0, 0], [0, 0], [0, 0],]) {
+            if (JSON.stringify(this.configurator.corners) !== JSON.stringify([[0, 0], [0, 0], [0, 0], [0, 0]])) {
                 this.configurator.crosshairVisibility = ['visible', 'visible', 'visible', 'visible'];
             } else {
                 this.configurator.crosshairVisibility = ['hidden', 'hidden', 'hidden', 'hidden'];
             }
         },
-        scaleCorners(corners) {
+        scaleCorners(unscaledCorners) {
             var scaledCorners = [];
             // Use the pointerDiv's pixel width to scale the corners to the original video resolution
             var pointerDivWidth = this.$refs.pointerDiv.offsetWidth;
             for (var i = 0; i < this.configurator.corners.length; i++) {
-                scaledCorners[i] = [parseInt(this.configurator.corners[i][0] * this.video0.resolutionX / pointerDivWidth), parseInt(this.configurator.corners[i][1] * this.video0.resolutionX / pointerDivWidth)];
+                scaledCorners[i] = [parseInt(unscaledCorners[i][0] * this.video0.resolutionX / pointerDivWidth), parseInt(unscaledCorners[i][1] * this.video0.resolutionX / pointerDivWidth)];
             }
             return scaledCorners;
         },
