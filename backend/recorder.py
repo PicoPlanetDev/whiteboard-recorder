@@ -237,9 +237,13 @@ class Processing():
     def process_recording(self, video_device_index=0):
         video = cv2.VideoCapture(TEMP_VIDEO_FILES[video_device_index])
         video_fps = video.get(cv2.CAP_PROP_FPS)
+        video_framecount = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out_file = cv2.VideoWriter(TEMP_PROCESSED_VIDEO_FILE, fourcc, video_fps, (1920, 1080))
+
+        # Testing purposes
+        processing_start_time = time.time()
 
         self.transform_matrix = self.get_warp_matrix(video_device_index)
 
@@ -255,6 +259,10 @@ class Processing():
 
         video.release()
         out_file.release()
+
+        # Testing purposes
+        processing_finish_time = time.time()
+        print(f"Processed {video_framecount} frames in {processing_finish_time - processing_start_time} seconds")
 
     def combine_video_and_audio(self):
         output_filename = self.config.config['output_video_file']
