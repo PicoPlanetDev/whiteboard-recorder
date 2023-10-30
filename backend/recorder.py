@@ -90,6 +90,7 @@ class Configuration:
             'audio_device': default_audio_device,
             'custom_audio_device_card': '',
             'custom_audio_device_dev': '',
+            'end_recording_delay': 1,
             'video0': {
                 'enabled': True,
                 'video_device': default_video_device,
@@ -124,6 +125,7 @@ class Configuration:
             'audio_input_device': self.config['audio_device'],
             'custom_audio_device_card': self.config['custom_audio_device_card'],
             'custom_audio_device_dev': self.config['custom_audio_device_dev'],
+            'end_recording_delay': self.config['end_recording_delay'],
             'video0': {
                 'video_device': self.config['video0']['video_device'],
                 'resolution': self.config['video0']['resolution'],
@@ -151,6 +153,7 @@ class Configuration:
         self.config['audio_input_device'] = [str(i) for i in data['audio_input_device']]
         self.config['custom_audio_device_card'] = data['custom_audio_device_card']
         self.config['custom_audio_device_dev'] = str(data['custom_audio_device_dev'])
+        self.config['end_recording_delay'] = data['end_recording_delay']
         # Video 0 options
         self.config['video0']['video_device'] = [str(i) for i in data['video0']['video_device']]
         self.config['video0']['resolution'] = data["video0"]["resolution"]
@@ -201,15 +204,20 @@ class VideoRecorder():
         #     ['ffmpeg', '-y', '-f', 'dshow', '-video_size', input_resolution, '-pixel_format', 'yuyv422', '-i', f'video={video_device}:audio={audio_device}', 
         #      TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
         
-        # Obviously this is not gonna fly on linux
-        if os.name == 'nt':
+        if os.name == 'nt': # use dshow on windows
+            if self.config.config[video_device_config]['streamcopy']:
+                # Start the recording process using ffmpeg
+                self.recording_process = subprocess.Popen(
+                    ['ffmpeg','-hide_banner','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}','-c','copy',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
             self.recording_process = subprocess.Popen(
                 ['ffmpeg','-hide_banner','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
-        elif os.name == 'posix':
+        elif os.name == 'posix': # use v4l2 on linux
             # Put together the custom audio device string
             linux_audio_device = f'sysdefault:CARD={self.config.config["custom_audio_device_card"]}'
             if self.config.config['custom_audio_device_dev'] != '':
                 linux_audio_device += f',DEV={self.config.config["custom_audio_device_dev"]}'
+
+            # Check if we should use streamcopy to avoid dropping frames
             if self.config.config[video_device_config]['streamcopy']:
                 # Start the recording process using ffmpeg
                 self.recording_process = subprocess.Popen(
@@ -225,7 +233,7 @@ class VideoRecorder():
     def stop_recording(self):
         # Tell ffmpeg to stop recording
         self.recording_process.communicate(str.encode('q'))
-        time.sleep(1)
+        time.sleep(int(self.config.config['end_recording_delay'])) # Wait for the encoder to catch up
         self.recording_process.terminate()
 
         # Extract the audio from the video
