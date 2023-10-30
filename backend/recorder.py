@@ -96,7 +96,8 @@ class Configuration:
                 'resolution': (1920, 1080),
                 'corners': [(0, 0), (0, 0), (0, 0), (0, 0)],
                 'custom_video_device': "",
-                'custom_video_device_index': -1
+                'custom_video_device_index': -1,
+                'streamcopy': False
             },
             'video1': {
                 'enabled': False,
@@ -104,7 +105,8 @@ class Configuration:
                 'resolution': (1920, 1080),
                 'corners': [(0, 0), (0, 0), (0, 0), (0, 0)],
                 'custom_video_device': "",
-                'custom_video_device_index': -1
+                'custom_video_device_index': -1,
+                'streamcopy': False
             },
             'output_video_file': 'output_video.mp4'
         }
@@ -128,6 +130,7 @@ class Configuration:
                 'enabled': self.config['video0']['enabled'],
                 'custom_video_device': self.config['video0']['custom_video_device'],
                 'custom_video_device_index': self.config['video0']['custom_video_device_index'],
+                'streamcopy': self.config['video0']['streamcopy'],
             },
             # TODO: Add video2
             'video1': {
@@ -136,6 +139,7 @@ class Configuration:
                 'enabled': self.config['video1']['enabled'],
                 'custom_video_device': self.config['video1']['custom_video_device'],
                 'custom_video_device_index': self.config['video1']['custom_video_device_index'],
+                'streamcopy': self.config['video1']['streamcopy'],
             },
             'output_video_file': self.config['output_video_file']
         }
@@ -153,12 +157,14 @@ class Configuration:
         self.config['video0']['enabled'] = data['video0']['enabled']
         self.config['video0']['custom_video_device'] = data['video0']['custom_video_device']
         self.config['video0']['custom_video_device_index'] = data['video0']['custom_video_device_index']
+        self.config['video0']['streamcopy'] = data['video0']['streamcopy']
         # Video 1 options
         self.config['video1']['video_device'] = [str(i) for i in data['video1']['video_device']]
         self.config['video1']['resolution'] = data["video1"]["resolution"]
         self.config['video1']['enabled'] = data['video1']['enabled']
         self.config['video1']['custom_video_device'] = data['video0']['custom_video_device']
         self.config['video1']['custom_video_device_index'] = data['video0']['custom_video_device_index']
+        self.config['video1']['streamcopy'] = data['video1']['streamcopy']
 
         self.save_config()
 
@@ -204,9 +210,14 @@ class VideoRecorder():
             linux_audio_device = f'sysdefault:CARD={self.config.config["custom_audio_device_card"]}'
             if self.config.config['custom_audio_device_dev'] != '':
                 linux_audio_device += f',DEV={self.config.config["custom_audio_device_dev"]}'
-            # Start the recording process using ffmpeg
-            self.recording_process = subprocess.Popen(
-                ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format','mjpeg','-framerate','30','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+            if self.config.config[video_device_config]['streamcopy']:
+                # Start the recording process using ffmpeg
+                self.recording_process = subprocess.Popen(
+                    ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format','mjpeg','-framerate','15','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,'-c','copy',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+            else:
+                # Start the recording process using ffmpeg
+                self.recording_process = subprocess.Popen(
+                    ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format','mjpeg','-framerate','30','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
         else:
             raise Exception('OS not supported')
 

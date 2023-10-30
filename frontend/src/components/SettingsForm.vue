@@ -4,6 +4,7 @@ import { RouterLink, RouterView } from 'vue-router';
 
 <template>
     <form>
+        <!-- Audio -->
         <div class="row border rounded mb-3">
             <div class="col">
                 <div class="mb-1">
@@ -28,7 +29,9 @@ import { RouterLink, RouterView } from 'vue-router';
                 </div>
             </div>
         </div>
+        <!-- Video -->
         <div class="row mb-3">
+            <!-- Video 0 -->
             <div class="col-6 border rounded">
                 <div class="row">
                     <div class="col fs-5">Video 0</div>
@@ -41,7 +44,6 @@ import { RouterLink, RouterView } from 'vue-router';
                     </div>
                 </div>
 
-                <!-- Video 0 -->
                 <div class="row" v-if="video0.enabled">
                     <div class="mb-3">
                         <div class="mb-1">
@@ -63,6 +65,11 @@ import { RouterLink, RouterView } from 'vue-router';
                                 <input type="number" class="form-control" placeholder=""
                                     aria-label="Custom video device index" v-model="video0.customVideoDeviceIndex">
                             </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="video0StreamCopyCheckSwitch"
+                                v-model="video0.streamcopy">
+                            <label class="form-check-label" for="video0StreamCopyCheckSwitch">Stream copy</label>
                         </div>
                     </div>
 
@@ -113,6 +120,11 @@ import { RouterLink, RouterView } from 'vue-router';
                                 <input type="number" class="form-control" placeholder=""
                                     aria-label="Custom video device index" v-model="video1.customVideoDeviceIndex">
                             </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="video1StreamCopyCheckSwitch"
+                                v-model="video1.streamcopy">
+                            <label class="form-check-label" for="video1StreamCopyCheckSwitch">Stream copy</label>
                         </div>
 
                     </div>
@@ -348,6 +360,7 @@ export default {
                 corners: [[0, 0], [0, 0], [0, 0], [0, 0],],
                 customVideoDevice: '',
                 customVideoDeviceIndex: 0,
+                streamcopy: false,
             },
             video1: {
                 videoDevice: 0,
@@ -357,6 +370,7 @@ export default {
                 corners: [[0, 0], [0, 0], [0, 0], [0, 0],],
                 customVideoDevice: '',
                 customVideoDeviceIndex: 0,
+                streamcopy: false,
             },
             configurator: {
                 capturedFrame: '',
@@ -387,6 +401,7 @@ export default {
                 this.video0.resolutionY = response.data.video0.resolution[1];
                 this.video0.enabled = response.data.video0.enabled;
                 this.video0.customVideoDevice = response.data.video0.custom_video_device;
+                this.video0.streamcopy = response.data.video0.streamcopy;
 
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video0.customVideoDeviceIndex = response.data.video0.custom_video_device_index;
@@ -399,6 +414,7 @@ export default {
                 this.video1.resolutionY = response.data.video1.resolution[1];
                 this.video1.enabled = response.data.video1.enabled;
                 this.video1.customVideoDevice = response.data.video1.custom_video_device;
+                this.video1.streamcopy = response.data.video1.streamcopy;
 
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video1.customVideoDeviceIndex = response.data.video1.custom_video_device_index;
@@ -425,6 +441,7 @@ export default {
                     enabled: this.video0.enabled,
                     custom_video_device: this.video0.customVideoDevice,
                     custom_video_device_index: video0CustomVideoDeviceIndex,
+                    streamcopy: this.video0.streamcopy,
 
                 },
                 video1: {
@@ -433,6 +450,7 @@ export default {
                     enabled: this.video1.enabled,
                     custom_video_device: this.video1.customVideoDevice,
                     custom_video_device_index: video1CustomVideoDeviceIndex,
+                    streamcopy: this.video1.streamcopy,
                 }
             }).then(response => {
                 if (response.data.success) {
