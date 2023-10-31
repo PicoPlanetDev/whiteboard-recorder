@@ -27,142 +27,151 @@ import { RouterLink, RouterView } from 'vue-router';
                             v-model="customAudioDeviceDev">
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Video -->
-        <div class="row mb-3">
-            <!-- Video 0 -->
-            <div class="col-6 border rounded">
-                <div class="row">
-                    <div class="col fs-5">Video 0</div>
-                    <div class="col">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="video0CheckSwitch"
-                                v-model="video0.enabled">
-                            <label class="form-check-label" for="video0CheckSwitch">Video 0 enabled</label>
-                        </div>
+                <div class="mb-3">
+                    <label for="endRecordingDelayInput" class="form-label">End Recording Delay</label>
+                    <input type="number" id="endRecordingDelayInput" class="form-control"
+                        aria-describedby="endRecordingDelayHelpBlock" v-model="endRecordingDelay">
+                    <div id="endRecordingDelayHelpBlock" class="form-text">
+                        Delay in seconds before termination after the gracefull stop signal is sent to the recording
+                        process.
                     </div>
                 </div>
-
-                <div class="row" v-if="video0.enabled">
-                    <div class="mb-3">
-                        <div class="mb-1">
-                            Video device
-                            <select class="form-select" v-model="video0.videoDevice">
-                                <option disabled value="">Please select one</option>
-                                <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
-                                    {{ device[1] }}
-                                </option>
-                            </select>
-                        </div>
-                        <div>
-                            Custom video device (disabled if blank)
-                            <div class="input-group">
-                                <span class="input-group-text">Name</span>
-                                <input type="text" class="form-control" placeholder="" aria-label="Custom video device name"
-                                    v-model="video0.customVideoDevice">
-                                <span class="input-group-text">Index</span>
-                                <input type="number" class="form-control" placeholder=""
-                                    aria-label="Custom video device index" v-model="video0.customVideoDeviceIndex">
+            </div>
+            <!-- Video -->
+            <div class="row mb-3">
+                <!-- Video 0 -->
+                <div class="col-6 border rounded">
+                    <div class="row">
+                        <div class="col fs-5">Video 0</div>
+                        <div class="col">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="video0CheckSwitch"
+                                    v-model="video0.enabled">
+                                <label class="form-check-label" for="video0CheckSwitch">Video 0 enabled</label>
                             </div>
                         </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="video0StreamCopyCheckSwitch"
-                                v-model="video0.streamcopy">
-                            <label class="form-check-label" for="video0StreamCopyCheckSwitch">Stream copy</label>
-                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="resolution-x" class="form-label">Video resolution</label>
-                        <div class="input-group">
-                            <span class="input-group-text">X</span>
-                            <input type="number" class="form-control" id="resolution-x" placeholder="1920"
-                                v-model="video0.resolutionX">
-                            <span class="input-group-text">Y</span>
-                            <input type="number" class="form-control" id="resolution-y" placeholder="1080"
-                                v-model="video0.resolutionY">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Video 1 -->
-            <div class="col-6 border rounded bg-danger-subtle">
-                <div class="row">
-                    <div class="col fs-5">Video 1</div>
-                    <div class="col">NOT IMPLEMENTED</div>
-                    <div class="col">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="video1CheckSwitch"
-                                v-model="video1.enabled">
-                            <label class="form-check-label" for="video1CheckSwitch">Video 1 enabled</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" v-if="video1.enabled">
-                    <div class="mb-3">
-                        <div class="mb-1">
-                            Video device
-                            <select class="form-select" v-model="video1.videoDevice">
-                                <option disabled value="">Please select one</option>
-                                <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
-                                    {{ device[1] }}
-                                </option>
-                            </select>
-                        </div>
-                        <div>
-                            Custom video device (disabled if blank)
-                            <div class="input-group">
-                                <span class="input-group-text">Name</span>
-                                <input type="text" class="form-control" placeholder="" aria-label="Custom video device name"
-                                    v-model="video1.customVideoDevice">
-                                <span class="input-group-text">Index</span>
-                                <input type="number" class="form-control" placeholder=""
-                                    aria-label="Custom video device index" v-model="video1.customVideoDeviceIndex">
+                    <div class="row" v-if="video0.enabled">
+                        <div class="mb-3">
+                            <div class="mb-1">
+                                Video device
+                                <select class="form-select" v-model="video0.videoDevice">
+                                    <option disabled value="">Please select one</option>
+                                    <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
+                                        {{ device[1] }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                Custom video device (disabled if blank)
+                                <div class="input-group">
+                                    <span class="input-group-text">Name</span>
+                                    <input type="text" class="form-control" placeholder=""
+                                        aria-label="Custom video device name" v-model="video0.customVideoDevice">
+                                    <span class="input-group-text">Index</span>
+                                    <input type="number" class="form-control" placeholder=""
+                                        aria-label="Custom video device index" v-model="video0.customVideoDeviceIndex">
+                                </div>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="video0StreamCopyCheckSwitch" v-model="video0.streamcopy">
+                                <label class="form-check-label" for="video0StreamCopyCheckSwitch">Stream copy</label>
                             </div>
                         </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="video1StreamCopyCheckSwitch"
-                                v-model="video1.streamcopy">
-                            <label class="form-check-label" for="video1StreamCopyCheckSwitch">Stream copy</label>
+
+                        <div class="mb-3">
+                            <label for="resolution-x" class="form-label">Video resolution</label>
+                            <div class="input-group">
+                                <span class="input-group-text">X</span>
+                                <input type="number" class="form-control" id="resolution-x" placeholder="1920"
+                                    v-model="video0.resolutionX">
+                                <span class="input-group-text">Y</span>
+                                <input type="number" class="form-control" id="resolution-y" placeholder="1080"
+                                    v-model="video0.resolutionY">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Video 1 -->
+                <div class="col-6 border rounded bg-danger-subtle">
+                    <div class="row">
+                        <div class="col fs-5">Video 1</div>
+                        <div class="col">NOT IMPLEMENTED</div>
+                        <div class="col">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="video1CheckSwitch"
+                                    v-model="video1.enabled">
+                                <label class="form-check-label" for="video1CheckSwitch">Video 1 enabled</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" v-if="video1.enabled">
+                        <div class="mb-3">
+                            <div class="mb-1">
+                                Video device
+                                <select class="form-select" v-model="video1.videoDevice">
+                                    <option disabled value="">Please select one</option>
+                                    <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
+                                        {{ device[1] }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                Custom video device (disabled if blank)
+                                <div class="input-group">
+                                    <span class="input-group-text">Name</span>
+                                    <input type="text" class="form-control" placeholder=""
+                                        aria-label="Custom video device name" v-model="video1.customVideoDevice">
+                                    <span class="input-group-text">Index</span>
+                                    <input type="number" class="form-control" placeholder=""
+                                        aria-label="Custom video device index" v-model="video1.customVideoDeviceIndex">
+                                </div>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="video1StreamCopyCheckSwitch" v-model="video1.streamcopy">
+                                <label class="form-check-label" for="video1StreamCopyCheckSwitch">Stream copy</label>
+                            </div>
+
                         </div>
 
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="resolution-x" class="form-label">Video resolution</label>
-                        <div class="input-group">
-                            <span class="input-group-text">X</span>
-                            <input type="number" class="form-control" id="resolution-x" placeholder="1920"
-                                v-model="video1.resolutionX">
-                            <span class="input-group-text">Y</span>
-                            <input type="number" class="form-control" id="resolution-y" placeholder="1080"
-                                v-model="video1.resolutionY">
+                        <div class="mb-3">
+                            <label for="resolution-x" class="form-label">Video resolution</label>
+                            <div class="input-group">
+                                <span class="input-group-text">X</span>
+                                <input type="number" class="form-control" id="resolution-x" placeholder="1920"
+                                    v-model="video1.resolutionX">
+                                <span class="input-group-text">Y</span>
+                                <input type="number" class="form-control" id="resolution-y" placeholder="1080"
+                                    v-model="video1.resolutionY">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Modal launcher button -->
-        <div class="row mb-3">
-            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
-                data-bs-target="#videoConfigurator" @click="getCorners">
-                Launch video configurator
-            </button>
-        </div>
+            <!-- Modal launcher button -->
+            <div class="row mb-3">
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                    data-bs-target="#videoConfigurator" @click="getCorners">
+                    Launch video configurator
+                </button>
+            </div>
 
-        <!-- Discard and save buttons -->
-        <div class="row mb-3">
-            <div class="col">
-                <button type="button" class="btn btn-outline-danger me-2" @click="resetForm">
-                    <i class="bi bi-trash me-1"></i>
-                    Discard
-                </button>
-                <button type="button" class="btn btn-primary me-2" @click="saveSettings">
-                    <i class="bi bi-check2 me-1"></i>
-                    Save
-                </button>
+            <!-- Discard and save buttons -->
+            <div class="row mb-3">
+                <div class="col">
+                    <button type="button" class="btn btn-outline-danger me-2" @click="resetForm">
+                        <i class="bi bi-trash me-1"></i>
+                        Discard
+                    </button>
+                    <button type="button" class="btn btn-primary me-2" @click="saveSettings">
+                        <i class="bi bi-check2 me-1"></i>
+                        Save
+                    </button>
+                </div>
             </div>
         </div>
     </form>
@@ -351,6 +360,7 @@ export default {
             audioInputDevice: 0,
             customAudioDeviceCard: '',
             customAudioDeviceDev: '',
+            endRecordingDelay: 1,
 
             video0: {
                 videoDevice: 0,
@@ -395,6 +405,7 @@ export default {
                 this.audioInputDevice = response.data.audio_input_device[0];
                 this.customAudioDeviceCard = response.data.custom_audio_device_card;
                 this.customAudioDeviceDev = response.data.custom_audio_device_dev;
+                this.endRecordingDelay = response.data.end_recording_delay;
 
                 this.video0.videoDevice = response.data.video0.video_device[0];
                 this.video0.resolutionX = response.data.video0.resolution[0];
@@ -435,6 +446,7 @@ export default {
                 audio_input_device: this.audioDevices[this.audioInputDevice],
                 custom_audio_device_card: this.customAudioDeviceCard,
                 custom_audio_device_dev: this.customAudioDeviceDev,
+                end_recording_delay: this.endRecordingDelay,
                 video0: {
                     video_device: this.videoDevices[this.video0.videoDevice],
                     resolution: [this.video0.resolutionX, this.video0.resolutionY],

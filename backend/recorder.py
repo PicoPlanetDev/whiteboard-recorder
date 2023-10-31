@@ -327,7 +327,7 @@ class Processing():
         # print(f"Time to process frame: {finish_time - start_time}")
 
         return resized
-    
+
 class Preview():
     def __init__(self, config, processing):
         self.config = config
