@@ -7,7 +7,7 @@ import contextlib
 import toml
 import time
 
-TEMP_VIDEO_FILES = ['temp_video_0.mp4', 'temp_video_1.mp4']
+TEMP_VIDEO_FILES = ['temp_video_0.mkv', 'temp_video_1.mkv']
 TEMP_AUDIO_FILE = 'temp_audio.mp3'
 TEMP_PROCESSED_VIDEO_FILE = 'temp_processed_video.mp4'
 
