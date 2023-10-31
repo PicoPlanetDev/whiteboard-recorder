@@ -356,4 +356,5 @@ class Preview():
         # warped_frame = self.frame
         # for corner in self.config.config['video'+str(video_device)]['corners']:
         #     warped_frame = cv2.circle(self.frame, corner, 10, (0, 0, 255), -1)
+        self.processing.transform_matrix = self.processing.get_warp_matrix()
         return self.processing.birds_eye_view(self.frame)
