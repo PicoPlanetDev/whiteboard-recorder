@@ -29,9 +29,11 @@ import { RouterLink, RouterView } from 'vue-router';
                 </div>
                 <div class="mb-3">
                     <label for="endRecordingDelayInput" class="form-label">End Recording Delay</label>
-                    <input type="number" id="endRecordingDelayInput" class="form-control" aria-describedby="endRecordingDelayHelpBlock" v-model="endRecordingDelay">
+                    <input type="number" id="endRecordingDelayInput" class="form-control"
+                        aria-describedby="endRecordingDelayHelpBlock" v-model="endRecordingDelay">
                     <div id="endRecordingDelayHelpBlock" class="form-text">
-                        Delay in seconds before termination after the gracefull stop signal is sent to the recording process.
+                        Delay in seconds before termination after the gracefull stop signal is sent to the recording
+                        process.
                     </div>
                 </div>
             </div>
@@ -171,6 +173,7 @@ import { RouterLink, RouterView } from 'vue-router';
                     </button>
                 </div>
             </div>
+        </div>
     </form>
 
     <!-- Modal itself -->
