@@ -92,6 +92,10 @@ import { RouterLink, RouterView } from 'vue-router';
                                     v-model="video0.resolutionY">
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label for="video0FramerateInput" class="form-label">Framerate</label>
+                            <input type="number" id="video0FramerateInput" class="form-control" v-model="video0.framerate">
+                        </div>
                     </div>
                 </div>
                 <!-- Video 1 -->
@@ -147,6 +151,10 @@ import { RouterLink, RouterView } from 'vue-router';
                                 <input type="number" class="form-control" id="resolution-y" placeholder="1080"
                                     v-model="video1.resolutionY">
                             </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="video1FramerateInput" class="form-label">Framerate</label>
+                            <input type="number" id="video1FramerateInput" class="form-control" v-model="video1.framerate">
                         </div>
                     </div>
                 </div>
@@ -371,6 +379,7 @@ export default {
                 customVideoDevice: '',
                 customVideoDeviceIndex: 0,
                 streamcopy: false,
+                framerate: 30,
             },
             video1: {
                 videoDevice: 0,
@@ -381,6 +390,7 @@ export default {
                 customVideoDevice: '',
                 customVideoDeviceIndex: 0,
                 streamcopy: false,
+                framerate: 30,
             },
             configurator: {
                 capturedFrame: '',
@@ -413,6 +423,7 @@ export default {
                 this.video0.enabled = response.data.video0.enabled;
                 this.video0.customVideoDevice = response.data.video0.custom_video_device;
                 this.video0.streamcopy = response.data.video0.streamcopy;
+                this.video0.framerate = response.data.video0.framerate;
 
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video0.customVideoDeviceIndex = response.data.video0.custom_video_device_index;
@@ -426,6 +437,7 @@ export default {
                 this.video1.enabled = response.data.video1.enabled;
                 this.video1.customVideoDevice = response.data.video1.custom_video_device;
                 this.video1.streamcopy = response.data.video1.streamcopy;
+                this.video1.framerate = response.data.video1.framerate;
 
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video1.customVideoDeviceIndex = response.data.video1.custom_video_device_index;
@@ -454,6 +466,7 @@ export default {
                     custom_video_device: this.video0.customVideoDevice,
                     custom_video_device_index: video0CustomVideoDeviceIndex,
                     streamcopy: this.video0.streamcopy,
+                    framerate: this.video0.framerate,
 
                 },
                 video1: {
@@ -463,6 +476,7 @@ export default {
                     custom_video_device: this.video1.customVideoDevice,
                     custom_video_device_index: video1CustomVideoDeviceIndex,
                     streamcopy: this.video1.streamcopy,
+                    framerate: this.video1.framerate,
                 }
             }).then(response => {
                 if (response.data.success) {
