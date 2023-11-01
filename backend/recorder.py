@@ -7,7 +7,7 @@ import contextlib
 import toml
 import time
 
-TEMP_VIDEO_FILES = ['temp_video_0.mp4', 'temp_video_1.mp4']
+TEMP_VIDEO_FILES = ['temp_video_0.mkv', 'temp_video_1.mkv']
 TEMP_AUDIO_FILE = 'temp_audio.mp3'
 TEMP_PROCESSED_VIDEO_FILE = 'temp_processed_video.mp4'
 
@@ -221,7 +221,7 @@ class VideoRecorder():
             if self.config.config[video_device_config]['streamcopy']:
                 # Start the recording process using ffmpeg
                 self.recording_process = subprocess.Popen(
-                    ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format','mjpeg','-framerate','15','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,'-c','copy',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+                    ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format','mjpeg','-err_detect','ignore_err','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,'-c','copy',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
             else:
                 # Start the recording process using ffmpeg
                 self.recording_process = subprocess.Popen(
@@ -356,4 +356,5 @@ class Preview():
         # warped_frame = self.frame
         # for corner in self.config.config['video'+str(video_device)]['corners']:
         #     warped_frame = cv2.circle(self.frame, corner, 10, (0, 0, 255), -1)
+        self.processing.transform_matrix = self.processing.get_warp_matrix()
         return self.processing.birds_eye_view(self.frame)
