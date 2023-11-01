@@ -225,7 +225,7 @@ class VideoRecorder():
             else:
                 # Start the recording process using ffmpeg
                 self.recording_process = subprocess.Popen(
-                    ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format','mjpeg','-framerate','30','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+                    ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format','mjpeg','-err_detect','ignore_err','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
         else:
             raise Exception('OS not supported')
 
