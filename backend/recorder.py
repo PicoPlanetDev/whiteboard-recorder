@@ -98,7 +98,8 @@ class Configuration:
                 'corners': [(0, 0), (0, 0), (0, 0), (0, 0)],
                 'custom_video_device': "",
                 'custom_video_device_index': -1,
-                'streamcopy': False
+                'streamcopy': False,
+                'framerate': 30
             },
             'video1': {
                 'enabled': False,
@@ -107,7 +108,8 @@ class Configuration:
                 'corners': [(0, 0), (0, 0), (0, 0), (0, 0)],
                 'custom_video_device': "",
                 'custom_video_device_index': -1,
-                'streamcopy': False
+                'streamcopy': False,
+                'framerate': 30
             },
             'output_video_file': 'output_video.mp4'
         }
@@ -133,6 +135,7 @@ class Configuration:
                 'custom_video_device': self.config['video0']['custom_video_device'],
                 'custom_video_device_index': self.config['video0']['custom_video_device_index'],
                 'streamcopy': self.config['video0']['streamcopy'],
+                'framerate': self.config['video0']['framerate'],
             },
             # TODO: Add video2
             'video1': {
@@ -142,6 +145,7 @@ class Configuration:
                 'custom_video_device': self.config['video1']['custom_video_device'],
                 'custom_video_device_index': self.config['video1']['custom_video_device_index'],
                 'streamcopy': self.config['video1']['streamcopy'],
+                'framerate': self.config['video1']['framerate'],
             },
             'output_video_file': self.config['output_video_file']
         }
@@ -161,6 +165,7 @@ class Configuration:
         self.config['video0']['custom_video_device'] = data['video0']['custom_video_device']
         self.config['video0']['custom_video_device_index'] = data['video0']['custom_video_device_index']
         self.config['video0']['streamcopy'] = data['video0']['streamcopy']
+        self.config['video0']['framerate'] = data['video0']['framerate']
         # Video 1 options
         self.config['video1']['video_device'] = [str(i) for i in data['video1']['video_device']]
         self.config['video1']['resolution'] = data["video1"]["resolution"]
@@ -168,6 +173,7 @@ class Configuration:
         self.config['video1']['custom_video_device'] = data['video0']['custom_video_device']
         self.config['video1']['custom_video_device_index'] = data['video0']['custom_video_device_index']
         self.config['video1']['streamcopy'] = data['video1']['streamcopy']
+        self.config['video1']['framerate'] = data['video1']['framerate']
 
         self.save_config()
 
@@ -287,7 +293,7 @@ class Processing():
         output_filename = self.config.config['output_video_file']
         # Use ffmpeg to combine the new silent video with the audio from the original video
         subprocess.run(['ffmpeg','-hide_banner','-i', TEMP_AUDIO_FILE, '-i',
-                        TEMP_PROCESSED_VIDEO_FILE, '-y', '-codec:a', 'copy', '-codec:v',
+                        TEMP_PROCESSED_VIDEO_FILE, '-y','-err_detect','ignore_err','-codec:a', 'copy', '-codec:v',
                         'copy', output_filename])
         print('Video saved to ' + output_filename)
 
