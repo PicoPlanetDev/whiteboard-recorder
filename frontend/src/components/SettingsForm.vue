@@ -1,46 +1,51 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router';
+import Alert from './Alert.vue';
 </script>
 
 <template>
     <form>
-        <!-- Audio -->
-        <div class="row border rounded mb-3">
-            <div class="col">
-                <div class="mb-1">
-                    Audio input device
-                    <select class="form-select" v-model="audioInputDevice">
-                        <option disabled value="">Please select one</option>
-                        <option v-for="device in audioDevices" :key="device[0]" :value="device[0]">
-                            {{ device[1] }}
-                        </option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    Custom audio device (disabled if blank)
-                    <div class="input-group">
-                        <span class="input-group-text">CARD</span>
-                        <input type="text" class="form-control" placeholder="" aria-label="Custom audio device CARD"
-                            v-model="customAudioDeviceCard">
-                        <span class="input-group-text">DEV</span>
-                        <input type="number" class="form-control" placeholder="" aria-label="Custom audio device DEV"
-                            v-model="customAudioDeviceDev">
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="endRecordingDelayInput" class="form-label">End Recording Delay</label>
-                    <input type="number" id="endRecordingDelayInput" class="form-control"
-                        aria-describedby="endRecordingDelayHelpBlock" v-model="endRecordingDelay">
-                    <div id="endRecordingDelayHelpBlock" class="form-text">
-                        Delay in seconds before termination after the gracefull stop signal is sent to the recording
-                        process.
-                    </div>
+        <div class="border rounded mb-3 p-3">
+            <!-- Alert -->
+            <Alert :message="alert.message" :icon="alert.icon" :color="alert.color" v-if="alert.show"></Alert>
+
+            <!-- Audio -->
+            <div class="mb-1">
+                Audio input device
+                <select class="form-select" v-model="audioInputDevice">
+                    <option disabled value="">Please select one</option>
+                    <option v-for="device in audioDevices" :key="device[0]" :value="device[0]">
+                        {{ device[1] }}
+                    </option>
+                </select>
+            </div>
+            <div class="mb-3">
+                Custom audio device (disabled if blank)
+                <div class="input-group">
+                    <span class="input-group-text">CARD</span>
+                    <input type="text" class="form-control" placeholder="" aria-label="Custom audio device CARD"
+                        v-model="customAudioDeviceCard">
+                    <span class="input-group-text">DEV</span>
+                    <input type="number" class="form-control" placeholder="" aria-label="Custom audio device DEV"
+                        v-model="customAudioDeviceDev">
                 </div>
             </div>
-            <!-- Video -->
+            <div class="mb-3">
+                <label for="endRecordingDelayInput" class="form-label">End Recording Delay</label>
+                <input type="number" id="endRecordingDelayInput" class="form-control"
+                    aria-describedby="endRecordingDelayHelpBlock" v-model="endRecordingDelay">
+                <div id="endRecordingDelayHelpBlock" class="form-text">
+                    Delay in seconds before termination after the graceful stop signal is sent to the recording
+                    process.
+                </div>
+            </div>
+        </div>
+        <!-- Video -->
+        <div class="container-fluid">
             <div class="row mb-3">
                 <!-- Video 0 -->
-                <div class="col-6 border rounded">
+                <div class="col border rounded">
+                    <!-- Header and enabled -->
                     <div class="row">
                         <div class="col fs-5">Video 0</div>
                         <div class="col">
@@ -53,34 +58,37 @@ import { RouterLink, RouterView } from 'vue-router';
                     </div>
 
                     <div class="row" v-if="video0.enabled">
+                        <!-- Video 0 Device -->
                         <div class="mb-3">
-                            <div class="mb-1">
-                                Video device
-                                <select class="form-select" v-model="video0.videoDevice">
-                                    <option disabled value="">Please select one</option>
-                                    <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
-                                        {{ device[1] }}
-                                    </option>
-                                </select>
+                            Video device
+                            <select class="form-select" v-model="video0.videoDevice">
+                                <option disabled value="">Please select one</option>
+                                <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
+                                    {{ device[1] }}
+                                </option>
+                            </select>
+                        </div>
+                        <!-- Video 0 Custom Devices -->
+                        <div class="mb-3">
+                            Custom video device (disabled if blank)
+                            <div class="input-group">
+                                <span class="input-group-text">Name</span>
+                                <input type="text" class="form-control" placeholder="" aria-label="Custom video device name"
+                                    v-model="video0.customVideoDevice">
+                                <span class="input-group-text">Index</span>
+                                <input type="number" class="form-control" placeholder=""
+                                    aria-label="Custom video device index" v-model="video0.customVideoDeviceIndex">
                             </div>
-                            <div>
-                                Custom video device (disabled if blank)
-                                <div class="input-group">
-                                    <span class="input-group-text">Name</span>
-                                    <input type="text" class="form-control" placeholder=""
-                                        aria-label="Custom video device name" v-model="video0.customVideoDevice">
-                                    <span class="input-group-text">Index</span>
-                                    <input type="number" class="form-control" placeholder=""
-                                        aria-label="Custom video device index" v-model="video0.customVideoDeviceIndex">
-                                </div>
-                            </div>
+                        </div>
+                        <!-- Video 0 Stream copy -->
+                        <div class="mb-2">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch"
                                     id="video0StreamCopyCheckSwitch" v-model="video0.streamcopy">
                                 <label class="form-check-label" for="video0StreamCopyCheckSwitch">Stream copy</label>
                             </div>
                         </div>
-
+                        <!-- Video 0 resolution -->
                         <div class="mb-3">
                             <label for="resolution-x" class="form-label">Video resolution</label>
                             <div class="input-group">
@@ -92,14 +100,26 @@ import { RouterLink, RouterView } from 'vue-router';
                                     v-model="video0.resolutionY">
                             </div>
                         </div>
+                        <!-- Video 0 Framerate -->
                         <div class="mb-3">
                             <label for="video0FramerateInput" class="form-label">Framerate</label>
                             <input type="number" id="video0FramerateInput" class="form-control" v-model="video0.framerate">
                         </div>
+                        <!-- Video 0 Input Format -->
+                        <div class="mb-3">
+                            <label for="inputFormatInput" class="form-label">Input format</label>
+                            <input type="text" id="inputFormatInput" class="form-control"
+                                aria-describedby="inputFormatInputHelpBlock" v-model="video0.inputFormat">
+                            <div id="inputFormatInputHelpBlock" class="form-text">
+                                Video device input format, commonly <span class="font-monospace">mjpeg</span> or <span
+                                    class="font-monospace">yuyv422</span>.
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- Video 1 -->
-                <div class="col-6 border rounded bg-danger-subtle">
+                <div class="col border rounded bg-danger-subtle">
+                    <!-- Header and enabled -->
                     <div class="row">
                         <div class="col fs-5">Video 1</div>
                         <div class="col">NOT IMPLEMENTED</div>
@@ -112,35 +132,37 @@ import { RouterLink, RouterView } from 'vue-router';
                         </div>
                     </div>
                     <div class="row" v-if="video1.enabled">
+                        <!-- Video 1 Device -->
                         <div class="mb-3">
-                            <div class="mb-1">
-                                Video device
-                                <select class="form-select" v-model="video1.videoDevice">
-                                    <option disabled value="">Please select one</option>
-                                    <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
-                                        {{ device[1] }}
-                                    </option>
-                                </select>
+                            Video device
+                            <select class="form-select" v-model="video1.videoDevice">
+                                <option disabled value="">Please select one</option>
+                                <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
+                                    {{ device[1] }}
+                                </option>
+                            </select>
+                        </div>
+                        <!-- Video 1 Custom Devices -->
+                        <div class="mb-3">
+                            Custom video device (disabled if blank)
+                            <div class="input-group">
+                                <span class="input-group-text">Name</span>
+                                <input type="text" class="form-control" placeholder="" aria-label="Custom video device name"
+                                    v-model="video1.customVideoDevice">
+                                <span class="input-group-text">Index</span>
+                                <input type="number" class="form-control" placeholder=""
+                                    aria-label="Custom video device index" v-model="video1.customVideoDeviceIndex">
                             </div>
-                            <div>
-                                Custom video device (disabled if blank)
-                                <div class="input-group">
-                                    <span class="input-group-text">Name</span>
-                                    <input type="text" class="form-control" placeholder=""
-                                        aria-label="Custom video device name" v-model="video1.customVideoDevice">
-                                    <span class="input-group-text">Index</span>
-                                    <input type="number" class="form-control" placeholder=""
-                                        aria-label="Custom video device index" v-model="video1.customVideoDeviceIndex">
-                                </div>
-                            </div>
+                        </div>
+                        <!-- Video 1 Stream copy -->
+                        <div class="mb-2">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch"
                                     id="video1StreamCopyCheckSwitch" v-model="video1.streamcopy">
                                 <label class="form-check-label" for="video1StreamCopyCheckSwitch">Stream copy</label>
                             </div>
-
                         </div>
-
+                        <!-- Video 1 Resolution -->
                         <div class="mb-3">
                             <label for="resolution-x" class="form-label">Video resolution</label>
                             <div class="input-group">
@@ -152,9 +174,20 @@ import { RouterLink, RouterView } from 'vue-router';
                                     v-model="video1.resolutionY">
                             </div>
                         </div>
+                        <!-- Video 1 Framerate -->
                         <div class="mb-3">
                             <label for="video1FramerateInput" class="form-label">Framerate</label>
                             <input type="number" id="video1FramerateInput" class="form-control" v-model="video1.framerate">
+                        </div>
+                        <!-- Video 1 Input Format -->
+                        <div class="mb-3">
+                            <label for="inputFormatInput" class="form-label">Input format</label>
+                            <input type="text" id="inputFormatInput" class="form-control"
+                                aria-describedby="inputFormatInputHelpBlock" v-model="video0.inputFormat">
+                            <div id="inputFormatInputHelpBlock" class="form-text">
+                                Video device input format, commonly <span class="font-monospace">mjpeg</span> or <span
+                                    class="font-monospace">yuyv422</span>.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,19 +200,19 @@ import { RouterLink, RouterView } from 'vue-router';
                     Launch video configurator
                 </button>
             </div>
+        </div>
 
-            <!-- Discard and save buttons -->
-            <div class="row mb-3">
-                <div class="col">
-                    <button type="button" class="btn btn-outline-danger me-2" @click="resetForm">
-                        <i class="bi bi-trash me-1"></i>
-                        Discard
-                    </button>
-                    <button type="button" class="btn btn-primary me-2" @click="saveSettings">
-                        <i class="bi bi-check2 me-1"></i>
-                        Save
-                    </button>
-                </div>
+        <!-- Discard and save buttons -->
+        <div class="row mb-3">
+            <div class="col">
+                <button type="button" class="btn btn-outline-danger me-2" @click="resetForm">
+                    <i class="bi bi-trash me-1"></i>
+                    Discard
+                </button>
+                <button type="button" class="btn btn-primary me-2" @click="saveSettings">
+                    <i class="bi bi-check2 me-1"></i>
+                    Save
+                </button>
             </div>
         </div>
     </form>
@@ -379,7 +412,8 @@ export default {
                 customVideoDevice: '',
                 customVideoDeviceIndex: 0,
                 streamcopy: false,
-                framerate: 30,
+                framerate: 0,
+                inputFormat: '',
             },
             video1: {
                 videoDevice: 0,
@@ -390,7 +424,8 @@ export default {
                 customVideoDevice: '',
                 customVideoDeviceIndex: 0,
                 streamcopy: false,
-                framerate: 30,
+                framerate: 0,
+                inputFormat: '',
             },
             configurator: {
                 capturedFrame: '',
@@ -400,7 +435,13 @@ export default {
                 currentCorner: 0,
                 corners: [[0, 0], [0, 0], [0, 0], [0, 0],],
                 spinnerVisibility: 'hidden',
-            }
+            },
+            alert: {
+                message: 'No response from backend',
+                icon: 'exclamation-circle',
+                color: 'danger',
+                show: false,
+            },
         }
     },
     computed: {
@@ -424,6 +465,7 @@ export default {
                 this.video0.customVideoDevice = response.data.video0.custom_video_device;
                 this.video0.streamcopy = response.data.video0.streamcopy;
                 this.video0.framerate = response.data.video0.framerate;
+                this.video0.inputFormat = response.data.video0.input_format;
 
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video0.customVideoDeviceIndex = response.data.video0.custom_video_device_index;
@@ -438,6 +480,7 @@ export default {
                 this.video1.customVideoDevice = response.data.video1.custom_video_device;
                 this.video1.streamcopy = response.data.video1.streamcopy;
                 this.video1.framerate = response.data.video1.framerate;
+                this.video1.inputFormat = response.data.video1.input_format;
 
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video1.customVideoDeviceIndex = response.data.video1.custom_video_device_index;
@@ -467,6 +510,7 @@ export default {
                     custom_video_device_index: video0CustomVideoDeviceIndex,
                     streamcopy: this.video0.streamcopy,
                     framerate: this.video0.framerate,
+                    input_format: this.video0.inputFormat,
 
                 },
                 video1: {
@@ -477,14 +521,33 @@ export default {
                     custom_video_device_index: video1CustomVideoDeviceIndex,
                     streamcopy: this.video1.streamcopy,
                     framerate: this.video1.framerate,
+                    input_format: this.video1.inputFormat,
                 }
             }).then(response => {
                 if (response.data.success) {
                     this.resetForm();
+
+                    // Update the alert
+                    this.alert.message = 'Settings saved';
+                    this.alert.icon = 'check-circle';
+                    this.alert.color = 'success';
+                    this.alert.show = true;
+                } else {
+                    // Update the alert
+                    this.alert.message = response.data.message;
+                    this.alert.icon = 'exclamation-circle';
+                    this.alert.color = 'danger';
+                    this.alert.show = true;
                 }
 
             }).catch(error => {
                 console.log(error);
+
+                // Update the alert
+                this.alert.message = 'Error saving settings';
+                this.alert.icon = 'exclamation-circle';
+                this.alert.color = 'danger';
+                this.alert.show = true;
             });
         },
         captureFrame() {
