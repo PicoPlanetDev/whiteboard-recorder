@@ -11,14 +11,20 @@ TEMP_VIDEO_FILES = ['temp_video_0.mkv', 'temp_video_1.mkv']
 TEMP_AUDIO_FILE = 'temp_audio.mp3'
 TEMP_PROCESSED_VIDEO_FILE = 'temp_processed_video.mp4'
 
-def convert_to_jpeg(frame):
+def convert_to_jpeg(frame: np.ndarray):
+    """Converts an OpenCV image to a jpeg
+
+    Args:
+        frame (np.ndarray): The OpenCV image
+
+    Returns:
+        bytes: The jpeg encoded bytes of the image
+    """    
     ret, buffer = cv2.imencode('.jpg', frame)
     return buffer.tobytes()
 
 def get_av_splits():
-    # import shlex
-    # shlex.split("ffmpeg -list_devices true -f dshow -i dummy")
-    # Immediate exit requested, so stderr is used
+    """Gets the output of ffmpeg list_devices splits it into video and audio sections"""
     output = subprocess.run(['ffmpeg', '-list_devices', 'true', '-f', 'dshow', '-i', 'dummy'],capture_output=True).stderr.decode('utf-8')
 
     return output.split('(video)')
@@ -140,7 +146,6 @@ class Configuration:
                 'framerate': self.config['video0']['framerate'],
                 'input_format': self.config['video0']['input_format'],
             },
-            # TODO: Add video2
             'video1': {
                 'video_device': self.config['video1']['video_device'],
                 'resolution': self.config['video1']['resolution'],
@@ -269,7 +274,7 @@ class VideoRecorder():
             linux_audio_device += f',DEV={self.config.config["custom_audio_device_dev"]}'
 
         # Beginning of the ffmpeg command for windows TODO: Add framerate
-        windows_command_template = ['ffmpeg','-hide_banner','-y','-f','dshow','-vcodec',input_format,'-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}']
+        windows_command_template = ['ffmpeg','-hide_banner','-y','-f','dshow','-vcodec',input_format,'-framerate',framerate,'-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}']
         # Beginning of the ffmpeg command for linux
         linux_command_template = ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format',input_format,'-framerate',framerate,'-err_detect','ignore_err','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device]
         
@@ -283,23 +288,21 @@ class VideoRecorder():
         
         # Add stream copy if necessary
         if self.config.config[video_device_config]['streamcopy']:
-            ffmpeg_command.extend(['-codec:v', 'copy'])
+            ffmpeg_command.extend(['-codec:v', 'copy', '-codec:a', 'copy'])
         
         ffmpeg_command.append(recording_file) # Add the output file
 
         # Run the ffmpeg command
-        self.recording_process = subprocess.Popen(ffmpeg_command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.recording_process = subprocess.Popen(ffmpeg_command, stdin=subprocess.PIPE)
 
     def stop_recording(self):
-        # Tell ffmpeg to stop recording
+        # Tell ffmpeg to stop recording, and wait a bit for it to finish before terminating it
         self.recording_process.communicate(str.encode('q'))
-        time.sleep(int(self.config.config['end_recording_delay'])) # Wait for the encoder to catch up
+        time.sleep(int(self.config.config['end_recording_delay']))
         self.recording_process.terminate()
 
         # Extract the audio from the video
-        # run ffmpeg with input temp file, overwrite true, codec audio libmp3lame, output temp audio file
-        subprocess.run(['ffmpeg','-hide_banner','-i', TEMP_VIDEO_FILES[self.video_device_index], '-y', '-codec:a', 'libmp3lame',
-                        TEMP_AUDIO_FILE])
+        subprocess.run(['ffmpeg','-hide_banner','-y','-i',TEMP_VIDEO_FILES[self.video_device_index],'-codec:a','libmp3lame',TEMP_AUDIO_FILE])
 
     def clear_files(self):
         with contextlib.suppress(FileNotFoundError): # Ignore if the file doesn't exist (likely)
