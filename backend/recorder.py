@@ -99,7 +99,8 @@ class Configuration:
                 'custom_video_device': "",
                 'custom_video_device_index': -1,
                 'streamcopy': False,
-                'framerate': 30
+                'framerate': 30,
+                'input_format': 'mjpeg',
             },
             'video1': {
                 'enabled': False,
@@ -109,7 +110,8 @@ class Configuration:
                 'custom_video_device': "",
                 'custom_video_device_index': -1,
                 'streamcopy': False,
-                'framerate': 30
+                'framerate': 30,
+                'input_format': 'mjpeg',
             },
             'output_video_file': 'output_video.mp4'
         }
@@ -136,6 +138,7 @@ class Configuration:
                 'custom_video_device_index': self.config['video0']['custom_video_device_index'],
                 'streamcopy': self.config['video0']['streamcopy'],
                 'framerate': self.config['video0']['framerate'],
+                'input_format': self.config['video0']['input_format'],
             },
             # TODO: Add video2
             'video1': {
@@ -146,34 +149,86 @@ class Configuration:
                 'custom_video_device_index': self.config['video1']['custom_video_device_index'],
                 'streamcopy': self.config['video1']['streamcopy'],
                 'framerate': self.config['video1']['framerate'],
+                'input_format': self.config['video1']['input_format'],
             },
             'output_video_file': self.config['output_video_file']
         }
         return all
     
-    # TODO: work for both video1 and video2
     def update_all(self, data):
-        # Audio is global
+        # Validate data itself
+        if not isinstance(data, dict):
+            raise TypeError('Expected data to be a dict')
+        
+        # Validate audio_input_device
+        if not isinstance(data['audio_input_device'], list):
+            raise TypeError("Expected audio_input_device to be a 2D enumerated list")
         self.config['audio_input_device'] = [str(i) for i in data['audio_input_device']]
+
+        # Validate custom_audio_device_card
+        if not isinstance(data['custom_audio_device_card'], str):
+            raise TypeError("Expected custom_audio_device_card to be a string")
         self.config['custom_audio_device_card'] = data['custom_audio_device_card']
+
+        # Validate custom_audio_device_dev
+        if not isinstance(data['custom_audio_device_dev'], (int, str)):
+            raise TypeError("Expected custom_audio_device_dev to be an int or string")
         self.config['custom_audio_device_dev'] = str(data['custom_audio_device_dev'])
+
+        # Validate end_recording_delay
+        if not isinstance(data['end_recording_delay'], (int, float)):
+            raise TypeError("Expected end_recording_delay to be a number")
         self.config['end_recording_delay'] = data['end_recording_delay']
-        # Video 0 options
-        self.config['video0']['video_device'] = [str(i) for i in data['video0']['video_device']]
-        self.config['video0']['resolution'] = data["video0"]["resolution"]
-        self.config['video0']['enabled'] = data['video0']['enabled']
-        self.config['video0']['custom_video_device'] = data['video0']['custom_video_device']
-        self.config['video0']['custom_video_device_index'] = data['video0']['custom_video_device_index']
-        self.config['video0']['streamcopy'] = data['video0']['streamcopy']
-        self.config['video0']['framerate'] = data['video0']['framerate']
-        # Video 1 options
-        self.config['video1']['video_device'] = [str(i) for i in data['video1']['video_device']]
-        self.config['video1']['resolution'] = data["video1"]["resolution"]
-        self.config['video1']['enabled'] = data['video1']['enabled']
-        self.config['video1']['custom_video_device'] = data['video0']['custom_video_device']
-        self.config['video1']['custom_video_device_index'] = data['video0']['custom_video_device_index']
-        self.config['video1']['streamcopy'] = data['video1']['streamcopy']
-        self.config['video1']['framerate'] = data['video1']['framerate']
+
+        # Validate video0 and video1
+        for video in ['video0', 'video1']:
+            if not isinstance(data[video], dict):
+                raise TypeError(f"Expected {video} to be a dictionary")
+
+            # Validate video_device
+            if not isinstance(data[video]['video_device'], list):
+                raise TypeError(f"Expected {video}['video_device'] to be a list")
+            self.config[video]['video_device'] = [str(i) for i in data[video]['video_device']]
+
+            # Validate the resolution
+            if not isinstance(data[video]['resolution'], (list, tuple)):
+                raise TypeError(f"Expected {video}['resolution'] to be a list or tuple")
+            if len(data[video]['resolution']) != 2:
+                raise TypeError(f"Expected {video}['resolution'] to be a list or tuple of length 2")
+            for i in data[video]['resolution']:
+                if not isinstance(i, int):
+                    raise TypeError(f"Expected {video}['resolution'] to be a list or tuple of ints")
+            self.config[video]['resolution'] = data[video]['resolution']
+
+            # Validate enabled
+            if not isinstance(data[video]['enabled'], bool):
+                raise TypeError(f"Expected {video}['enabled'] to be a bool")
+            self.config[video]['enabled'] = data[video]['enabled']
+
+            # Validate custom_video_device
+            if not isinstance(data[video]['custom_video_device'], str):
+                raise TypeError(f"Expected {video}['custom_video_device'] to be a string")
+            self.config[video]['custom_video_device'] = data[video]['custom_video_device']
+
+            # Validate custom_video_device_index
+            if not isinstance(data[video]['custom_video_device_index'], int):
+                raise TypeError(f"Expected {video}['custom_video_device_index'] to be an int")
+            self.config[video]['custom_video_device_index'] = data[video]['custom_video_device_index']
+
+            # Validate streamcopy
+            if not isinstance(data[video]['streamcopy'], bool):
+                raise TypeError(f"Expected {video}['streamcopy'] to be a bool")
+            self.config[video]['streamcopy'] = data[video]['streamcopy']
+
+            # Validate framerate
+            if not isinstance(data[video]['framerate'], int):
+                raise TypeError(f"Expected {video}['framerate'] to be an int")
+            self.config[video]['framerate'] = data[video]['framerate']
+
+            # Validate input_format
+            if not isinstance(data[video]['input_format'], str):
+                raise TypeError(f"Expected {video}['input_format'] to be a string")
+            self.config[video]['input_format'] = data[video]['input_format']
 
         self.save_config()
 
@@ -198,43 +253,42 @@ class VideoRecorder():
 
     def start_recording(self):
         # Get the video device config string
-        video_device_config = 'video'+str(self.video_device_index)
+        video_device_config = self.config.config['video'+str(self.video_device_index)]
 
-        # Get the configuration values
+        # Get the configuration values that will be reused
         video_device = self.config.get_video_device_name(self.video_device_index)
-        audio_device = self.config.config['audio_device'][1]
-        input_resolution = f"{self.config.config[video_device_config]['resolution'][0]}x{self.config.config[video_device_config]['resolution'][1]}"
+        audio_device = self.config.config['audio_device'][1] # specifically the audio device name
+        input_resolution = f"{video_device_config['resolution'][0]}x{video_device_config['resolution'][1]}"
+        input_format = video_device_config['input_format']
+        recording_file = TEMP_VIDEO_FILES[self.video_device_index]
+        framerate = str(video_device_config["framerate"])
 
-        # Start the recording process using ffmpeg
-        # self.recording_process = subprocess.Popen(
-        #     ['ffmpeg', '-y', '-f', 'dshow', '-video_size', input_resolution, '-pixel_format', 'yuyv422', '-i', f'video={video_device}:audio={audio_device}', 
-        #      TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+        # Put together the custom audio device string for linux
+        linux_audio_device = f'sysdefault:CARD={self.config.config["custom_audio_device_card"]}'
+        if self.config.config['custom_audio_device_dev'] != '':
+            linux_audio_device += f',DEV={self.config.config["custom_audio_device_dev"]}'
+
+        # Beginning of the ffmpeg command for windows TODO: Add framerate
+        windows_command_template = ['ffmpeg','-hide_banner','-y','-f','dshow','-vcodec',input_format,'-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}']
+        # Beginning of the ffmpeg command for linux
+        linux_command_template = ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format',input_format,'-framerate',framerate,'-err_detect','ignore_err','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device]
         
-        if os.name == 'nt': # use dshow on windows
-            if self.config.config[video_device_config]['streamcopy']:
-                # Start the recording process using ffmpeg
-                self.recording_process = subprocess.Popen(
-                    ['ffmpeg','-hide_banner','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}','-c','copy',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
-            self.recording_process = subprocess.Popen(
-                ['ffmpeg','-hide_banner','-y','-f','dshow','-vcodec','mjpeg','-video_size',input_resolution,'-i',f'video={video_device}:audio={audio_device}',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
-        elif os.name == 'posix': # use v4l2 on linux
-            # Put together the custom audio device string
-            linux_audio_device = f'sysdefault:CARD={self.config.config["custom_audio_device_card"]}'
-            if self.config.config['custom_audio_device_dev'] != '':
-                linux_audio_device += f',DEV={self.config.config["custom_audio_device_dev"]}'
-
-            # Check if we should use streamcopy to avoid dropping frames
-            if self.config.config[video_device_config]['streamcopy']:
-                # Start the recording process using ffmpeg
-                self.recording_process = subprocess.Popen(
-                    ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format','mjpeg','-framerate',str(self.config.config[video_device_config]["framerate"]),'-err_detect','ignore_err','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,'-c','copy',TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
-            else:
-                # Start the recording process using ffmpeg
-                self.recording_process = subprocess.Popen(
-                    ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format','mjpeg','-framerate',str(self.config.config[video_device_config]["framerate"]),'-err_detect','ignore_err','-video_size',input_resolution,'-i',f'{video_device}','-f','alsa','-i',linux_audio_device,TEMP_VIDEO_FILES[self.video_device_index]], stdin=subprocess.PIPE)
+        # Select the correct command template based on the OS
+        if os.name == 'nt':
+            ffmpeg_command = windows_command_template
+        elif os.name == 'posix':
+            ffmpeg_command = linux_command_template
         else:
             raise Exception('OS not supported')
+        
+        # Add stream copy if necessary
+        if self.config.config[video_device_config]['streamcopy']:
+            ffmpeg_command.extend(['-codec:v', 'copy'])
+        
+        ffmpeg_command.append(recording_file) # Add the output file
 
+        # Run the ffmpeg command
+        self.recording_process = subprocess.Popen(ffmpeg_command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     def stop_recording(self):
         # Tell ffmpeg to stop recording
