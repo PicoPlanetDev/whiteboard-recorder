@@ -76,7 +76,7 @@ class Configuration:
             'custom_audio_device_card': '',
             'custom_audio_device_dev': '',
             'end_recording_delay': 1,
-            'stack': 'vertical', # 'vertical' or 'horizontal'
+            'stack': 'vstack', # 'vstack' or 'hstack'
             'video0': {
                 'enabled': True,
                 'video_device': default_video_device,
