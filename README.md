@@ -51,8 +51,8 @@ This will be updated once the built webapp is released and I make a simple start
 6. Select **Settings** in the navbar and select your microphone and camera(s), then setup their respective parameters as necessary.
    - On Linux, it is necessary to manually enter the audio and video devices. Use `arecord -L` to see the available audio inputs, and `v4l2-ctl --list-devices` to see available video devices
 7. Configure the bird's eye perspective warp using the **Launch video configurator** button:
-   - Select the video device you want to set up
-   - Click **Capture frame** to get an image for reference
+   1. Select the video device you want to set up
+   2. Click **Capture frame** to get an image for reference
    - Click the top left corner of the whiteboard
    - Select the colored arrow button for the top right corner, then click the image again to set that corner
    - Repeat this process for the two remaining corners
