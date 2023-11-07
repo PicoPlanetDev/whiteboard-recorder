@@ -30,8 +30,8 @@ Replaces the prior Flask-hosted static site with a Vue and Flask webapp. Informa
 3. Switch to the `webapp` branch using `git switch webapp`
 4. `cd frontend` then `npm install`
 5. `cd ../backend` then create a virtual environment `venv` in the backend directory
-    a. On Windows: `python -m venv venv` and activate the venv with `.\venv\Scripts\activate`
-    b. On Linux: `python3 -m venv venv` and activate the venv with `source venv/bin/activate`
+   a. On Windows: `python -m venv venv` and activate the venv with `.\venv\Scripts\activate`
+   b. On Linux: `python3 -m venv venv` and activate the venv with `source venv/bin/activate`
 6. Install the required packages
   a. On Windows: `pip install -r requirements.txt`
   b. On Linux: `pip3 install -r requirements.txt`
