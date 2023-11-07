@@ -86,6 +86,7 @@ class Configuration:
                 'streamcopy': False,
                 'framerate': 30,
                 'input_format': 'mjpeg',
+                'temp_video_file': 'temp_video0.mp4'
             },
             'video1': {
                 'enabled': False,
@@ -97,9 +98,9 @@ class Configuration:
                 'streamcopy': False,
                 'framerate': 30,
                 'input_format': 'mjpeg',
+                'temp_video_file': 'temp_video1.mp4'
             },
             'files': {
-                'temp_video_files': ['temp_video0.mp4', 'temp_video1.mp4'],
                 'temp_audio_file': 'temp_audio.mp3',
                 'temp_processed_video_file': 'temp_processed_video.mp4',
                 'output_video_file': 'output_video.mp4'
@@ -129,6 +130,7 @@ class Configuration:
                 'streamcopy': self.config['video0']['streamcopy'],
                 'framerate': self.config['video0']['framerate'],
                 'input_format': self.config['video0']['input_format'],
+                'temp_video_file': self.config['video0']['temp_video_file']
             },
             'video1': {
                 'video_device': self.config['video1']['video_device'],
@@ -139,9 +141,9 @@ class Configuration:
                 'streamcopy': self.config['video1']['streamcopy'],
                 'framerate': self.config['video1']['framerate'],
                 'input_format': self.config['video1']['input_format'],
+                'temp_video_file': self.config['video1']['temp_video_file']
             },
             'files': {
-                'temp_video_files': self.config['files']['temp_video_files'],
                 'temp_audio_file': self.config['files']['temp_audio_file'],
                 'temp_processed_video_file': self.config['files']['temp_processed_video_file'],
                 'output_video_file': self.config['files']['output_video_file']
@@ -229,13 +231,13 @@ class Configuration:
         self.save_config()
 
     def get_video_device_index(self, video_device):
-        if self.config['video'+str(video_device)]["custom_video_device_index"] != -1:
-            return self.config['video'+str(video_device)]["custom_video_device_index"]
+        if self.config[video_device]["custom_video_device_index"] != -1:
+            return self.config[video_device]["custom_video_device_index"]
         else:
-            return int(self.config['video'+str(video_device)]["video_device"][0])
+            return int(self.config[video_device]["video_device"][0])
         
     def get_video_device_name(self, video_device):
-        if self.config['video'+str(video_device)]["custom_video_device"] != "":
-            return self.config['video'+str(video_device)]["custom_video_device"]
+        if self.config[video_device]["custom_video_device"] != "":
+            return self.config[video_device]["custom_video_device"]
         else:
-            return self.config['video'+str(video_device)]["video_device"][1]
+            return self.config[video_device]["video_device"][1]

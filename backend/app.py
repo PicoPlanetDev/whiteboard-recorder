@@ -119,9 +119,9 @@ def settings():
 
 @app.route('/api/capture_frame', methods=['POST'])
 def capture_frame():
-    video_device = int(request.get_json()['video_device'])
+    video_device = request.get_json()['video_device']
     global preview
-    frame_jpeg = recorder.convert_to_jpeg(preview.capture_frame(video_device))
+    frame_jpeg = processing.convert_to_jpeg(preview.capture_frame(video_device))
     return "data:image/png;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 
 @app.route('/api/corners', methods=['GET','POST'])
@@ -164,9 +164,9 @@ def corners():
     
 @app.route('/api/preview_warped', methods=['POST'])
 def preview_warped():
-    #video_device = int(request.get_json()['video_device'])
+    video_device = request.get_json()['video_device']
     global preview
-    frame_jpeg = recorder.convert_to_jpeg(preview.warp_frame())
+    frame_jpeg = processing.convert_to_jpeg(preview.warp_frame(video_device))
     return "data:image/png;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 
 

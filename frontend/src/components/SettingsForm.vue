@@ -408,8 +408,7 @@ export default {
         captureFrame() {
             this.configurator.spinnerVisibility = 'visible';
             axios.post('/capture_frame', {
-
-                video_device: this.configurator.currentVideoDevice,
+                video_device: 'video' + this.configurator.currentVideoDevice,
             }).then(response => {
                 this.configurator.spinnerVisibility = 'hidden';
                 this.configurator.capturedFrame = response.data;
@@ -431,7 +430,6 @@ export default {
             this.configurator.crosshairPositions[currentCorner] = this.crosshairOffset([x, y]);
             this.configurator.crosshairVisibility[currentCorner] = 'visible';
             this.configurator.corners[currentCorner] = [x, y];
-
         },
         getVideoAspectRatio(video_device) {
             if (video_device == 0) {
@@ -512,7 +510,7 @@ export default {
         previewWarped() {
             this.configurator.spinnerVisibility = 'visible';
             axios.post('/preview_warped', {
-                video_device: this.configurator.currentVideoDevice,
+                video_device: 'video' + this.configurator.currentVideoDevice,
             }).then(response => {
                 this.configurator.spinnerVisibility = 'hidden';
                 this.configurator.capturedFrame = response.data;
