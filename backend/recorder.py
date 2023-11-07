@@ -28,15 +28,31 @@ class VideoRecorder():
                 linux_audio_device += f',DEV={self.config.config["custom_audio_device_dev"]}'
 
             # Beginning of the ffmpeg command for windows TODO: Add framerate
-            windows_command_template = ['ffmpeg','-hide_banner','-y','-f','dshow','-vcodec',str(input_format),'-framerate',str(framerate),'-video_size',str(input_resolution),'-i',f'video={video_device}:audio={audio_device}']
+            windows_command_template = ['ffmpeg','-hide_banner','-y','-f','dshow','-framerate',str(framerate),'-video_size',str(input_resolution),'-i',f'video={video_device}:audio={audio_device}']
             # Beginning of the ffmpeg command for linux
-            linux_command_template = ['ffmpeg','-hide_banner','-y','-f','v4l2','-input_format',str(input_format),'-framerate',str(framerate),'-err_detect','ignore_err','-video_size',str(input_resolution),'-i',str(video_device),'-f','alsa','-i',str(linux_audio_device)]
+            linux_command_template = ['ffmpeg','-hide_banner','-y','-f','v4l2','-framerate',str(framerate),'-err_detect','ignore_err','-video_size',str(input_resolution),'-i',str(video_device),'-f','alsa','-i',str(linux_audio_device)]
             
             # Select the correct command template based on the OS
             if os.name == 'nt':
                 ffmpeg_command = windows_command_template
+
+                # Add pixel format and input format if necessary
+                if video_device_config['pixel_format'] != '':
+                    ffmpeg_command.insert(5, '-pixel_format')
+                    ffmpeg_command.insert(6, video_device_config['pixel_format'])
+                if video_device_config['input_format'] != '':
+                    ffmpeg_command.insert(5, '-vcodec')
+                    ffmpeg_command.insert(6, video_device_config['input_format'])
             elif os.name == 'posix':
                 ffmpeg_command = linux_command_template
+
+                # Add pixel format and input format if necessary
+                if video_device_config['pixel_format'] != '':
+                    ffmpeg_command.insert(5, '-pixel_format')
+                    ffmpeg_command.insert(6, video_device_config['pixel_format'])
+                if video_device_config['input_format'] != '':
+                    ffmpeg_command.insert(5, '-input_format')
+                    ffmpeg_command.insert(6, video_device_config['input_format'])
             else:
                 raise Exception('OS not supported')
             
@@ -59,7 +75,7 @@ class VideoRecorder():
             process.terminate()
 
         # Extract the audio from the video
-        subprocess.run(['ffmpeg','-hide_banner','-y','-i',self.config.config['files']['temp_video_files'][self.video_device_index],'-codec:a','libmp3lame',self.config.config['files']['temp_audio_file']])
+        subprocess.run(['ffmpeg','-hide_banner','-y','-i',self.config.config['video0']['temp_video_file'],'-codec:a','libmp3lame',self.config.config['files']['temp_audio_file']])
 
     def clear_files(self):
         with contextlib.suppress(FileNotFoundError): # Ignore if the file doesn't exist

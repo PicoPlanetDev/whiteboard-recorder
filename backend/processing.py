@@ -83,7 +83,7 @@ class Processing():
                         '-i', temp_processed_video_files[0], '-i',temp_processed_video_files[1],
                         '-i', temp_audio_file,
                         '-err_detect','ignore_err',
-                        '-filter_complex', 'vstack',
+                        '-filter_complex', self.config.config['stack'],
                         '-r', '30',
                         output_video_file])
 

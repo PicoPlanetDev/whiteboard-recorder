@@ -61,14 +61,32 @@
                 <input type="number" id="videoFramerateInput" class="form-control" v-model="videoData.framerate"
                     @input="updateVideo">
             </div>
-            <!-- Video 0 Input Format -->
-            <div class="mb-3">
-                <label for="inputFormatInput" class="form-label">Input format</label>
-                <input type="text" id="inputFormatInput" class="form-control" aria-describedby="inputFormatInputHelpBlock"
-                    v-model="videoData.inputFormat" @input="updateVideo">
-                <div id="inputFormatInputHelpBlock" class="form-text">
-                    Video device input format, commonly <span class="font-monospace">mjpeg</span> or <span
-                        class="font-monospace">yuyv422</span>.
+            <div class="row">
+                <div class="col">
+                    <!-- Video 0 Input Format -->
+                    <div class="mb-3">
+                        <label for="inputFormatInput" class="form-label">Input format</label>
+                        <input type="text" id="inputFormatInput" class="form-control"
+                            aria-describedby="inputFormatInputHelpBlock" v-model="videoData.inputFormat"
+                            @input="updateVideo">
+                        <div id="inputFormatInputHelpBlock" class="form-text">
+                            Video device input format, disabled if blank, commonly <span class="font-monospace">mjpeg</span>
+                            or <span class="font-monospace">yuyv422</span>.
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <!-- Video 0 Pixel Format -->
+                    <div class="mb-3">
+                        <label for="pixelFormatInput" class="form-label">Pixel format</label>
+                        <input type="text" id="pixelFormatInput" class="form-control"
+                            aria-describedby="pixelFormatInputHelpBlock" v-model="videoData.pixelFormat"
+                            @input="updateVideo">
+                        <div id="pixelFormatInputHelpBlock" class="form-text">
+                            Video device pixel format, disabled if blank, otherwise commonly <span
+                                class="font-monospace">yuyv422</span>.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
