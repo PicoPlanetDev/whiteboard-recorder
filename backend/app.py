@@ -131,17 +131,24 @@ def corners():
         # update settings
         request_data = request.get_json()
         video_device = request_data['video_device']
-        if int(video_device) != 0 and int(video_device) != 1:
-            return jsonify({'status': "error"})
+
+        # Validate the request
+        if not isinstance(request_data, dict):
+            return jsonify({'status': "error", 'message': "request_data must be a dictionary"})
+        if not isinstance(video_device, str):
+            return jsonify({'status': "error", 'message': "video_device must be a string"})
+        if video_device not in config.config:
+            return jsonify({'status': "error", 'message': "Given video_device not present in config"})
+        if 'corners' not in request_data:
+            return jsonify({'status': "error", 'message': "Missing corners in request_data"})
         
         corners = request_data['corners']
-        print(corners)
         # Convert the corners to ints
         for corner in corners:
             corner[0] = int(corner[0])
             corner[1] = int(corner[1])
 
-        config.config['video' + str(video_device)]['corners'] = corners
+        config.config[video_device]['corners'] = corners
         config.save_config()
 
         return jsonify({'status': "success"})

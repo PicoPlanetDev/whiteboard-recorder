@@ -7,8 +7,8 @@ import Alert from './Alert.vue';
     <form>
         <!-- Alert -->
         <Alert :message="alert.message" :icon="alert.icon" :color="alert.color" v-if="alert.show"></Alert>
+        <!-- Audio -->
         <div class="border rounded mb-3 p-3">
-            <!-- Audio -->
             <div class="mb-1">
                 Audio input device
                 <select class="form-select" v-model="audioInputDevice">
@@ -56,7 +56,6 @@ import Alert from './Alert.vue';
                 </button>
             </div>
         </div>
-
         <!-- Discard and save buttons -->
         <div class="row mb-3">
             <div class="col">
@@ -489,8 +488,7 @@ export default {
         saveCorners() {
             var scaledCorners = this.scaleCorners(this.configurator.corners);
             axios.post('/corners', {
-
-                video_device: this.configurator.currentVideoDevice,
+                video_device: 'video' + this.configurator.currentVideoDevice,
                 corners: scaledCorners,
             }).then(response => {
                 if (response.data.success) {
