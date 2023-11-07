@@ -51,7 +51,7 @@ def toggle_recording():
             is_recording = False
             global video_processing
             video_processing.process_recording()
-            video_processing.combine_video_and_audio()
+            video_processing.stack_processed_videos()
         # if recording and request to start recording (something went wrong)
         if new_recording_status:
             return jsonify({'status': "error", 'recording_status': is_recording})

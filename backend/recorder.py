@@ -10,7 +10,7 @@ class VideoRecorder():
         self.recording_processes = []
 
     def start_recording(self):
-        for video_device in self.config.config['video_devices']:
+        for video_device in self.config.get_enabled_video_devices():
             # Get the video device config string
             video_device_config = self.config.config[video_device]
 
@@ -63,9 +63,10 @@ class VideoRecorder():
 
     def clear_files(self):
         with contextlib.suppress(FileNotFoundError): # Ignore if the file doesn't exist
-            # TODO: again decide if we should really hardcode this
-            os.remove(self.config.config['video0']['temp_video_file'])
-            os.remove(self.config.config['video1']['temp_video_file'])
+            # Video files
+            for video_device in self.config.get_enabled_video_devices():
+                os.remove(self.config.config[video_device]['temp_video_file'])
+                os.remove(self.config.config[video_device]['temp_processed_video_file'])
+            # General files
             os.remove(self.config.config['files']['temp_audio_file'])
-            os.remove(self.config.config['files']['temp_processed_video_file'])
             os.remove(self.config.config['files']['output_video_file'])

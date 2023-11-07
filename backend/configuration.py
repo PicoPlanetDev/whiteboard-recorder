@@ -104,7 +104,8 @@ class Configuration:
             },
             'files': {
                 'temp_audio_file': 'temp_audio.mp3',
-                'output_video_file': 'output_video.mp4'
+                'output_video_file': 'output_video.mp4',
+                'stacked_video_file': 'stacked_video.mp4'
             }
         }
         self.config = default_config
@@ -148,7 +149,8 @@ class Configuration:
             },
             'files': {
                 'temp_audio_file': self.config['files']['temp_audio_file'],
-                'output_video_file': self.config['files']['output_video_file']
+                'output_video_file': self.config['files']['output_video_file'],
+                'stacked_video_file': self.config['files']['stacked_video_file']
             }
         }
         return all
@@ -243,3 +245,13 @@ class Configuration:
             return self.config[video_device]["custom_video_device"]
         else:
             return self.config[video_device]["video_device"][1]
+
+    def get_enabled_video_devices(self):
+            """
+            Returns a list of enabled video devices based on the configuration.
+            """
+            enabled_video_devices = []
+            for video_device in ['video0', 'video1']:
+                if self.config[video_device]['enabled']:
+                    enabled_video_devices.append(video_device)
+            return enabled_video_devices

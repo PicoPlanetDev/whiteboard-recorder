@@ -8,19 +8,27 @@ class Processing():
     def __init__(self, config):
         self.config = config
 
-    def process_recording(self, video_device='video0'):
-        # Get the file paths
-        temp_video_file = self.config.config[video_device]['temp_video_file']
-        temp_processed_video_file = self.config.config['files']['temp_processed_video_file']
+    def process_recording(self):
+        """Processes the video file that was just recorded"""
+        for video_device in self.config.get_enabled_video_devices():
+            print(f"Processing video from {video_device}")
+            
+            # Get the file paths
+            temp_video_file = self.config.config[video_device]['temp_video_file']
+            temp_processed_video_file = self.config.config[video_device]['temp_processed_video_file']
 
+            self.process_video(temp_video_file, temp_processed_video_file, video_device)
+        # Now we end up with two processed video files, one for each video device
+
+    def process_video(self, input_file, output_file, video_device):
         # Create the video capture and get its properties
-        video = cv2.VideoCapture(temp_video_file)
+        video = cv2.VideoCapture(input_file)
         video_fps = video.get(cv2.CAP_PROP_FPS)
         video_framecount = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
         # Create the video writer
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out_file = cv2.VideoWriter(temp_processed_video_file, fourcc, video_fps, (1920, 1080))
+        out_file = cv2.VideoWriter(output_file, fourcc, video_fps, (1920, 1080))
 
         # Testing purposes
         processing_start_time = time.time()
@@ -59,6 +67,25 @@ class Processing():
                         output_video_file])
         
         print(f'Video saved to {output_video_file}')
+
+    def stack_processed_videos(self):
+        """Stacks the processed videos on top of each other"""
+        print("Stacking processed videos")
+        # Get the file paths
+        temp_processed_video_files = [self.config.config[video_device]['temp_processed_video_file'] for video_device in self.config.get_enabled_video_devices()]
+        # stacked_video_file = self.config.config['files']['stacked_video_file']
+        temp_audio_file = self.config.config['files']['temp_audio_file']
+
+        output_video_file = self.config.config['files']['output_video_file']
+
+        # Use ffmpeg to stack the processed videos on top of each other
+        subprocess.run(['ffmpeg','-hide_banner','-y',
+                        '-i', temp_processed_video_files[0], '-i',temp_processed_video_files[1],
+                        '-i', temp_audio_file,
+                        '-err_detect','ignore_err',
+                        '-filter_complex', 'vstack',
+                        '-codec:a', 'copy', '-codec:v','copy',
+                        output_video_file])
 
     def get_warp_matrix(self, video_device='video0'):
         # Corners should be in this order
