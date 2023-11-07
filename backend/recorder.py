@@ -50,17 +50,22 @@ class VideoRecorder():
             self.recording_processes.append(subprocess.Popen(ffmpeg_command, stdin=subprocess.PIPE))
 
     def stop_recording(self):
-        # Tell ffmpeg to stop recording, and wait a bit for it to finish before terminating it
-        self.recording_process.communicate(str.encode('q'))
-        time.sleep(int(self.config.config['end_recording_delay']))
-        self.recording_process.terminate()
+        # Tell ffmpeg to stop recording
+        for process in self.recording_processes:
+            process.communicate(str.encode('q'))
+        time.sleep(int(self.config.config['end_recording_delay'])) # Wait a bit to make sure ffmpeg has time to stop recording gracefully
+        # Terminate the ffmpeg processes
+        for process in self.recording_processes:
+            process.terminate()
 
         # Extract the audio from the video
         subprocess.run(['ffmpeg','-hide_banner','-y','-i',self.config.config['files']['temp_video_files'][self.video_device_index],'-codec:a','libmp3lame',self.config.config['files']['temp_audio_file']])
 
     def clear_files(self):
         with contextlib.suppress(FileNotFoundError): # Ignore if the file doesn't exist
-            os.remove(self.config.config[self.video_device]['temp_video_file'])
+            # TODO: again decide if we should really hardcode this
+            os.remove(self.config.config['video0']['temp_video_file'])
+            os.remove(self.config.config['video1']['temp_video_file'])
             os.remove(self.config.config['files']['temp_audio_file'])
             os.remove(self.config.config['files']['temp_processed_video_file'])
             os.remove(self.config.config['files']['output_video_file'])
