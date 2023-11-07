@@ -56,7 +56,8 @@ class VideoRecorder():
         self.recording_process.terminate()
 
         # Extract the audio from the video
-        subprocess.run(['ffmpeg','-hide_banner','-y','-i',self.config.config['files']['temp_video_files'][self.video_device_index],'-codec:a','libmp3lame',self.config.config['files']['temp_audio_file']])
+        # TODO: maybe not best to hardcode video0
+        subprocess.run(['ffmpeg','-hide_banner','-y','-i',self.config.config['video0']['temp_video_file'],'-codec:a','libmp3lame',self.config.config['files']['temp_audio_file']])
 
     def clear_files(self):
         with contextlib.suppress(FileNotFoundError): # Ignore if the file doesn't exist
