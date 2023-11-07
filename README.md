@@ -33,8 +33,8 @@ Replaces the prior Flask-hosted static site with a Vue and Flask webapp. Informa
    - On Windows: `python -m venv venv` and activate the venv with `.\venv\Scripts\activate`
    - On Linux: `python3 -m venv venv` and activate the venv with `source venv/bin/activate`
 6. Install the required packages
-  a. On Windows: `pip install -r requirements.txt`
-  b. On Linux: `pip3 install -r requirements.txt`
+   - On Windows: `pip install -r requirements.txt`
+   - On Linux: `pip3 install -r requirements.txt`
 
 ## Usage
 
@@ -44,20 +44,20 @@ This will be updated once the built webapp is released and I make a simple start
 2. Create a second terminal emulator tab/window in the same directory
 3. In the first terminal: `cd frontend` then `npm run dev -- --host`
 4. In the second terminal: `cd backend` then
-  a. On Windows: `.\venv\Scripts\activate` then `python app.py`
-  b. On Linux: `source venv/bin/activate` then `python3 app.py`
+   - On Windows: `.\venv\Scripts\activate` then `python app.py`
+   - On Linux: `source venv/bin/activate` then `python3 app.py`
 5. Navigate in a modern browser to `http://localhost:5173`
-  a. To control Whiteboard Recorder from another device, replace `localhost` with the host computer's local IP address
+   - To control Whiteboard Recorder from another device, replace `localhost` with the host computer's local IP address
 6. Select **Settings** in the navbar and select your microphone and camera(s), then setup their respective parameters as necessary.
-  a. On Linux, it is necessary to manually enter the audio and video devices. Use `arecord -L` to see the available audio inputs, and `v4l2-ctl --list-devices` to see available video devices
+   - On Linux, it is necessary to manually enter the audio and video devices. Use `arecord -L` to see the available audio inputs, and `v4l2-ctl --list-devices` to see available video devices
 7. Configure the bird's eye perspective warp using the **Launch video configurator** button:
-  a. Select the video device you want to set up
-  b. Click **Capture frame** to get an image for reference
-  c. Click the top left corner of the whiteboard
-  d. Select the colored arrow button for the top right corner, then click the image again to set that corner
-  e. Repeat this process for the two remaining corners
-  f. Click **Save** then **Preview warped**
-  g. Make any changes you need and save again, repeat the process for another camera, or close the dialog and continue
+   - Select the video device you want to set up
+   - Click **Capture frame** to get an image for reference
+   - Click the top left corner of the whiteboard
+   - Select the colored arrow button for the top right corner, then click the image again to set that corner
+   - Repeat this process for the two remaining corners
+   - Click **Save** then **Preview warped**
+   - Make any changes you need and save again, repeat the process for another camera, or close the dialog and continue
 8. Return to the root page by selecting **Home** in the navbar, then begin a recording with the **Start recording** button
 9. End the recording by clicking the **Stop recording** button.
 10. The recording is processed automatically, then will be available by clicking the **Download recording** button.
