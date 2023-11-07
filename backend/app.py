@@ -106,7 +106,11 @@ def settings():
     if request.method == 'POST': # update settings
         # update settings
         request_data = request.get_json()
-        config.update_all(request_data)
+        try:
+            config.update_all(request_data)
+        except TypeError as e:
+            print(e)
+            return jsonify({'status': "error", 'message': str(e)})
         return jsonify({'status': "success"})
 
     elif request.method == 'GET': # fetch settings

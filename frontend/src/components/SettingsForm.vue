@@ -5,10 +5,9 @@ import Alert from './Alert.vue';
 
 <template>
     <form>
+        <!-- Alert -->
+        <Alert :message="alert.message" :icon="alert.icon" :color="alert.color" v-if="alert.show"></Alert>
         <div class="border rounded mb-3 p-3">
-            <!-- Alert -->
-            <Alert :message="alert.message" :icon="alert.icon" :color="alert.color" v-if="alert.show"></Alert>
-
             <!-- Audio -->
             <div class="mb-1">
                 Audio input device
@@ -44,153 +43,9 @@ import Alert from './Alert.vue';
         <div class="container-fluid">
             <div class="row mb-3">
                 <!-- Video 0 -->
-                <div class="col border rounded">
-                    <!-- Header and enabled -->
-                    <div class="row">
-                        <div class="col fs-5">Video 0</div>
-                        <div class="col">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="video0CheckSwitch"
-                                    v-model="video0.enabled">
-                                <label class="form-check-label" for="video0CheckSwitch">Video 0 enabled</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" v-if="video0.enabled">
-                        <!-- Video 0 Device -->
-                        <div class="mb-3">
-                            Video device
-                            <select class="form-select" v-model="video0.videoDevice">
-                                <option disabled value="">Please select one</option>
-                                <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
-                                    {{ device[1] }}
-                                </option>
-                            </select>
-                        </div>
-                        <!-- Video 0 Custom Devices -->
-                        <div class="mb-3">
-                            Custom video device (disabled if blank)
-                            <div class="input-group">
-                                <span class="input-group-text">Name</span>
-                                <input type="text" class="form-control" placeholder="" aria-label="Custom video device name"
-                                    v-model="video0.customVideoDevice">
-                                <span class="input-group-text">Index</span>
-                                <input type="number" class="form-control" placeholder=""
-                                    aria-label="Custom video device index" v-model="video0.customVideoDeviceIndex">
-                            </div>
-                        </div>
-                        <!-- Video 0 Stream copy -->
-                        <div class="mb-2">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch"
-                                    id="video0StreamCopyCheckSwitch" v-model="video0.streamcopy">
-                                <label class="form-check-label" for="video0StreamCopyCheckSwitch">Stream copy</label>
-                            </div>
-                        </div>
-                        <!-- Video 0 resolution -->
-                        <div class="mb-3">
-                            <label for="resolution-x" class="form-label">Video resolution</label>
-                            <div class="input-group">
-                                <span class="input-group-text">X</span>
-                                <input type="number" class="form-control" id="resolution-x" placeholder="1920"
-                                    v-model="video0.resolutionX">
-                                <span class="input-group-text">Y</span>
-                                <input type="number" class="form-control" id="resolution-y" placeholder="1080"
-                                    v-model="video0.resolutionY">
-                            </div>
-                        </div>
-                        <!-- Video 0 Framerate -->
-                        <div class="mb-3">
-                            <label for="video0FramerateInput" class="form-label">Framerate</label>
-                            <input type="number" id="video0FramerateInput" class="form-control" v-model="video0.framerate">
-                        </div>
-                        <!-- Video 0 Input Format -->
-                        <div class="mb-3">
-                            <label for="inputFormatInput" class="form-label">Input format</label>
-                            <input type="text" id="inputFormatInput" class="form-control"
-                                aria-describedby="inputFormatInputHelpBlock" v-model="video0.inputFormat">
-                            <div id="inputFormatInputHelpBlock" class="form-text">
-                                Video device input format, commonly <span class="font-monospace">mjpeg</span> or <span
-                                    class="font-monospace">yuyv422</span>.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <VideoSettings :videoNumber="0" :video="video0" :videoDevices="videoDevices"></VideoSettings>
                 <!-- Video 1 -->
-                <div class="col border rounded bg-danger-subtle">
-                    <!-- Header and enabled -->
-                    <div class="row">
-                        <div class="col fs-5">Video 1</div>
-                        <div class="col">NOT IMPLEMENTED</div>
-                        <div class="col">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="video1CheckSwitch"
-                                    v-model="video1.enabled">
-                                <label class="form-check-label" for="video1CheckSwitch">Video 1 enabled</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" v-if="video1.enabled">
-                        <!-- Video 1 Device -->
-                        <div class="mb-3">
-                            Video device
-                            <select class="form-select" v-model="video1.videoDevice">
-                                <option disabled value="">Please select one</option>
-                                <option v-for="device in videoDevices" :key="device[0]" :value="device[0]">
-                                    {{ device[1] }}
-                                </option>
-                            </select>
-                        </div>
-                        <!-- Video 1 Custom Devices -->
-                        <div class="mb-3">
-                            Custom video device (disabled if blank)
-                            <div class="input-group">
-                                <span class="input-group-text">Name</span>
-                                <input type="text" class="form-control" placeholder="" aria-label="Custom video device name"
-                                    v-model="video1.customVideoDevice">
-                                <span class="input-group-text">Index</span>
-                                <input type="number" class="form-control" placeholder=""
-                                    aria-label="Custom video device index" v-model="video1.customVideoDeviceIndex">
-                            </div>
-                        </div>
-                        <!-- Video 1 Stream copy -->
-                        <div class="mb-2">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch"
-                                    id="video1StreamCopyCheckSwitch" v-model="video1.streamcopy">
-                                <label class="form-check-label" for="video1StreamCopyCheckSwitch">Stream copy</label>
-                            </div>
-                        </div>
-                        <!-- Video 1 Resolution -->
-                        <div class="mb-3">
-                            <label for="resolution-x" class="form-label">Video resolution</label>
-                            <div class="input-group">
-                                <span class="input-group-text">X</span>
-                                <input type="number" class="form-control" id="resolution-x" placeholder="1920"
-                                    v-model="video1.resolutionX">
-                                <span class="input-group-text">Y</span>
-                                <input type="number" class="form-control" id="resolution-y" placeholder="1080"
-                                    v-model="video1.resolutionY">
-                            </div>
-                        </div>
-                        <!-- Video 1 Framerate -->
-                        <div class="mb-3">
-                            <label for="video1FramerateInput" class="form-label">Framerate</label>
-                            <input type="number" id="video1FramerateInput" class="form-control" v-model="video1.framerate">
-                        </div>
-                        <!-- Video 1 Input Format -->
-                        <div class="mb-3">
-                            <label for="inputFormatInput" class="form-label">Input format</label>
-                            <input type="text" id="inputFormatInput" class="form-control"
-                                aria-describedby="inputFormatInputHelpBlock" v-model="video0.inputFormat">
-                            <div id="inputFormatInputHelpBlock" class="form-text">
-                                Video device input format, commonly <span class="font-monospace">mjpeg</span> or <span
-                                    class="font-monospace">yuyv422</span>.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <VideoSettings :videoNumber="1" :video="video1" :videoDevices="videoDevices"></VideoSettings>
             </div>
 
             <!-- Modal launcher button -->
@@ -390,6 +245,7 @@ import Alert from './Alert.vue';
 
 <script>
 import axios from 'axios';
+import VideoSettings from './VideoSettings.vue';
 
 export default {
 
@@ -524,7 +380,7 @@ export default {
                     input_format: this.video1.inputFormat,
                 }
             }).then(response => {
-                if (response.data.success) {
+                if (response.data.status == 'success') {
                     this.resetForm();
 
                     // Update the alert
