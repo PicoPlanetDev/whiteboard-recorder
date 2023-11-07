@@ -84,7 +84,7 @@ class Processing():
                         '-i', temp_audio_file,
                         '-err_detect','ignore_err',
                         '-filter_complex', 'vstack',
-                        '-codec:a', 'copy', '-codec:v','copy',
+                        '-r', '30',
                         output_video_file])
 
     def get_warp_matrix(self, video_device='video0'):
