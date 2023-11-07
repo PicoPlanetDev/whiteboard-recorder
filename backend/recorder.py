@@ -41,7 +41,7 @@ class VideoRecorder():
                 raise Exception('OS not supported')
             
             # Add stream copy if necessary
-            if self.config.config[video_device_config]['streamcopy']:
+            if video_device_config['streamcopy']:
                 ffmpeg_command.extend(['-codec:v', 'copy', '-codec:a', 'copy'])
             
             ffmpeg_command.append(recording_file) # Add the output file
