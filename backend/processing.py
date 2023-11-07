@@ -69,18 +69,26 @@ class Processing():
         print(f'Video saved to {output_video_file}')
 
     def stack_processed_videos(self):
-        """Stacks the processed videos on top of each other"""
+        """Stacks the processed videos on top of each other and adds the audio back in"""
         print("Stacking processed videos")
         # Get the file paths
         temp_processed_video_files = [self.config.config[video_device]['temp_processed_video_file'] for video_device in self.config.get_enabled_video_devices()]
         # stacked_video_file = self.config.config['files']['stacked_video_file']
         temp_audio_file = self.config.config['files']['temp_audio_file']
-
         output_video_file = self.config.config['files']['output_video_file']
+
+        # If there is only one video device, just use the processed video file as the output video file
+        if len(temp_processed_video_files) == 1:
+            # Use ffmpeg to combine the new silent video with the audio from the original video
+            subprocess.run(['ffmpeg','-hide_banner','-y',
+                            '-i', temp_audio_file, '-i',temp_processed_video_files[0],'-err_detect','ignore_err',
+                            '-codec:a', 'copy', '-codec:v','copy',
+                            output_video_file])
+            return
 
         # Use ffmpeg to stack the processed videos on top of each other
         subprocess.run(['ffmpeg','-hide_banner','-y',
-                        '-i', temp_processed_video_files[0], '-i',temp_processed_video_files[1],
+                        '-i', temp_processed_video_files[0],'-i',temp_processed_video_files[1],
                         '-i', temp_audio_file,
                         '-err_detect','ignore_err',
                         '-filter_complex', self.config.config['stack'],
