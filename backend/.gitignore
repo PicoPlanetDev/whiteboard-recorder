@@ -162,6 +162,8 @@ cython_debug/
 # Video and audio
 *.mp4
 *.mp3
+*.avi
+*.mkv
 
 # Configuration
 config.toml
