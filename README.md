@@ -53,11 +53,11 @@ This will be updated once the built webapp is released and I make a simple start
 7. Configure the bird's eye perspective warp using the **Launch video configurator** button:
    1. Select the video device you want to set up
    2. Click **Capture frame** to get an image for reference
-   - Click the top left corner of the whiteboard
-   - Select the colored arrow button for the top right corner, then click the image again to set that corner
-   - Repeat this process for the two remaining corners
-   - Click **Save** then **Preview warped**
-   - Make any changes you need and save again, repeat the process for another camera, or close the dialog and continue
+   3. Click the top left corner of the whiteboard
+   4. Select the colored arrow button for the top right corner, then click the image again to set that corner
+   5. Repeat this process for the two remaining corners
+   6. Click **Save** then **Preview warped**
+   7. Make any changes you need and save again, repeat the process for another camera, or close the dialog and continue
 8. Return to the root page by selecting **Home** in the navbar, then begin a recording with the **Start recording** button
 9. End the recording by clicking the **Stop recording** button.
 10. The recording is processed automatically, then will be available by clicking the **Download recording** button.
