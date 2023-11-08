@@ -38,6 +38,19 @@ import Alert from './Alert.vue';
                     process.
                 </div>
             </div>
+            <div class="">
+                Video stack direction
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="stackDirection" id="stackDirectionHorizontal"
+                        value="hstack" v-model="stack">
+                    <label class="form-check-label" for="stackDirectionHorizontal">Horizontal</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="stackDirection" id="stackDirectionVertical"
+                        value="vstack" v-model="stack">
+                    <label class="form-check-label" for="stackDirectionVertical">Vertical</label>
+                </div>
+            </div>
         </div>
         <!-- Video -->
         <div class="container-fluid">
@@ -257,6 +270,7 @@ export default {
             customAudioDeviceCard: '',
             customAudioDeviceDev: '',
             endRecordingDelay: 1,
+            stack: '',
 
             video0: {
                 videoDevice: 0,
@@ -269,6 +283,7 @@ export default {
                 streamcopy: false,
                 framerate: 0,
                 inputFormat: '',
+                pixelFormat: '',
             },
             video1: {
                 videoDevice: 0,
@@ -281,6 +296,7 @@ export default {
                 streamcopy: false,
                 framerate: 0,
                 inputFormat: '',
+                pixelFormat: '',
             },
             configurator: {
                 capturedFrame: '',
@@ -312,6 +328,7 @@ export default {
                 this.customAudioDeviceCard = response.data.custom_audio_device_card;
                 this.customAudioDeviceDev = response.data.custom_audio_device_dev;
                 this.endRecordingDelay = response.data.end_recording_delay;
+                this.stack = response.data.stack;
 
                 this.video0.videoDevice = response.data.video0.video_device[0];
                 this.video0.resolutionX = response.data.video0.resolution[0];
@@ -321,6 +338,7 @@ export default {
                 this.video0.streamcopy = response.data.video0.streamcopy;
                 this.video0.framerate = response.data.video0.framerate;
                 this.video0.inputFormat = response.data.video0.input_format;
+                this.video0.pixelFormat = response.data.video0.pixel_format;
 
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video0.customVideoDeviceIndex = response.data.video0.custom_video_device_index;
@@ -336,6 +354,7 @@ export default {
                 this.video1.streamcopy = response.data.video1.streamcopy;
                 this.video1.framerate = response.data.video1.framerate;
                 this.video1.inputFormat = response.data.video1.input_format;
+                this.video0.pixelFormat = response.data.video1.pixel_format;
 
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video1.customVideoDeviceIndex = response.data.video1.custom_video_device_index;
@@ -357,6 +376,7 @@ export default {
                 custom_audio_device_card: this.customAudioDeviceCard,
                 custom_audio_device_dev: this.customAudioDeviceDev,
                 end_recording_delay: this.endRecordingDelay,
+                stack: this.stack,
                 video0: {
                     video_device: this.videoDevices[this.video0.videoDevice],
                     resolution: [this.video0.resolutionX, this.video0.resolutionY],
@@ -366,6 +386,7 @@ export default {
                     streamcopy: this.video0.streamcopy,
                     framerate: this.video0.framerate,
                     input_format: this.video0.inputFormat,
+                    pixel_format: this.video0.pixelFormat,
 
                 },
                 video1: {
@@ -377,6 +398,7 @@ export default {
                     streamcopy: this.video1.streamcopy,
                     framerate: this.video1.framerate,
                     input_format: this.video1.inputFormat,
+                    pixel_format: this.video1.pixelFormat,
                 }
             }).then(response => {
                 if (response.data.status == 'success') {

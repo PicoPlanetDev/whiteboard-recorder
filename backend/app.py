@@ -51,7 +51,7 @@ def toggle_recording():
             is_recording = False
             global video_processing
             video_processing.process_recording()
-            video_processing.combine_video_and_audio()
+            video_processing.stack_processed_videos()
         # if recording and request to start recording (something went wrong)
         if new_recording_status:
             return jsonify({'status': "error", 'recording_status': is_recording})
@@ -62,7 +62,7 @@ def toggle_recording():
 @app.route('/api/download_recording', methods=['GET'])
 def download():
     global config
-    output_file = config.config['output_video_file']
+    output_file = config.config['files']['output_video_file']
     if os.path.isfile(output_file):
         return send_file(output_file, as_attachment=True)
     else:
@@ -108,7 +108,7 @@ def settings():
         request_data = request.get_json()
         try:
             config.update_all(request_data)
-        except TypeError as e:
+        except Exception as e:
             print(e)
             return jsonify({'status': "error", 'message': str(e)})
         return jsonify({'status': "success"})

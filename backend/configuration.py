@@ -76,6 +76,7 @@ class Configuration:
             'custom_audio_device_card': '',
             'custom_audio_device_dev': '',
             'end_recording_delay': 1,
+            'stack': 'vstack', # 'vstack' or 'hstack'
             'video0': {
                 'enabled': True,
                 'video_device': default_video_device,
@@ -86,7 +87,9 @@ class Configuration:
                 'streamcopy': False,
                 'framerate': 30,
                 'input_format': 'mjpeg',
-                'temp_video_file': 'temp_video0.mp4'
+                'temp_video_file': 'temp_video0.mkv',
+                'temp_processed_video_file': 'temp_processed_video0.mp4',
+                'pixel_format': '',
             },
             'video1': {
                 'enabled': False,
@@ -98,12 +101,14 @@ class Configuration:
                 'streamcopy': False,
                 'framerate': 30,
                 'input_format': 'mjpeg',
-                'temp_video_file': 'temp_video1.mp4'
+                'temp_video_file': 'temp_video1.mkv',
+                'temp_processed_video_file': 'temp_processed_video1.mp4',
+                'pixel_format': '',
             },
             'files': {
                 'temp_audio_file': 'temp_audio.mp3',
-                'temp_processed_video_file': 'temp_processed_video.mp4',
-                'output_video_file': 'output_video.mp4'
+                'output_video_file': 'output_video.mp4',
+                'stacked_video_file': 'stacked_video.mp4'
             }
         }
         self.config = default_config
@@ -121,6 +126,7 @@ class Configuration:
             'custom_audio_device_card': self.config['custom_audio_device_card'],
             'custom_audio_device_dev': self.config['custom_audio_device_dev'],
             'end_recording_delay': self.config['end_recording_delay'],
+            'stack': self.config['stack'],
             'video0': {
                 'video_device': self.config['video0']['video_device'],
                 'resolution': self.config['video0']['resolution'],
@@ -130,7 +136,9 @@ class Configuration:
                 'streamcopy': self.config['video0']['streamcopy'],
                 'framerate': self.config['video0']['framerate'],
                 'input_format': self.config['video0']['input_format'],
-                'temp_video_file': self.config['video0']['temp_video_file']
+                'temp_video_file': self.config['video0']['temp_video_file'],
+                'temp_processed_video_file': self.config['video0']['temp_processed_video_file'],
+                'pixel_format': self.config['video0']['pixel_format'],
             },
             'video1': {
                 'video_device': self.config['video1']['video_device'],
@@ -141,12 +149,14 @@ class Configuration:
                 'streamcopy': self.config['video1']['streamcopy'],
                 'framerate': self.config['video1']['framerate'],
                 'input_format': self.config['video1']['input_format'],
-                'temp_video_file': self.config['video1']['temp_video_file']
+                'temp_video_file': self.config['video1']['temp_video_file'],
+                'temp_processed_video_file': self.config['video1']['temp_processed_video_file'],
+                'pixel_format': self.config['video1']['pixel_format'],
             },
             'files': {
                 'temp_audio_file': self.config['files']['temp_audio_file'],
-                'temp_processed_video_file': self.config['files']['temp_processed_video_file'],
-                'output_video_file': self.config['files']['output_video_file']
+                'output_video_file': self.config['files']['output_video_file'],
+                'stacked_video_file': self.config['files']['stacked_video_file']
             }
         }
         return all
@@ -175,6 +185,13 @@ class Configuration:
         if not isinstance(data['end_recording_delay'], (int, float)):
             raise TypeError("Expected end_recording_delay to be a number")
         self.config['end_recording_delay'] = data['end_recording_delay']
+
+        # Validate stack
+        if not isinstance(data['stack'], str):
+            raise TypeError("Expected stack to be a string")
+        if data['stack'] not in ['vstack', 'hstack']:
+            raise ValueError("Expected stack to be 'vstack' or 'hstack'")
+        self.config['stack'] = data['stack']
 
         # Validate video0 and video1
         for video in ['video0', 'video1']:
@@ -241,3 +258,13 @@ class Configuration:
             return self.config[video_device]["custom_video_device"]
         else:
             return self.config[video_device]["video_device"][1]
+
+    def get_enabled_video_devices(self):
+            """
+            Returns a list of enabled video devices based on the configuration.
+            """
+            enabled_video_devices = []
+            for video_device in ['video0', 'video1']:
+                if self.config[video_device]['enabled']:
+                    enabled_video_devices.append(video_device)
+            return enabled_video_devices
