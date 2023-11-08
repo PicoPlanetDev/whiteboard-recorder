@@ -75,6 +75,7 @@ class VideoRecorder():
             process.terminate()
 
         # Extract the audio from the video
+        # TODO: maybe not best to hardcode video0
         subprocess.run(['ffmpeg','-hide_banner','-y','-i',self.config.config['video0']['temp_video_file'],'-codec:a','libmp3lame',self.config.config['files']['temp_audio_file']])
 
     def clear_files(self):
