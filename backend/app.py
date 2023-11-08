@@ -62,7 +62,7 @@ def toggle_recording():
 @app.route('/api/download_recording', methods=['GET'])
 def download():
     global config
-    output_file = config.config['output_video_file']
+    output_file = config.config['files']['output_video_file']
     if os.path.isfile(output_file):
         return send_file(output_file, as_attachment=True)
     else:
