@@ -53,21 +53,6 @@ class Processing():
         elapsed = processing_finish_time - processing_start_time
         print(f"Processed {video_framecount} frames in {elapsed} seconds: {video_framecount/elapsed} fps")
 
-    def combine_video_and_audio(self):
-        """Combines the processed video and the audio from the original video into one video file with sound"""
-        # Get the file paths
-        temp_audio_file = self.config.config['files']['temp_audio_file']
-        temp_processed_video_file = self.config.config['files']['temp_processed_video_file']
-        output_video_file = self.config.config['files']['output_video_file']
-
-        # Use ffmpeg to combine the new silent video with the audio from the original video
-        subprocess.run(['ffmpeg','-hide_banner','-y',
-                        '-i', temp_audio_file, '-i',temp_processed_video_file,'-err_detect','ignore_err',
-                        '-codec:a', 'copy', '-codec:v','copy',
-                        output_video_file])
-        
-        print(f'Video saved to {output_video_file}')
-
     def stack_processed_videos(self):
         """Stacks the processed videos on top of each other and adds the audio back in"""
         print("Stacking processed videos")
