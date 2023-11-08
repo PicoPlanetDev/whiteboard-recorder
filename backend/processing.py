@@ -48,6 +48,8 @@ class Processing():
                 output = self.birds_eye_view(frame, video_device)
                 output = cv2.resize(output, (1920, 1080), interpolation=cv2.INTER_AREA) # apparently necessary on linux???
                 out_file.write(output)
+                
+            counter += 1
 
         video.release()
         out_file.release()
