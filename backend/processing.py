@@ -35,15 +35,19 @@ class Processing():
 
         self.transform_matrix = self.get_warp_matrix(video_device)
 
+        counter = 0
         while video.isOpened():
+            if counter > video_framecount:
+                break
+
             ret, frame = video.read()
             if not ret:
-                break # Break if there is no more video
-
-            # Replace the frame with the birds eye view
-            output = self.birds_eye_view(frame, video_device)
-            output = cv2.resize(output, (1920, 1080), interpolation=cv2.INTER_AREA) # apparently necessary on linux???
-            out_file.write(output)
+                print("ret false") # Shouldn't happen but sometimes does
+            else:
+                # Replace the frame with the birds eye view
+                output = self.birds_eye_view(frame, video_device)
+                output = cv2.resize(output, (1920, 1080), interpolation=cv2.INTER_AREA) # apparently necessary on linux???
+                out_file.write(output)
 
         video.release()
         out_file.release()
