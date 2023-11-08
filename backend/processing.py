@@ -155,7 +155,7 @@ class Preview():
         # for corner in self.config.config['video'+str(video_device)]['corners']:
         #     warped_frame = cv2.circle(self.frame, corner, 10, (0, 0, 255), -1)
         self.processing.transform_matrix = self.processing.get_warp_matrix(video_device)
-        return self.processing.birds_eye_view(self.frame)
+        return self.processing.birds_eye_view(self.frame, video_device)
     
 def convert_to_jpeg(frame: np.ndarray):
     """Converts an OpenCV image to a jpeg
