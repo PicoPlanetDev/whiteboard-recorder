@@ -316,15 +316,6 @@ export default {
         }
     },
     computed: {
-        currentVideoDeviceResolutionX() {
-            if (this.configurator.currentVideoDevice === 0) {
-                return this.video0.resolutionX;
-            } else if (this.configurator.currentVideoDevice === 1) {
-                return this.video1.resolutionX;
-            } else {
-                return null; // or some default value
-            }
-        }
     },
     methods: {
         resetForm() {
@@ -475,10 +466,10 @@ export default {
             }
 
             // Set new corner values based on current video device
-            if (parseInt(this.configurator.currentVideoDevice) == 0) {
-                this.configurator.corners = this.unscaleCorners(this.video0.corners);
+            if (parseInt(this.configurator.currentVideoDevice) === 0) {
+                this.configurator.corners = this.unscaleCorners(this.video0.corners, this.video0.resolutionX);
             } else {
-                this.configurator.corners = this.unscaleCorners(this.video1.corners);
+                this.configurator.corners = this.unscaleCorners(this.video1.corners, this.video1.resolutionX);
             }
 
             this.configurator.currentCorner = 0;
@@ -495,28 +486,31 @@ export default {
                 this.configurator.crosshairVisibility = ['hidden', 'hidden', 'hidden', 'hidden'];
             }
         },
-        scaleCorners(unscaledCorners) {
+        scaleCorners(unscaledCorners, resolutionX) {
 
 
             var scaledCorners = [];
             // Use the pointerDiv's pixel width to scale the corners to the original video resolution
             var pointerDivWidth = this.$refs.pointerDiv.offsetWidth;
             for (var i = 0; i < this.configurator.corners.length; i++) {
-                scaledCorners[i] = [parseInt(unscaledCorners[i][0] * this.currentVideoDeviceResolutionX / pointerDivWidth), parseInt(unscaledCorners[i][1] * this.currentVideoDeviceResolutionX / pointerDivWidth)];
+                scaledCorners[i] = [parseInt(unscaledCorners[i][0] * resolutionX / pointerDivWidth), parseInt(unscaledCorners[i][1] * resolutionX / pointerDivWidth)];
             }
             return scaledCorners;
         },
-        unscaleCorners(scaledCorners) {
+        unscaleCorners(scaledCorners, resolutionX) {
             // Reverse the scaling done in scaleCorners()
             var pointerDivWidth = this.$refs.pointerDiv.offsetWidth;
             var corners = [];
             for (var i = 0; i < scaledCorners.length; i++) {
-                corners[i] = [parseInt(scaledCorners[i][0] * pointerDivWidth / this.currentVideoDeviceResolutionX), parseInt(scaledCorners[i][1] * pointerDivWidth / this.currentVideoDeviceResolutionX)];
+                corners[i] = [parseInt(scaledCorners[i][0] * pointerDivWidth / resolutionX), parseInt(scaledCorners[i][1] * pointerDivWidth / resolutionX)];
             }
             return corners;
         },
         saveCorners() {
-            var scaledCorners = this.scaleCorners(this.configurator.corners);
+            if (parseInt(this.configurator.currentVideoDevice) === 0)
+                var scaledCorners = this.scaleCorners(this.configurator.corners, this.video0.resolutionX);
+            else if (parseInt(this.configurator.currentVideoDevice) === 1)
+                var scaledCorners = this.scaleCorners(this.configurator.corners, this.video1.resolutionX);
             axios.post('/corners', {
                 video_device: 'video' + this.configurator.currentVideoDevice,
                 corners: scaledCorners,
