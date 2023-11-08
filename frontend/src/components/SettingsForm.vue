@@ -316,7 +316,15 @@ export default {
         }
     },
     computed: {
-
+        currentVideoDeviceResolutionX() {
+            if (this.configurator.currentVideoDevice === 0) {
+                return this.video0.resolutionX;
+            } else if (this.configurator.currentVideoDevice === 1) {
+                return this.video1.resolutionX;
+            } else {
+                return null; // or some default value
+            }
+        }
     },
     methods: {
         resetForm() {
@@ -488,11 +496,13 @@ export default {
             }
         },
         scaleCorners(unscaledCorners) {
+
+
             var scaledCorners = [];
             // Use the pointerDiv's pixel width to scale the corners to the original video resolution
             var pointerDivWidth = this.$refs.pointerDiv.offsetWidth;
             for (var i = 0; i < this.configurator.corners.length; i++) {
-                scaledCorners[i] = [parseInt(unscaledCorners[i][0] * this.video0.resolutionX / pointerDivWidth), parseInt(unscaledCorners[i][1] * this.video0.resolutionX / pointerDivWidth)];
+                scaledCorners[i] = [parseInt(unscaledCorners[i][0] * this.currentVideoDeviceResolutionX / pointerDivWidth), parseInt(unscaledCorners[i][1] * this.currentVideoDeviceResolutionX / pointerDivWidth)];
             }
             return scaledCorners;
         },
@@ -501,7 +511,7 @@ export default {
             var pointerDivWidth = this.$refs.pointerDiv.offsetWidth;
             var corners = [];
             for (var i = 0; i < scaledCorners.length; i++) {
-                corners[i] = [parseInt(scaledCorners[i][0] * pointerDivWidth / this.video0.resolutionX), parseInt(scaledCorners[i][1] * pointerDivWidth / this.video0.resolutionX)];
+                corners[i] = [parseInt(scaledCorners[i][0] * pointerDivWidth / this.currentVideoDeviceResolutionX), parseInt(scaledCorners[i][1] * pointerDivWidth / this.currentVideoDeviceResolutionX)];
             }
             return corners;
         },
