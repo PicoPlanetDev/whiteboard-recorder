@@ -62,7 +62,7 @@ class Processing():
         processing_finish_time = time.time()
         elapsed = processing_finish_time - processing_start_time
         print(f"Processed {video_framecount} frames in {round(elapsed, 3)} seconds: {round(video_framecount/elapsed, 3)} fps")
-        
+
     def stack_processed_videos(self):
         """Stacks the processed videos on top of each other and adds the audio back in"""
         print("Stacking processed videos")
@@ -87,7 +87,7 @@ class Processing():
                         '-i', temp_audio_file,
                         '-err_detect','ignore_err',
                         '-filter_complex', self.config.config['stack'],
-                        '-r', '30',
+                        '-r', str(max(int(self.config.config['video0']['framerate']), int(self.config.config['video1']['framerate']))),
                         output_video_file])
 
     def get_warp_matrix(self, video_device='video0'):
