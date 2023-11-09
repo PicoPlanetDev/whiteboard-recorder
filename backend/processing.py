@@ -61,8 +61,8 @@ class Processing():
         # Testing purposes
         processing_finish_time = time.time()
         elapsed = processing_finish_time - processing_start_time
-        print(f"Processed {video_framecount} frames in {elapsed} seconds: {video_framecount/elapsed} fps")
-
+        print(f"Processed {video_framecount} frames in {round(elapsed, 3)} seconds: {round(video_framecount/elapsed, 3)} fps")
+        
     def stack_processed_videos(self):
         """Stacks the processed videos on top of each other and adds the audio back in"""
         print("Stacking processed videos")
