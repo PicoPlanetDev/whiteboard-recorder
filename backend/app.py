@@ -70,7 +70,7 @@ def download():
         print("no file")
         return jsonify({'status': "error"})
 
-@app.route('/api/manual_process', methods=['GET'])
+@app.route('/api/process_recording', methods=['GET'])
 def manual_process():
     global video_processing
     video_processing.process_recording()
