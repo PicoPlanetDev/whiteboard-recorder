@@ -70,6 +70,13 @@ def download():
         print("no file")
         return jsonify({'status': "error"})
 
+@app.route('/api/manual_process', methods=['GET'])
+def manual_process():
+    global video_processing
+    video_processing.process_recording()
+    video_processing.stack_processed_videos()
+    return jsonify({'status': "success"})
+
 # Gets the local IP address of the machine running the backend
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

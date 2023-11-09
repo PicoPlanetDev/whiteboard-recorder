@@ -8,6 +8,10 @@ import RecordingButton from './RecordingButton.vue';
         <i class="bi bi-file-earmark-arrow-down-fill"></i>
         Download recording
     </a>
+    <button type="button" class="btn btn-primary btn-lg px-4 me-2 my-2" @click="processRecording">
+        <i class="bi bi-gears"></i>
+        Manually process recording
+    </button>
 </template>
 
 <script>
@@ -16,8 +20,14 @@ import axios from 'axios';
 export default {
     name: 'ButtonGroup',
     methods: {
-        downloadRecording() {
-            console.log("download recording");
+        processRecording() {
+            axios.get('/process_recording')
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
     },
     computed: {

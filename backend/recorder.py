@@ -68,15 +68,20 @@ class VideoRecorder():
     def stop_recording(self):
         # Tell ffmpeg to stop recording
         for process in self.recording_processes:
-            process.communicate(str.encode('q'))
+            try:
+                process.communicate(str.encode('q'))
+            except Exception as e:
+                print(e)
+                pass
+
         time.sleep(int(self.config.config['end_recording_delay'])) # Wait a bit to make sure ffmpeg has time to stop recording gracefully
         # Terminate the ffmpeg processes
         for process in self.recording_processes:
-            process.terminate()
-
-        # Extract the audio from the video
-        # TODO: maybe not best to hardcode video0
-        subprocess.run(['ffmpeg','-hide_banner','-y','-i',self.config.config['video0']['temp_video_file'],'-codec:a','libmp3lame',self.config.config['files']['temp_audio_file']])
+            try:
+                process.terminate()
+            except Exception as e:
+                print(e)
+                pass
 
     def clear_files(self):
         with contextlib.suppress(FileNotFoundError): # Ignore if the file doesn't exist

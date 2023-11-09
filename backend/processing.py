@@ -10,6 +10,10 @@ class Processing():
 
     def process_recording(self):
         """Processes the video file that was just recorded"""
+        # Extract the audio from the video
+        # TODO: maybe not best to hardcode video0
+        subprocess.run(['ffmpeg','-hide_banner','-y','-i',self.config.config['video0']['temp_video_file'],'-codec:a','libmp3lame',self.config.config['files']['temp_audio_file']])
+
         for video_device in self.config.get_enabled_video_devices():
             print(f"Processing video from {video_device}")
             
