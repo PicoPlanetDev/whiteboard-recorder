@@ -284,6 +284,7 @@ export default {
                 framerate: 0,
                 inputFormat: '',
                 pixelFormat: '',
+                focus: -1,
             },
             video1: {
                 videoDevice: 0,
@@ -297,6 +298,7 @@ export default {
                 framerate: 0,
                 inputFormat: '',
                 pixelFormat: '',
+                focus: -1,
             },
             configurator: {
                 capturedFrame: '',
@@ -338,6 +340,7 @@ export default {
                 this.video0.framerate = response.data.video0.framerate;
                 this.video0.inputFormat = response.data.video0.input_format;
                 this.video0.pixelFormat = response.data.video0.pixel_format;
+                this.video0.focus = response.data.video0.focus;
 
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video0.customVideoDeviceIndex = response.data.video0.custom_video_device_index;
@@ -353,7 +356,8 @@ export default {
                 this.video1.streamcopy = response.data.video1.streamcopy;
                 this.video1.framerate = response.data.video1.framerate;
                 this.video1.inputFormat = response.data.video1.input_format;
-                this.video0.pixelFormat = response.data.video1.pixel_format;
+                this.video1.pixelFormat = response.data.video1.pixel_format;
+                this.video1.focus = response.data.video1.focus;
 
                 // If the custom video device index is -1, set it to blank so it looks better
                 this.video1.customVideoDeviceIndex = response.data.video1.custom_video_device_index;
@@ -386,6 +390,7 @@ export default {
                     framerate: this.video0.framerate,
                     input_format: this.video0.inputFormat,
                     pixel_format: this.video0.pixelFormat,
+                    focus: this.video0.focus,
 
                 },
                 video1: {
@@ -398,6 +403,7 @@ export default {
                     framerate: this.video1.framerate,
                     input_format: this.video1.inputFormat,
                     pixel_format: this.video1.pixelFormat,
+                    focus: this.video1.focus,
                 }
             }).then(response => {
                 if (response.data.status == 'success') {

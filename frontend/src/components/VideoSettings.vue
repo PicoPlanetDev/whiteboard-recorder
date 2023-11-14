@@ -61,6 +61,23 @@
                 <input type="number" id="videoFramerateInput" class="form-control" v-model="videoData.framerate"
                     @input="updateVideo">
             </div>
+            <!-- Video 0 Framerate -->
+            <div class="mb-3">
+                <label for="videoFocusRange" class="form-label">Focus</label>
+                <div class="row">
+                    <div class="col">
+                        <input type="range" id="videoFocusRange" class="form-range" min="-1" max="17" step="1"
+                            v-model="videoData.focus" @input="updateVideo" aria-describedby="videoFocusHelpBlock">
+                    </div>
+                    <div class="col-2">
+                        <input type="number" class="form-control" id="videoFocusInput" placeholder="-1"
+                            v-model="videoData.focus" @input="updateVideo">
+                    </div>
+                </div>
+
+
+                <div class="form-text" id="videoFocusHelpBlock">Auto-focus is enabled if set to -1</div>
+            </div>
             <div class="row">
                 <div class="col">
                     <!-- Video 0 Input Format -->

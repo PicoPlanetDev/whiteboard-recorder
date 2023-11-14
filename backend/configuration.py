@@ -90,6 +90,7 @@ class Configuration:
                 'temp_video_file': 'temp_video0.mkv',
                 'temp_processed_video_file': 'temp_processed_video0.mp4',
                 'pixel_format': '',
+                'focus': -1,
             },
             'video1': {
                 'enabled': False,
@@ -104,6 +105,7 @@ class Configuration:
                 'temp_video_file': 'temp_video1.mkv',
                 'temp_processed_video_file': 'temp_processed_video1.mp4',
                 'pixel_format': '',
+                'focus': -1,
             },
             'files': {
                 'temp_audio_file': 'temp_audio.mp3',
@@ -139,6 +141,7 @@ class Configuration:
                 'temp_video_file': self.config['video0']['temp_video_file'],
                 'temp_processed_video_file': self.config['video0']['temp_processed_video_file'],
                 'pixel_format': self.config['video0']['pixel_format'],
+                'focus': self.config['video0']['focus'],
             },
             'video1': {
                 'video_device': self.config['video1']['video_device'],
@@ -152,6 +155,7 @@ class Configuration:
                 'temp_video_file': self.config['video1']['temp_video_file'],
                 'temp_processed_video_file': self.config['video1']['temp_processed_video_file'],
                 'pixel_format': self.config['video1']['pixel_format'],
+                'focus': self.config['video1']['focus'],
             },
             'files': {
                 'temp_audio_file': self.config['files']['temp_audio_file'],
@@ -242,6 +246,11 @@ class Configuration:
             if not isinstance(data[video]['input_format'], str):
                 raise TypeError(f"Expected {video}['input_format'] to be a string")
             self.config[video]['input_format'] = data[video]['input_format']
+
+            # Validate focus
+            if not isinstance(data[video]['focus'], int):
+                raise TypeError(f"Expected {video}['focus'] to be an int")
+            self.config[video]['focus'] = data[video]['focus']
 
         # Does not have anything for files yet
 
