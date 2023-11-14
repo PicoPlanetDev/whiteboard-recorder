@@ -5,15 +5,20 @@ import os
 import qrcode
 import io
 import base64
+from flask_socketio import SocketIO, emit
+import eventlet
+import threading
 # my modules
 import recorder
 import configuration
 import processing
 
-# Flask setup
+# Flask and SocketIO setup
 app = Flask(__name__)
 app.secret_key = 'secret'
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+socketio = SocketIO(app, cors_allowed_origins="*")
+eventlet.monkey_patch()
 
 config = configuration.Configuration()
 video_recorder = recorder.VideoRecorder(config)
@@ -178,4 +183,4 @@ def preview_warped():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    socketio.run(debug=True, host='0.0.0.0', port=5000)

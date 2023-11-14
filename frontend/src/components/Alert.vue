@@ -21,10 +21,6 @@ export default {
             type: String,
             default: 'secondary'
         },
-        show: {
-            type: Boolean,
-            default: false
-        }
     },
 }
 </script>

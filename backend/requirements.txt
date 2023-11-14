@@ -4,3 +4,5 @@ numpy
 qrcode
 flask_cors
 toml
+flask_socketio
+eventlet
