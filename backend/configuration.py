@@ -248,8 +248,8 @@ class Configuration:
             self.config[video]['input_format'] = data[video]['input_format']
 
             # Validate focus
-            if not isinstance(data[video]['focus'], int):
-                raise TypeError(f"Expected {video}['focus'] to be an int")
+            # if not isinstance(data[video]['focus'], int):
+            #     raise TypeError(f"Expected {video}['focus'] to be an int")
             self.config[video]['focus'] = data[video]['focus']
 
         # Does not have anything for files yet
