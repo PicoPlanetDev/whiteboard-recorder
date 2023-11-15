@@ -6,7 +6,7 @@
 
 Replaces the prior Flask-hosted static site with a Vue and Flask webapp. Information below may be incorrect.
 
-![Screenshot of the homepage of Whiteboard Recorder](https://raw.githubusercontent.com/PicoPlanetDev/whiteboard-recorder/webapp/screenshots/homepage.png)
+![Screenshot of the homepage of Whiteboard Recorder](https://raw.githubusercontent.com/PicoPlanetDev/whiteboard-recorder/master/screenshots/homepage.png)
 
 ## Requirements
 
