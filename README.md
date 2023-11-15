@@ -2,6 +2,9 @@
 
 ## A recording system that creates a birds-eye view of a whiteboard recorded from any perspective
 
+Whiteboard Recorder captures high-resolution video of multiple whiteboards while still allowing for flexible camera placement.
+It provides a non-intrusive solution for archiving lessons and lectures to aid students that missed class.
+
 ![Screenshot of the homepage of Whiteboard Recorder](https://raw.githubusercontent.com/PicoPlanetDev/whiteboard-recorder/master/screenshots/homepage.png)
 
 ## Requirements
