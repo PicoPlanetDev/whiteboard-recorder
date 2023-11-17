@@ -15,7 +15,7 @@ class VideoRecorder():
             video_device_config = self.config.config[video_device]
 
             # Get the configuration values that will be reused
-            video_device = self.config.get_video_device_name(video_device)
+            video_device_name = self.config.get_video_device_name(video_device)
             audio_device = self.config.config['audio_device'][1] # specifically the audio device name
             input_resolution = f"{video_device_config['resolution'][0]}x{video_device_config['resolution'][1]}"
             input_format = video_device_config['input_format']
@@ -28,9 +28,9 @@ class VideoRecorder():
                 linux_audio_device += f',DEV={self.config.config["custom_audio_device_dev"]}'
 
             # Beginning of the ffmpeg command for windows TODO: Add framerate
-            windows_command_template = ['ffmpeg','-hide_banner','-y','-f','dshow','-framerate',str(framerate),'-video_size',str(input_resolution),'-i',f'video={video_device}:audio={audio_device}']
+            windows_command_template = ['ffmpeg','-hide_banner','-y','-f','dshow','-framerate',str(framerate),'-video_size',str(input_resolution),'-i',f'video={video_device_name}:audio={audio_device}']
             # Beginning of the ffmpeg command for linux
-            linux_command_template = ['ffmpeg','-hide_banner','-y','-f','v4l2','-framerate',str(framerate),'-err_detect','ignore_err','-video_size',str(input_resolution),'-i',str(video_device),'-f','alsa','-i',str(linux_audio_device)]
+            linux_command_template = ['ffmpeg','-hide_banner','-y','-f','v4l2','-framerate',str(framerate),'-err_detect','ignore_err','-video_size',str(input_resolution),'-i',str(video_device_name),'-f','alsa','-i',str(linux_audio_device)]
             
             # Select the correct command template based on the OS
             if os.name == 'nt':
@@ -53,6 +53,9 @@ class VideoRecorder():
                 if video_device_config['input_format'] != '':
                     ffmpeg_command.insert(5, '-input_format')
                     ffmpeg_command.insert(6, video_device_config['input_format'])
+
+                # Focus the camera
+                self.focus_camera(video_device)
             else:
                 raise Exception('OS not supported')
             
@@ -92,3 +95,25 @@ class VideoRecorder():
             # General files
             os.remove(self.config.config['files']['temp_audio_file'])
             os.remove(self.config.config['files']['output_video_file'])
+
+    def focus_camera(self, video_device):
+        """Sets the focus of the camera to the value specified in the config file
+        Only works on linux right now because of the v4l2-ctl command
+
+        Args:
+            video_device (str): The internal name of the video device to focus (either video0 or video1)
+        """
+        if os.name != 'posix':
+            print('Focus not supported on this OS')
+            return
+
+        video_device_name = self.config.get_video_device_name(video_device)
+        video_device_config = self.config.config[video_device]
+
+        # Enable autofocus if necessary
+        if int(video_device_config['focus']) == -1:
+            subprocess.run(['v4l2-ctl', '-d', video_device_name, '-c', 'focus_auto=1'])
+        else:
+            subprocess.run(['v4l2-ctl', '-d', video_device_name, '-c', 'focus_auto=0'])
+            # multiply by 15 because the slider is -1 to 17 and the v4l2-ctl is 0 to 255 with steps of 15
+            subprocess.run(['v4l2-ctl', '-d', video_device_name, '-c', f'focus_absolute={video_device_config["focus"] * 15}'])
