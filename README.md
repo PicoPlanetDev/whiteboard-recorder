@@ -2,11 +2,10 @@
 
 ## A recording system that creates a birds-eye view of a whiteboard recorded from any perspective
 
-## Branch webapp
+Whiteboard Recorder captures high-resolution video of multiple whiteboards while still allowing for flexible camera placement.
+It provides a non-intrusive solution for archiving lessons and lectures to aid students that missed class.
 
-Replaces the prior Flask-hosted static site with a Vue and Flask webapp. Information below may be incorrect.
-
-![Screenshot of the homepage of Whiteboard Recorder](https://raw.githubusercontent.com/PicoPlanetDev/whiteboard-recorder/webapp/screenshots/homepage.png)
+![Screenshot of the homepage of Whiteboard Recorder](https://raw.githubusercontent.com/PicoPlanetDev/whiteboard-recorder/master/screenshots/homepage.png)
 
 ## Requirements
 
@@ -27,12 +26,11 @@ Replaces the prior Flask-hosted static site with a Vue and Flask webapp. Informa
 
 1. Use `git clone https://github.com/PicoPlanetDev/whiteboard-recorder` to download the source code
 2. `cd whiteboard-recorder` then
-3. Switch to the `webapp` branch using `git switch webapp`
-4. `cd frontend` then `npm install`
-5. `cd ../backend` then create a virtual environment `venv` in the backend directory
+3. `cd frontend` then `npm install`
+4. `cd ../backend` then create a virtual environment `venv` in the backend directory
    - On Windows: `python -m venv venv` and activate the venv with `.\venv\Scripts\activate`
    - On Linux: `python3 -m venv venv` and activate the venv with `source venv/bin/activate`
-6. Install the required packages
+5. Install the required packages
    - On Windows: `pip install -r requirements.txt`
    - On Linux: `pip3 install -r requirements.txt`
 
