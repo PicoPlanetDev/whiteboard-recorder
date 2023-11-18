@@ -128,6 +128,9 @@ def settings():
 def capture_frame():
     video_device = request.get_json()['video_device']
     global preview
+    # focus the camera
+    global video_recorder
+    video_recorder.focus_camera(video_device)
     frame_jpeg = processing.convert_to_jpeg(preview.capture_frame(video_device))
     return "data:image/png;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 

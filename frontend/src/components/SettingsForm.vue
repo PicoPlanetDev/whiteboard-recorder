@@ -102,12 +102,12 @@ import Alert from './Alert.vue';
                                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="video0Radio"
                                         value="0" checked v-model="configurator.currentVideoDevice"
                                         @change="resetConfigurator">
-                                    <label class="form-check-label" for="video0Radio">Video 1</label>
+                                    <label class="form-check-label" for="video0Radio">Video 0</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="video1Radio"
                                         value="1" v-model="configurator.currentVideoDevice" @change="resetConfigurator">
-                                    <label class="form-check-label" for="video1Radio">Video 2</label>
+                                    <label class="form-check-label" for="video1Radio">Video 1</label>
                                 </div>
                             </form>
                         </div>
