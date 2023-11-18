@@ -66,7 +66,7 @@
                 <label for="videoFocusRange" class="form-label">Focus</label>
                 <div class="row">
                     <div class="col">
-                        <input type="range" id="videoFocusRange" class="form-range" min="-1" max="17" step="1"
+                        <input type="range" id="videoFocusRange" class="form-range" min="-1" max="255" step="1"
                             v-model="videoData.focus" @input="updateVideo" aria-describedby="videoFocusHelpBlock">
                     </div>
                     <div class="col-2">

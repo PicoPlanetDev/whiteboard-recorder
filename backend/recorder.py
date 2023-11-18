@@ -112,8 +112,7 @@ class VideoRecorder():
 
         # Enable autofocus if necessary
         if int(video_device_config['focus']) == -1:
-            subprocess.run(['v4l2-ctl', '-d', video_device_name, '-c', 'focus_auto=1'])
+            subprocess.run(['v4l2-ctl', '-d', video_device_name, '-c', 'focus_automatic_continuous=1'])
         else:
-            subprocess.run(['v4l2-ctl', '-d', video_device_name, '-c', 'focus_auto=0'])
-            # multiply by 15 because the slider is -1 to 17 and the v4l2-ctl is 0 to 255 with steps of 15
-            subprocess.run(['v4l2-ctl', '-d', video_device_name, '-c', f'focus_absolute={video_device_config["focus"] * 15}'])
+            subprocess.run(['v4l2-ctl', '-d', video_device_name, '-c', 'focus_automatic_continuous=0'])
+            subprocess.run(['v4l2-ctl', '-d', video_device_name, '-c', f'focus_absolute={video_device_config["focus"]}'])
