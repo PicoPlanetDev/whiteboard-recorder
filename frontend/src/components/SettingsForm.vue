@@ -51,27 +51,6 @@ import Alert from './Alert.vue';
                     <label class="form-check-label" for="stackDirectionVertical">Vertical</label>
                 </div>
             </div>
-            <!-- Job name format input -->
-            <div class="mb-3">
-                <label for="jobNameFormatInput" class="form-label">Job Name Format</label>
-                <input type="text" id="jobNameFormatInput" class="form-control font-monospace"
-                    aria-describedby="jobNameFormatHelpBlock" v-model="jobNameFormat">
-                <div id="jobNameFormatHelpBlock" class="form-text">
-                    <span class="font-monospace">time.strftime</span> string for naming jobs based on the current time.
-                    See the <a href="https://docs.python.org/3/library/time.html#time.strftime" target="_blank">Python time
-                        docs</a> for more information.
-                </div>
-            </div>
-            <!-- Recording directory input -->
-            <div class="">
-                <label for="recordingDirectoryInput" class="form-label">Recording Directory</label>
-                <input type="text" id="jrecordingDirectoryInput" class="form-control"
-                    aria-describedby="recordingDirectoryHelpBlock" v-model="recordingDirectory">
-                <div id="recordingDirectoryHelpBlock" class="form-text">
-                    The path to a directory where recordings will be saved. If the directory does not exist, it will be
-                    created when the first recording in the directory is started.
-                </div>
-            </div>
         </div>
         <!-- Video -->
         <div class="container-fluid">
@@ -87,6 +66,36 @@ import Alert from './Alert.vue';
                 <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
                     data-bs-target="#videoConfigurator" @click="getCorners">
                     Launch video configurator
+                </button>
+            </div>
+        </div>
+        <div class="border rounded mb-3 p-3">
+            <div class="fs-5 mb-3">Files</div>
+            <!-- Job name format input -->
+            <div class="mb-3">
+                <label for="jobNameFormatInput" class="form-label">Job Name Format</label>
+                <input type="text" id="jobNameFormatInput" class="form-control font-monospace"
+                    aria-describedby="jobNameFormatHelpBlock" v-model="jobNameFormat">
+                <div id="jobNameFormatHelpBlock" class="form-text">
+                    <span class="font-monospace">time.strftime</span> string for naming jobs based on the current time.
+                    See the <a href="https://docs.python.org/3/library/time.html#time.strftime" target="_blank">Python time
+                        docs</a> for more information.
+                </div>
+            </div>
+            <!-- Recording directory input -->
+            <div class="mb-3">
+                <label for="recordingDirectoryInput" class="form-label">Recording Directory</label>
+                <input type="text" id="jrecordingDirectoryInput" class="form-control"
+                    aria-describedby="recordingDirectoryHelpBlock" v-model="recordingDirectory">
+                <div id="recordingDirectoryHelpBlock" class="form-text">
+                    The path to a directory where recordings will be saved. If the directory does not exist, it will be
+                    created when the first recording in the directory is started.
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-danger me-2" @click="" disabled>
+                    <i class="bi bi-trash me-1"></i>
+                    Purge recordings
                 </button>
             </div>
         </div>
@@ -482,12 +491,20 @@ export default {
             return [x - 3, y + 48];
         },
         // This is very hacky, and I can't even say it works
+        // imageClicked(event) {
+        //     var currentCorner = parseInt(this.configurator.currentCorner);
+        //     var modalOffsetX = this.$refs.configuratorModal.offsetLeft;
+        //     var modalOffsetY = this.$refs.configuratorModal.offsetTop;
+        //     var x = event.pageX - event.target.offsetLeft - modalOffsetX;
+        //     var y = event.pageY - event.target.offsetTop - modalOffsetY - 64;
+        //     this.configurator.crosshairPositions[currentCorner] = this.crosshairOffset([x, y]);
+        //     this.configurator.crosshairVisibility[currentCorner] = 'visible';
+        //     this.configurator.corners[currentCorner] = [x, y];
+        // },
         imageClicked(event) {
             var currentCorner = parseInt(this.configurator.currentCorner);
-            var modalOffsetX = this.$refs.configuratorModal.offsetLeft;
-            var modalOffsetY = this.$refs.configuratorModal.offsetTop;
-            var x = event.pageX - event.target.offsetLeft - modalOffsetX;
-            var y = event.pageY - event.target.offsetTop - modalOffsetY - 64;
+            var x = event.offsetX;
+            var y = event.offsetY;
             this.configurator.crosshairPositions[currentCorner] = this.crosshairOffset([x, y]);
             this.configurator.crosshairVisibility[currentCorner] = 'visible';
             this.configurator.corners[currentCorner] = [x, y];
