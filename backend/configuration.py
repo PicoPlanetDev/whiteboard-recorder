@@ -1,6 +1,7 @@
 import toml
 import os
 import subprocess
+import pathlib
 
 def get_av_splits():
     """Gets the output of ffmpeg list_devices splits it into video and audio sections"""
@@ -110,7 +111,8 @@ class Configuration:
             'files': {
                 'temp_audio_file': 'temp_audio.mp3',
                 'output_video_file': 'output_video.mp4',
-                'stacked_video_file': 'stacked_video.mp4'
+                'stacked_video_file': 'stacked_video.mp4',
+                'recording_directory': pathlib.Path('./recordings').as_posix()
             }
         }
         self.config = default_config
@@ -160,7 +162,8 @@ class Configuration:
             'files': {
                 'temp_audio_file': self.config['files']['temp_audio_file'],
                 'output_video_file': self.config['files']['output_video_file'],
-                'stacked_video_file': self.config['files']['stacked_video_file']
+                'stacked_video_file': self.config['files']['stacked_video_file'],
+                'recording_directory': pathlib.Path(self.config['files']['recording_directory']).as_posix()
             }
         }
         return all
@@ -249,6 +252,8 @@ class Configuration:
 
             # Convert focus to int
             self.config[video]['focus'] = int(data[video]['focus'])
+
+            # TODO: Add custom recording directory
 
         # Does not have anything for files yet
 

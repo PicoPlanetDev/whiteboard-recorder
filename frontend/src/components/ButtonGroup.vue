@@ -4,14 +4,14 @@ import RecordingButton from './RecordingButton.vue';
 
 <template>
     <RecordingButton />
-    <a class="btn btn-primary btn-lg px-4 me-2 my-2" :href="downloadUrl">
+    <!-- <a class="btn btn-primary btn-lg px-4 me-2 my-2" :href="downloadUrl">
         <i class="bi bi-file-earmark-arrow-down-fill"></i>
         Download recording
-    </a>
-    <button type="button" class="btn btn-primary btn-lg px-4 me-2 my-2" @click="processRecording">
+    </a> -->
+    <!-- <button type="button" class="btn btn-primary btn-lg px-4 me-2 my-2" @click="processRecording">
         <i class="bi bi-gears"></i>
         Manually process recording
-    </button>
+    </button> -->
 </template>
 
 <script>

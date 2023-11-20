@@ -38,9 +38,9 @@ export default {
         },
         toggleRecording() {
             var newRecordingStatus = !this.recording_status;
-            if (!newRecordingStatus) {
-                this.recording_status = 'processing';
-            }
+            // if (!newRecordingStatus) {
+            //     this.recording_status = 'processing';
+            // }
             return axios.post('/toggle_recording', { recording_status: newRecordingStatus })
                 .then(response => {
                     this.recording_status = response.data.recording_status;

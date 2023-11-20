@@ -1,3 +1,4 @@
+import pathlib
 import cv2
 import numpy as np
 import time
@@ -5,21 +6,27 @@ import subprocess
 import os
 
 class Processing():
-    def __init__(self, config):
+    def __init__(self, config, recording_directory: pathlib.Path):
         self.config = config
+        self.recording_directory = recording_directory
+
+    def extract_audio(self):
+        """Extracts the audio from the video file, saving it as a temporary mp3 file"""
+        # Extract the audio from the video
+        # TODO: maybe not best to hardcode video0
+        temp_video_file_path = self.recording_directory.joinpath(self.config.config['video0']['temp_video_file']).as_posix()
+        temp_audio_file_path = self.recording_directory.joinpath(self.config.config['files']['temp_audio_file']).as_posix()
+        subprocess.run(['ffmpeg','-hide_banner','-y','-i',temp_video_file_path,'-codec:a','libmp3lame',temp_audio_file_path])
 
     def process_recording(self):
         """Processes the video file that was just recorded"""
-        # Extract the audio from the video
-        # TODO: maybe not best to hardcode video0
-        subprocess.run(['ffmpeg','-hide_banner','-y','-i',self.config.config['video0']['temp_video_file'],'-codec:a','libmp3lame',self.config.config['files']['temp_audio_file']])
 
         for video_device in self.config.get_enabled_video_devices():
             print(f"Processing video from {video_device}")
             
             # Get the file paths
-            temp_video_file = self.config.config[video_device]['temp_video_file']
-            temp_processed_video_file = self.config.config[video_device]['temp_processed_video_file']
+            temp_video_file = self.recording_directory.joinpath(self.config.config[video_device]['temp_video_file']).as_posix()
+            temp_processed_video_file = self.recording_directory.joinpath(self.config.config[video_device]['temp_processed_video_file']).as_posix()
 
             self.process_video(temp_video_file, temp_processed_video_file, video_device)
         # Now we end up with two processed video files, one for each video device
@@ -67,10 +74,11 @@ class Processing():
         """Stacks the processed videos on top of each other and adds the audio back in"""
         print("Stacking processed videos")
         # Get the file paths
-        temp_processed_video_files = [self.config.config[video_device]['temp_processed_video_file'] for video_device in self.config.get_enabled_video_devices()]
+        temp_processed_video_files = [self.recording_directory.joinpath(self.config.config[video_device]['temp_processed_video_file']).as_posix() for video_device in self.config.get_enabled_video_devices()]
         # stacked_video_file = self.config.config['files']['stacked_video_file']
-        temp_audio_file = self.config.config['files']['temp_audio_file']
-        output_video_file = self.config.config['files']['output_video_file']
+        temp_audio_file = self.recording_directory.joinpath(self.config.config['files']['temp_audio_file']).as_posix()
+        
+        output_video_file = self.recording_directory.joinpath(self.config.config['files']['output_video_file']).as_posix()
 
         # If there is only one video device, just use the processed video file as the output video file
         if len(temp_processed_video_files) == 1:
@@ -130,10 +138,10 @@ class Processing():
             return resized
 
 class Preview():
-    def __init__(self, config, processing):
+    def __init__(self, config):
         self.config = config
         self.frame = None
-        self.processing = Processing(config)
+        self.processing = Processing(config, pathlib.Path(self.config.config['files']['recording_directory']))
 
     def capture_frame(self, video_device='video0'):
             """
