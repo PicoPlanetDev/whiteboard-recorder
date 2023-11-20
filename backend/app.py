@@ -1,4 +1,3 @@
-import re
 from flask import Flask, send_file, jsonify, request
 from flask_cors import CORS
 import socket  # Get local IP address

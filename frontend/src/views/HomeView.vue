@@ -1,7 +1,8 @@
 <script setup>
-import ButtonGroup from '../components/ButtonGroup.vue';
 import Footer from '../components/Footer.vue';
 import Header from '../components/Header.vue';
+import Jobs from '../components/Jobs.vue';
+import RecordingButton from '../components/RecordingButton.vue';
 </script>
 
 <template>
@@ -27,7 +28,7 @@ import Header from '../components/Header.vue';
       </div>
 
       <div class="mb-3">
-        <ButtonGroup />
+        <RecordingButton />
       </div>
       <hr>
       <div>
@@ -41,8 +42,6 @@ import Header from '../components/Header.vue';
 
 <script>
 import axios from 'axios';
-import Jobs from '../components/Jobs.vue';
-
 export default {
   name: 'HomeView',
   data() {
