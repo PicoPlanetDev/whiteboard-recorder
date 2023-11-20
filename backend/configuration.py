@@ -265,14 +265,12 @@ class Configuration:
             # Convert focus to int
             self.config[video]['focus'] = int(data[video]['focus'])
 
-            # Validate recording_directory
-            if not isinstance(data['files']['recording_directory'], str):
-                raise TypeError(f"Expected files['recording_directory'] to be a string")
-            if data['files']['recording_directory'] == '':
-                raise ValueError(f"Expected files['recording_directory'] to not be empty")
-            self.config['files']['recording_directory'] = pathlib.Path(data['files']['recording_directory']).as_posix()
-
-        # Does not have anything for files yet
+        # Validate recording_directory
+        if not isinstance(data['files']['recording_directory'], str):
+            raise TypeError(f"Expected files['recording_directory'] to be a string")
+        if data['files']['recording_directory'] == '':
+            raise ValueError(f"Expected files['recording_directory'] to not be empty")
+        self.config['files']['recording_directory'] = pathlib.Path(data['files']['recording_directory']).as_posix()
 
         self.save_config()
 

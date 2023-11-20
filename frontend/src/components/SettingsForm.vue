@@ -87,7 +87,7 @@ import Alert from './Alert.vue';
             <div class="mb-3">
                 <label for="recordingDirectoryInput" class="form-label">Recording Directory</label>
                 <input type="text" id="jrecordingDirectoryInput" class="form-control"
-                    aria-describedby="recordingDirectoryHelpBlock" v-model="recordingDirectory">
+                    aria-describedby="recordingDirectoryHelpBlock" v-model="files.recordingDirectory">
                 <div id="recordingDirectoryHelpBlock" class="form-text">
                     The path to a directory where recordings will be saved. If the directory does not exist, it will be
                     created when the first recording in the directory is started.
@@ -401,7 +401,8 @@ export default {
                     this.video1.customVideoDeviceIndex = '';
                 }
 
-                this.recordingDirectory = response.data.recording_directory;
+                this.files.recordingDirectory = response.data.files.recording_directory;
+                console.log(response.data.recording_directory)
 
             }).catch(error => {
                 console.log(error);
@@ -446,12 +447,13 @@ export default {
                     focus: this.video1.focus,
                 },
                 files: {
-                    recording_directory: this.recordingDirectory,
+                    recording_directory: this.files.recordingDirectory,
                 }
 
             }).then(response => {
                 if (response.data.status == 'success') {
                     this.resetForm();
+                    this.scrollToTop();
 
                     // Update the alert
                     this.alert.message = 'Settings saved';
@@ -628,6 +630,10 @@ export default {
                 this.alert.color = 'danger';
                 this.alert.show = true;
             });
+        },
+        scrollToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
         },
     },
     mounted() {
