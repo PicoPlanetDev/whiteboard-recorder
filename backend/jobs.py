@@ -97,6 +97,11 @@ class JobManager():
             if job.finished:
                 self.processing_jobs.remove(job)
 
+    def purge_recording_directory(self):
+        """Removes all the files in the recording directory"""
+        for file in os.listdir(self.config.config['files']['recording_directory']):
+            os.remove(os.path.join(self.config.config['files']['recording_directory'], file))
+
 class ProcessingJob():
     def __init__(self, config: configuration.Configuration, job_name: str, recording_directory: pathlib.Path):
         self.config = config

@@ -78,7 +78,8 @@ import Alert from './Alert.vue';
                     aria-describedby="jobNameFormatHelpBlock" v-model="jobNameFormat">
                 <div id="jobNameFormatHelpBlock" class="form-text">
                     <span class="font-monospace">time.strftime</span> string for naming jobs based on the current time.
-                    See the <a href="https://docs.python.org/3/library/time.html#time.strftime" target="_blank">Python time
+                    See the <a href="https://docs.python.org/3/library/time.html#time.strftime" target="_blank">Python <span
+                            class="font-monospace">time</span>
                         docs</a> for more information.
                 </div>
             </div>
@@ -93,8 +94,8 @@ import Alert from './Alert.vue';
                 </div>
             </div>
             <div>
-                <button type="button" class="btn btn-danger me-2" @click="" disabled>
-                    <i class="bi bi-trash me-1"></i>
+                <button type="button" class="btn btn-danger me-2" @click="purgeRecordingsDirectory">
+                    <i class="bi bi-exclamation-octagon me-1"></i>
                     Purge recordings
                 </button>
             </div>
@@ -600,6 +601,32 @@ export default {
 
             }).catch(error => {
                 console.log(error);
+            });
+        },
+        purgeRecordingsDirectory() {
+            axios.post('/purge_recordings_directory').then(response => {
+                if (response.data.status == 'success') {
+                    // Update the alert
+                    this.alert.message = 'Recordings purged';
+                    this.alert.icon = 'check-circle';
+                    this.alert.color = 'success';
+                    this.alert.show = true;
+                } else {
+                    // Update the alert
+                    this.alert.message = response.data.message;
+                    this.alert.icon = 'exclamation-circle';
+                    this.alert.color = 'danger';
+                    this.alert.show = true;
+                }
+
+            }).catch(error => {
+                console.log(error);
+
+                // Update the alert
+                this.alert.message = 'Error purging recordings';
+                this.alert.icon = 'exclamation-circle';
+                this.alert.color = 'danger';
+                this.alert.show = true;
             });
         },
     },
