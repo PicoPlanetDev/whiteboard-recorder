@@ -13,7 +13,12 @@ import router from './router'
 
 // Axios base URL
 import axios from 'axios'
-axios.defaults.baseURL = window.location.href.split(':5173')[0] + ":5000/api";
+if (import.meta.env.VITE_API_ENDPOINT === "default") {
+    axios.defaults.baseURL = window.location.href.split(':5173')[0] + ":5000/api";
+}
+else {
+    axios.defaults.baseURL = import.meta.env.VITE_API_ENDPOINT;
+};
 
 const app = createApp(App)
 
