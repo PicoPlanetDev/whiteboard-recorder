@@ -78,6 +78,7 @@ class Configuration:
             'custom_audio_device_dev': '',
             'end_recording_delay': 1,
             'stack': 'vstack', # 'vstack' or 'hstack'
+            'job_name_format': '%m-%d-%Y %H-%M-%S',
             'video0': {
                 'enabled': True,
                 'video_device': default_video_device,
@@ -131,6 +132,7 @@ class Configuration:
             'custom_audio_device_dev': self.config['custom_audio_device_dev'],
             'end_recording_delay': self.config['end_recording_delay'],
             'stack': self.config['stack'],
+            'job_name_format': self.config['job_name_format'],
             'video0': {
                 'video_device': self.config['video0']['video_device'],
                 'resolution': self.config['video0']['resolution'],
@@ -199,6 +201,16 @@ class Configuration:
         if data['stack'] not in ['vstack', 'hstack']:
             raise ValueError("Expected stack to be 'vstack' or 'hstack'")
         self.config['stack'] = data['stack']
+
+        # Validate job_name_format
+        if not isinstance(data['job_name_format'], str):
+            raise TypeError("Expected job_name_format to be a string")
+        if data['job_name_format'] == '':
+            raise ValueError("Expected job_name_format to not be empty")
+        for char in ['/', '\\', ':', '*', '?', '"', '<', '>', '|']:
+            if char in data['job_name_format']:
+                raise ValueError(f"Expected job_name_format to not contain {char}")
+        self.config['job_name_format'] = data['job_name_format']
 
         # Validate video0 and video1
         for video in ['video0', 'video1']:

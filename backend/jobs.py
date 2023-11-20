@@ -19,7 +19,7 @@ class JobManager():
         self.video_recorder.clear_files()
 
         # Create a somehwat friendly job name based on the current time
-        self.current_recording_job_name = time.strftime("%m-%d-%Y %H-%M-%S", time.localtime())
+        self.current_recording_job_name = time.strftime(self.config.config['job_name_format'], time.localtime())
 
         # Create a new directory for the job in the config's recording_directory, which might not already exist
         pathlib.Path(self.config.config['files']['recording_directory']).joinpath(pathlib.Path(self.current_recording_job_name)).mkdir(parents=True, exist_ok=True)
