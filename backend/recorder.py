@@ -1,15 +1,20 @@
+import pathlib
 import time
 import subprocess
 import os
 import contextlib
 import time
+import pathlib
 
 class VideoRecorder():
     def __init__(self, config):
         self.config = config
         self.recording_processes = []
 
-    def start_recording(self):
+    def start_recording(self, recording_directory: pathlib.Path):
+        # Clear any files in the recording directory
+        self.clear_files(recording_directory)
+
         for video_device in self.config.get_enabled_video_devices():
             # Get the video device config string
             video_device_config = self.config.config[video_device]
@@ -18,9 +23,10 @@ class VideoRecorder():
             video_device_name = self.config.get_video_device_name(video_device)
             audio_device = self.config.config['audio_device'][1] # specifically the audio device name
             input_resolution = f"{video_device_config['resolution'][0]}x{video_device_config['resolution'][1]}"
-            input_format = video_device_config['input_format']
-            recording_file = video_device_config['temp_video_file']
             framerate = video_device_config["framerate"]
+
+            # Create the file path for the recording
+            recording_file = recording_directory.joinpath(pathlib.Path(video_device_config['temp_video_file']))
 
             # Put together the custom audio device string for linux
             linux_audio_device = f'sysdefault:CARD={self.config.config["custom_audio_device_card"]}'
@@ -86,15 +92,16 @@ class VideoRecorder():
                 print(e)
                 pass
 
-    def clear_files(self):
+    def clear_files(self, recording_directory: pathlib.Path):
+        # TODO: Support new jobs system
         with contextlib.suppress(FileNotFoundError): # Ignore if the file doesn't exist
             # Video files
             for video_device in self.config.get_enabled_video_devices():
-                os.remove(self.config.config[video_device]['temp_video_file'])
-                os.remove(self.config.config[video_device]['temp_processed_video_file'])
+                os.remove(recording_directory.joinpath(self.config.config[video_device]['temp_video_file']).as_posix())
+                os.remove(recording_directory.joinpath(self.config.config[video_device]['temp_processed_video_file']).as_posix())
             # General files
-            os.remove(self.config.config['files']['temp_audio_file'])
-            os.remove(self.config.config['files']['output_video_file'])
+            os.remove(recording_directory.joinpath(self.config.config['files']['temp_audio_file']).as_posix())
+            os.remove(recording_directory.joinpath(self.config.config['files']['output_video_file']).as_posix())
 
     def focus_camera(self, video_device):
         """Sets the focus of the camera to the value specified in the config file

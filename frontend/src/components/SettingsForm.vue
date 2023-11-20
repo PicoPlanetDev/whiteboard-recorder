@@ -1,5 +1,4 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
 import Alert from './Alert.vue';
 </script>
 
@@ -38,7 +37,7 @@ import Alert from './Alert.vue';
                     process.
                 </div>
             </div>
-            <div class="">
+            <div class="mb-3">
                 Video stack direction
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="stackDirection" id="stackDirectionHorizontal"
@@ -49,6 +48,16 @@ import Alert from './Alert.vue';
                     <input class="form-check-input" type="radio" name="stackDirection" id="stackDirectionVertical"
                         value="vstack" v-model="stack">
                     <label class="form-check-label" for="stackDirectionVertical">Vertical</label>
+                </div>
+            </div>
+            <div class="">
+                <label for="jobNameFormatInput" class="form-label">Job Name Format</label>
+                <input type="text" id="jobNameFormatInput" class="form-control font-monospace"
+                    aria-describedby="jobNameFormatHelpBlock" v-model="jobNameFormat">
+                <div id="jobNameFormatHelpBlock" class="form-text">
+                    <span class="font-monospace">time.strftime</span> string for naming jobs based on the current time.
+                    See the <a href="https://docs.python.org/3/library/time.html#time.strftime" target="_blank">Python time
+                        docs</a> for more information.
                 </div>
             </div>
         </div>
@@ -271,6 +280,7 @@ export default {
             customAudioDeviceDev: '',
             endRecordingDelay: 1,
             stack: '',
+            jobNameFormat: '',
 
             video0: {
                 videoDevice: 0,
@@ -330,6 +340,7 @@ export default {
                 this.customAudioDeviceDev = response.data.custom_audio_device_dev;
                 this.endRecordingDelay = response.data.end_recording_delay;
                 this.stack = response.data.stack;
+                this.jobNameFormat = response.data.job_name_format;
 
                 this.video0.videoDevice = response.data.video0.video_device[0];
                 this.video0.resolutionX = response.data.video0.resolution[0];
@@ -380,6 +391,8 @@ export default {
                 custom_audio_device_dev: this.customAudioDeviceDev,
                 end_recording_delay: this.endRecordingDelay,
                 stack: this.stack,
+                job_name_format: this.jobNameFormat,
+
                 video0: {
                     video_device: this.videoDevices[this.video0.videoDevice],
                     resolution: [this.video0.resolutionX, this.video0.resolutionY],
