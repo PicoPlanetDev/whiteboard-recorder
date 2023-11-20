@@ -10,10 +10,7 @@ It provides a non-intrusive solution for archiving lessons and lectures to aid s
 ## Requirements
 
 - Python 3
-- Virtual environment with packages installed in `requirements.txt`: `opencv-python,flask,numpy,qrcode,flask_cors,toml`
-- FFmpeg
-  - On Windows: `ffmpeg.exe` in the `whiteboard-recorder/backend` directory
-  - On Linux: `sudo apt install ffmpeg`
+- Network connection for installation only
 
 ### Reccomended hardware
 
@@ -33,6 +30,9 @@ It provides a non-intrusive solution for archiving lessons and lectures to aid s
 5. Install the required packages
    - On Windows: `pip install -r requirements.txt`
    - On Linux: `pip3 install -r requirements.txt`
+6. Install required software:
+   - On Windows: Place `ffmpeg.exe` in the `whiteboard-recorder/backend` directory
+   - On Linux: `sudo apt install -y ffmpeg v4l-utils`
 
 ## Usage
 
@@ -59,3 +59,5 @@ This will be updated once the built webapp is released and I make a simple start
 8. Return to the root page by selecting **Home** in the navbar, then begin a recording with the **Start recording** button
 9. End the recording by clicking the **Stop recording** button.
 10. The recording is processed automatically, then will be available by clicking the **Download recording** button.
+
+## TODO
