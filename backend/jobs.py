@@ -16,8 +16,6 @@ class JobManager():
         self.current_recording_job_directory = None # TODO: what's a default pathlib path
 
     def start_recording(self):
-        self.video_recorder.clear_files()
-
         # Create a somehwat friendly job name based on the current time
         self.current_recording_job_name = time.strftime(self.config.config['job_name_format'], time.localtime())
 

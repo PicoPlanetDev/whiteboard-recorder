@@ -12,6 +12,9 @@ class VideoRecorder():
         self.recording_processes = []
 
     def start_recording(self, recording_directory: pathlib.Path):
+        # Clear any files in the recording directory
+        self.clear_files(recording_directory)
+
         for video_device in self.config.get_enabled_video_devices():
             # Get the video device config string
             video_device_config = self.config.config[video_device]
@@ -89,16 +92,16 @@ class VideoRecorder():
                 print(e)
                 pass
 
-    def clear_files(self):
+    def clear_files(self, recording_directory: pathlib.Path):
         # TODO: Support new jobs system
         with contextlib.suppress(FileNotFoundError): # Ignore if the file doesn't exist
             # Video files
             for video_device in self.config.get_enabled_video_devices():
-                os.remove(self.config.config[video_device]['temp_video_file'])
-                os.remove(self.config.config[video_device]['temp_processed_video_file'])
+                os.remove(recording_directory.joinpath(self.config.config[video_device]['temp_video_file']).as_posix())
+                os.remove(recording_directory.joinpath(self.config.config[video_device]['temp_processed_video_file']).as_posix())
             # General files
-            os.remove(self.config.config['files']['temp_audio_file'])
-            os.remove(self.config.config['files']['output_video_file'])
+            os.remove(recording_directory.joinpath(self.config.config['files']['temp_audio_file']).as_posix())
+            os.remove(recording_directory.joinpath(self.config.config['files']['output_video_file']).as_posix())
 
     def focus_camera(self, video_device):
         """Sets the focus of the camera to the value specified in the config file
