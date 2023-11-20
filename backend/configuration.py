@@ -26,7 +26,7 @@ class Configuration:
         self.config = self.load_config()
         
 
-    def get_video_devices(self):
+    def get_video_devices(self) -> list[tuple[str, str]]:
         """Gets a list of video device names from the ffmpeg output.
 
         Returns:
@@ -43,7 +43,7 @@ class Configuration:
 
         return video_devices_enumerated
 
-    def get_audio_devices(self):
+    def get_audio_devices(self) -> list[tuple[str, str]]:
         """Gets a list of audio device names from the ffmpeg output.
 
         Returns:
@@ -60,7 +60,7 @@ class Configuration:
 
         return audio_devices_enumerated
 
-    def load_config(self):
+    def load_config(self) -> dict:
         try:
             with open('config.toml', 'r') as file:
                 return toml.load(file)
@@ -265,25 +265,30 @@ class Configuration:
             # Convert focus to int
             self.config[video]['focus'] = int(data[video]['focus'])
 
-            # TODO: Add custom recording directory
+            # Validate recording_directory
+            if not isinstance(data['files']['recording_directory'], str):
+                raise TypeError(f"Expected files['recording_directory'] to be a string")
+            if data['files']['recording_directory'] == '':
+                raise ValueError(f"Expected files['recording_directory'] to not be empty")
+            self.config['files']['recording_directory'] = pathlib.Path(data['files']['recording_directory']).as_posix()
 
         # Does not have anything for files yet
 
         self.save_config()
 
-    def get_video_device_index(self, video_device):
+    def get_video_device_index(self, video_device: str) -> int:
         if self.config[video_device]["custom_video_device_index"] != -1:
             return self.config[video_device]["custom_video_device_index"]
         else:
             return int(self.config[video_device]["video_device"][0])
         
-    def get_video_device_name(self, video_device):
+    def get_video_device_name(self, video_device: str) -> str:
         if self.config[video_device]["custom_video_device"] != "":
             return self.config[video_device]["custom_video_device"]
         else:
             return self.config[video_device]["video_device"][1]
 
-    def get_enabled_video_devices(self):
+    def get_enabled_video_devices(self) -> list[str]:
             """
             Returns a list of enabled video devices based on the configuration.
             """

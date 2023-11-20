@@ -5,7 +5,6 @@ import os
 import qrcode
 import io
 import base64
-import pathlib
 # my modules
 import configuration
 import processing

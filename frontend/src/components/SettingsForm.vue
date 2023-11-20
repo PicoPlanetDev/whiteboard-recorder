@@ -37,6 +37,7 @@ import Alert from './Alert.vue';
                     process.
                 </div>
             </div>
+            <!-- Stack direction radio -->
             <div class="mb-3">
                 Video stack direction
                 <div class="form-check form-check-inline">
@@ -50,7 +51,8 @@ import Alert from './Alert.vue';
                     <label class="form-check-label" for="stackDirectionVertical">Vertical</label>
                 </div>
             </div>
-            <div class="">
+            <!-- Job name format input -->
+            <div class="mb-3">
                 <label for="jobNameFormatInput" class="form-label">Job Name Format</label>
                 <input type="text" id="jobNameFormatInput" class="form-control font-monospace"
                     aria-describedby="jobNameFormatHelpBlock" v-model="jobNameFormat">
@@ -58,6 +60,16 @@ import Alert from './Alert.vue';
                     <span class="font-monospace">time.strftime</span> string for naming jobs based on the current time.
                     See the <a href="https://docs.python.org/3/library/time.html#time.strftime" target="_blank">Python time
                         docs</a> for more information.
+                </div>
+            </div>
+            <!-- Recording directory input -->
+            <div class="">
+                <label for="recordingDirectoryInput" class="form-label">Recording Directory</label>
+                <input type="text" id="jrecordingDirectoryInput" class="form-control"
+                    aria-describedby="recordingDirectoryHelpBlock" v-model="recordingDirectory">
+                <div id="recordingDirectoryHelpBlock" class="form-text">
+                    The path to a directory where recordings will be saved. If the directory does not exist, it will be
+                    created when the first recording in the directory is started.
                 </div>
             </div>
         </div>
@@ -325,6 +337,9 @@ export default {
                 color: 'danger',
                 show: false,
             },
+            files: {
+                recordingDirectory: '',
+            }
         }
     },
     computed: {
@@ -376,6 +391,8 @@ export default {
                     this.video1.customVideoDeviceIndex = '';
                 }
 
+                this.recordingDirectory = response.data.recording_directory;
+
             }).catch(error => {
                 console.log(error);
             });
@@ -417,7 +434,11 @@ export default {
                     input_format: this.video1.inputFormat,
                     pixel_format: this.video1.pixelFormat,
                     focus: this.video1.focus,
+                },
+                files: {
+                    recording_directory: this.recordingDirectory,
                 }
+
             }).then(response => {
                 if (response.data.status == 'success') {
                     this.resetForm();
