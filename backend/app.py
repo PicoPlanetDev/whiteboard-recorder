@@ -210,7 +210,12 @@ def purge_recordings():
 
 @app.route('/api/shutdown', methods=['POST'])
 def shutdown():
-    os.system("systemctl poweroff")
+    if os.name == 'nt':
+        os.system("shutdown /s /t 1") # not sure if this works withouth admin privileges
+    elif os.name == 'posix':
+        os.system("systemctl poweroff") # need systemd
+    else:
+        return jsonify({'status': "error", 'message': "OS not supported"})
     return jsonify({'status': "success"})
 
 if __name__ == '__main__':

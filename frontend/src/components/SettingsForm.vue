@@ -111,6 +111,10 @@ import Alert from './Alert.vue';
                     <i class="bi bi-check2 me-1"></i>
                     Save
                 </button>
+                <button type="button" class="btn btn-outline-secondary float-end" @click="shutdown">
+                    <i class="bi bi-power me-1"></i>
+                    Shutdown
+                </button>
             </div>
         </div>
     </form>
@@ -269,10 +273,6 @@ import Alert from './Alert.vue';
                     <button type="button" class="btn btn-primary me-2" @click="saveCorners">
                         <i class="bi bi-check2 me-1"></i>
                         Save
-                    </button>
-                    <button type="button" class="btn btn-primary float-end" @click="shutdown">
-                        <i class="bi bi-power me-1"></i>
-                        Shutdown
                     </button>
                 </div>
             </div>
