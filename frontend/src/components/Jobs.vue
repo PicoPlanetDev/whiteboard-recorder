@@ -140,6 +140,12 @@ export default {
     },
     mounted() {
         this.getJobs();
+        this.jobInterval = setInterval(() => {
+            this.getJobs();
+        }, 5000);
     },
+    beforeDestroy() {
+        clearInterval(this.jobInterval);
+    }
 }
 </script>
