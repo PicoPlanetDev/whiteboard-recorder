@@ -99,3 +99,4 @@ sudo systemctl start whiteboard-recorder-frontend.service
 ## TODO
 
 [ ] Build for a production release
+[ ] Screenshots for instructions
