@@ -402,7 +402,6 @@ export default {
                 }
 
                 this.files.recordingDirectory = response.data.files.recording_directory;
-                console.log(response.data.recording_directory)
 
             }).catch(error => {
                 console.log(error);
