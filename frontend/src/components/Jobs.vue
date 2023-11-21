@@ -144,7 +144,7 @@ export default {
             this.getJobs();
         }, 5000);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         clearInterval(this.jobInterval);
     }
 }
