@@ -633,6 +633,7 @@ export default {
                 this.alert.color = 'danger';
                 this.alert.show = true;
             });
+            this.scrollToTop();
         },
         shutdown() {
             axios.post('/shutdown').then(response => {
@@ -658,7 +659,8 @@ export default {
                 this.alert.icon = 'exclamation-circle';
                 this.alert.color = 'danger';
                 this.alert.show = true;
-            }); s
+            });
+            this.scrollToTop();
         },
         scrollToTop() {
             document.body.scrollTop = 0;
