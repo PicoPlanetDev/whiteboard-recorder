@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/home/USERNAME/whiteboard-recorder/frontend
-ExecStart=/usr/bin/screen -dmS dwhiteboard-recorder-frontend /home/orangepi/Programming/whiteboard-recorder/frontend/start.sh
+ExecStart=/usr/bin/screen -dmS whiteboard-recorder-frontend /home/USERNAME/whiteboard-recorder/frontend/start.sh
 Type=forking
 
 [Install]
