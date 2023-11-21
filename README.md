@@ -18,6 +18,7 @@ It provides a non-intrusive solution for archiving lessons and lectures to aid s
 - A webcam with a decently high resolution (preferably 1920x1080 or better)
 - A microphone
 - (Optional) A USB cable extender rated for the USB version that the camera communicates with, to mount the camera far from the computer
+- (Optional) A USB hard drive, SSD, or even flash drive/SD card that is either high endurance or disposable for storing recordings
 
 ## Installation
 
@@ -33,6 +34,7 @@ It provides a non-intrusive solution for archiving lessons and lectures to aid s
 6. Install required software:
    - On Windows: Place `ffmpeg.exe` in the `whiteboard-recorder/backend` directory
    - On Linux: `sudo apt install -y ffmpeg v4l-utils`
+7. Copy `.env.example` to `.env` and modify it for your configuration if necessary
 
 ## Usage
 
@@ -61,3 +63,5 @@ This will be updated once the built webapp is released and I make a simple start
 10. The recording is processed automatically, then will be available by clicking the **Download recording** button.
 
 ## TODO
+
+[ ] Build for a production release
