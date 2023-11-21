@@ -62,6 +62,29 @@ This will be updated once the built webapp is released and I make a simple start
 9. End the recording by clicking the **Stop recording** button.
 10. The recording is processed automatically, then will be available by clicking the **Download recording** button.
 
+### Run on boot
+
+*Warning: As of 11/20/2023 these steps are untested.*
+
+1. Edit `whiteboard-recorder-backend.service` and `whiteboard-recorder-frontend.service` to match your username and path to the `whiteboard-recorder` directory
+2. Edit `frontend/start.sh` to match your username
+3. Copy both service files to the `/etc/systemd/system` directory:
+
+```bash
+cp whiteboard-recorder-backend.service /etc/systemd/system/whiteboard-recorder-backend.service
+cp whiteboard-recorder-frontend.service /etc/systemd/system/whiteboard-recorder-frontend.service
+```
+
+4. Enable and start the services using sysctl:
+
+```bash
+sudo systemctl enable whiteboard-recorder-backend.service
+sudo systemctl enable whiteboard-recorder-frontend.service
+
+sudo systemctl start whiteboard-recorder-backend.service
+sudo systemctl start whiteboard-recorder-frontend.service
+```
+
 ## TODO
 
 [ ] Build for a production release

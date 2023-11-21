@@ -1,0 +1,11 @@
+[Unit]
+Description=Whiteboard Recorder Frontend Dev Server
+After=network.target
+
+[Service]
+WorkingDirectory=/home/USERNAME/whiteboard-recorder/frontend
+ExecStart=/usr/bin/screen -dmS dwhiteboard-recorder-frontend /home/orangepi/Programming/whiteboard-recorder/frontend/start.sh
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

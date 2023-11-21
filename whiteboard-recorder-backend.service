@@ -1,0 +1,11 @@
+[Unit]
+Description=Whiteboard Recorder Backend Dev Server
+After=network.target
+
+[Service]
+WorkingDirectory=/home/USERNAME/whiteboard-recorder/backend
+ExecStart=/usr/bin/screen -dmS whiteboard-recorder-backend /home/USERNAME/whiteboard-recorder/backend/venv/bin/python3 app.py
+Type=forking
+
+[Install]
+WantedBy=multi-user.target
