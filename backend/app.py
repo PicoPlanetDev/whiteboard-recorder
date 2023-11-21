@@ -202,7 +202,7 @@ def jobs_route():
                 job_manager.clear_finished_jobs()
                 return jsonify({'status': "success"})
 
-@app.route('/api/purge_recording_directory', methods=['GET'])
+@app.route('/api/purge_recordings_directory', methods=['POST'])
 def purge_recordings():
     global job_manager
     job_manager.purge_recording_directory()
