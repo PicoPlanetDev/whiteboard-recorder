@@ -208,5 +208,10 @@ def purge_recordings():
     job_manager.purge_recording_directory()
     return jsonify({'status': "success"})
 
+@app.route('/api/shutdown', methods=['POST'])
+def shutdown():
+    os.system("systemctl poweroff")
+    return jsonify({'status': "success"})
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
