@@ -22,6 +22,17 @@ It provides a non-intrusive solution for archiving lessons and lectures to aid s
 
 ## Installation
 
+### Install node via nvm
+
+As explained in full detail at [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm), run the following commands to install node using nvm.
+
+1. Run `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash` to download and install nvm
+2. Close and reopen your terminal
+3. Ensure that `command -v nvm` returns `nvm`
+4. Install the latest version of node using `nvm install node`
+
+### Whiteboard Recorder Setup
+
 1. Use `git clone https://github.com/PicoPlanetDev/whiteboard-recorder` to download the source code
 2. `cd whiteboard-recorder` then
 3. `cd frontend` then `npm install`
@@ -35,6 +46,8 @@ It provides a non-intrusive solution for archiving lessons and lectures to aid s
    - On Windows: Place `ffmpeg.exe` in the `whiteboard-recorder/backend` directory
    - On Linux: `sudo apt install -y ffmpeg v4l-utils`
 7. Copy `.env.example` to `.env` and modify it for your configuration if necessary
+   - If you are simply accessing Whiteboard Recorder over HTTP on your local network (or with a service such as Tailscale), there's no need to further modify `.env`
+   - If you are setting up access to Whiteboard Recorder on a custom domain (or subdomain) using a reverse proxy or a service such as a Cloudflare Tunnel, the `VITE_API_ENDPOINT` variable must be modified to match your domain configuration, with `/api` added on to the end. This variable must be in quotation marks as well, such as `"https://whiteboard-recorder-api.mydomain.com/api"`.
 
 ## Usage
 
@@ -63,8 +76,6 @@ This will be updated once the built webapp is released and I make a simple start
 10. The recording is processed automatically, then will be available by clicking the **Download recording** button.
 
 ### Run on boot
-
-*Warning: As of 11/20/2023 these steps are untested.*
 
 1. Edit `whiteboard-recorder-backend.service` and `whiteboard-recorder-frontend.service` to match your username and path to the `whiteboard-recorder` directory
 2. Edit `frontend/start.sh` to match your username
