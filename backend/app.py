@@ -218,5 +218,12 @@ def shutdown():
         return jsonify({'status': "error", 'message': "OS not supported"})
     return jsonify({'status': "success"})
 
+@app.route('/api/update', methods=['POST'])
+def update():
+    # This is a sketchy way to update the backend
+    os.system("git stash && git fetch && git pull && git stash pop")
+    os.system("sudo systemctl restart whiteboard-recorder")
+    return jsonify({'status': "success"})
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
