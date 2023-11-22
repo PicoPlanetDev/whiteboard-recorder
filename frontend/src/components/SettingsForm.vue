@@ -115,7 +115,7 @@ import Alert from './Alert.vue';
                     <i class="bi bi-power me-1"></i>
                     Shutdown
                 </button>
-                <button type="button" class="btn btn-outline-warning float-end me-2" @click="shutdown">
+                <button type="button" class="btn btn-outline-warning float-end me-2" @click="update">
                     <i class="bi bi-arrow-clockwise me-1"></i>
                     Update
                 </button>
