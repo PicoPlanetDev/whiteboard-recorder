@@ -115,6 +115,10 @@ import Alert from './Alert.vue';
                     <i class="bi bi-power me-1"></i>
                     Shutdown
                 </button>
+                <button type="button" class="btn btn-outline-secondary float-end" @click="shutdown">
+                    <i class="bi bi-arrow-clockwise me-1"></i>
+                    Update
+                </button>
             </div>
         </div>
     </form>
@@ -665,6 +669,27 @@ export default {
         scrollToTop() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
+        },
+        update() {
+            axios.post('/update').then(response => {
+                if (response.data.status == 'success') {
+                    // Update the alert
+                    this.alert.message = 'Update initiated';
+                    this.alert.icon = 'check-circle';
+                    this.alert.color = 'success';
+                    this.alert.show = true;
+                } else {
+                    // Update the alert
+                    this.alert.message = response.data.message;
+                    this.alert.icon = 'exclamation-circle';
+                    this.alert.color = 'danger';
+                    this.alert.show = true;
+                }
+                this.scrollToTop();
+
+            }).catch(error => {
+                console.log(error);
+            });
         },
     },
     mounted() {
