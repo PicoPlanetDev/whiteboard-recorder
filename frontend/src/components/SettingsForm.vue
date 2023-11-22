@@ -3,7 +3,6 @@ import Alert from './Alert.vue';
 </script>
 
 <template>
-    hehehe hooohooo
     <form>
         <!-- Alert -->
         <Alert :message="alert.message" :icon="alert.icon" :color="alert.color" v-if="alert.show"></Alert>
