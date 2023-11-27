@@ -6,9 +6,10 @@ import subprocess
 import os
 
 class Processing():
-    def __init__(self, config, recording_directory: pathlib.Path):
+    def __init__(self, config, recording_directory: pathlib.Path, job_name: str = None):
         self.config = config
         self.recording_directory = recording_directory
+        self.job_name = job_name
 
     def extract_audio(self):
         """Extracts the audio from the video file, saving it as a temporary mp3 file"""
@@ -20,7 +21,7 @@ class Processing():
 
     def process_recording(self):
         """Processes the video file that was just recorded"""
-
+        start_time = time.time()
         for video_device in self.config.get_enabled_video_devices():
             print(f"Processing video from {video_device}")
             
@@ -30,6 +31,9 @@ class Processing():
 
             self.process_video(temp_video_file, temp_processed_video_file, video_device)
         # Now we end up with two processed video files, one for each video device
+
+        duration = time.time() - start_time
+        print(f"Processed recording in {round(duration, 3)} seconds")
 
     def process_video(self, input_file, output_file, video_device):
         # Create the video capture and get its properties
@@ -78,7 +82,8 @@ class Processing():
         # stacked_video_file = self.config.config['files']['stacked_video_file']
         temp_audio_file = self.recording_directory.joinpath(self.config.config['files']['temp_audio_file']).as_posix()
         
-        output_video_file = self.recording_directory.joinpath(self.config.config['files']['output_video_file']).as_posix()
+        # output_video_file = self.recording_directory.joinpath(self.config.config['files']['output_video_file']).as_posix()
+        output_video_file = self.recording_directory.joinpath(f"{self.job_name}.mp4").as_posix()
 
         # If there is only one video device, just use the processed video file as the output video file
         if len(temp_processed_video_files) == 1:

@@ -109,7 +109,7 @@ class JobManager():
 class ProcessingJob():
     def __init__(self, config: configuration.Configuration, job_name: str, recording_directory: pathlib.Path):
         self.config = config
-        self.video_processing = processing.Processing(config, recording_directory)
+        self.video_processing = processing.Processing(config, recording_directory, job_name)
         self.job_name = job_name
         self.recording_directory = recording_directory
         self.started = False
