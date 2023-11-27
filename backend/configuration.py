@@ -262,6 +262,11 @@ class Configuration:
                 raise TypeError(f"Expected {video}['input_format'] to be a string")
             self.config[video]['input_format'] = data[video]['input_format']
 
+            # Validate pixel_format
+            if not isinstance(data[video]['pixel_format'], str):
+                raise TypeError(f"Expected {video}['pixel_format'] to be a string")
+            self.config[video]['pixel_format'] = data[video]['pixel_format']
+
             # Convert focus to int
             self.config[video]['focus'] = int(data[video]['focus'])
 
