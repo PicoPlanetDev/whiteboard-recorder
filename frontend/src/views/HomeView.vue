@@ -18,12 +18,13 @@ import RecordingButton from '../components/RecordingButton.vue';
           <h1>Control panel</h1>
           <p class="fs-5">Start, stop, and download whiteboard recordings from this page.
             Bookmark the below IP address and port for easy access.</p>
-          <p class="fs-6 font-monospace" v-if="import.meta.env.VITE_API_ENDPOINT === 'default'">Connected to server at <a :href="'http://' + ip_address + ':5173/'">http://{{
-            ip_address }}:5173/</a></p>
+          <p class="fs-6 font-monospace" v-if="showIP">Connected to server at <a
+              :href="'http://' + ip_address + ':5173/'">http://{{
+                ip_address }}:5173/</a></p>
         </div>
         <!-- QR code -->
         <div class="col">
-          <img :src="qrCodeUrl" alt="QR code for URL" height="150" class="rounded-4 float-end" v-if="import.meta.env.VITE_API_ENDPOINT === 'default'">
+          <img :src="qrCodeUrl" alt="QR code for URL" height="150" class="rounded-4 float-end" v-if="showIP">
         </div>
       </div>
 
@@ -52,6 +53,9 @@ export default {
   computed: {
     qrCodeUrl() {
       return axios.defaults.baseURL + '/get_qr_code';
+    },
+    showIP() {
+      return import.meta.env.VITE_API_ENDPOINT === 'default';
     },
   },
   methods: {
