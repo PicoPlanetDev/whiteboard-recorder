@@ -282,7 +282,7 @@ class Configuration:
         # Validate recording_copy_directory
         if not isinstance(data['files']['recording_copy_directory'], str):
             raise TypeError(f"Expected files['recording_copy_directory'] to be a string")
-        self.config['files']['recording_copy_directory'] = pathlib.Path(data['files']['recording_copy_directory']).as_posix()
+        self.config['files']['recording_copy_directory'] = data['files']['recording_copy_directory']
 
         self.save_config()
 
