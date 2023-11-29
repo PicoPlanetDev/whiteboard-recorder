@@ -133,6 +133,6 @@ class ProcessingJob():
         self.video_processing.stack_processed_videos()
         self.progress_message = 'Copying output'
         if self.config.config['files']['recording_copy_directory'] != '':
-            os.system(f'cp {self.video_processing.output_file} {self.config.config["files"]["recording_copy_directory"]}')
+            os.system(f'cp {self.recording_directory.joinpath(f"{self.job_name}.mp4").as_posix()} {pathlib.Path(self.config.config["files"]["recording_copy_directory"])}')
         self.progress_message = 'Finished'
         self.finished = True

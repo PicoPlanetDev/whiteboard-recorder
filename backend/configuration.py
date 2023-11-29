@@ -167,7 +167,7 @@ class Configuration:
                 'output_video_file': self.config['files']['output_video_file'],
                 'stacked_video_file': self.config['files']['stacked_video_file'],
                 'recording_directory': pathlib.Path(self.config['files']['recording_directory']).as_posix(),
-                'recording_copy_directory': pathlib.Path(self.config['files']['recording_copy_directory']).as_posix(),
+                'recording_copy_directory': self.config['files']['recording_copy_directory'],
             }
         }
         return all

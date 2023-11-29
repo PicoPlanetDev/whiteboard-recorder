@@ -95,7 +95,7 @@ import Alert from './Alert.vue';
             </div>
             <!-- Copy directory input -->
             <div class="mb-3">
-                <label for="recordingCopyDirectoryInput" class="form-label">Recording Directory</label>
+                <label for="recordingCopyDirectoryInput" class="form-label">Recording Copy Directory</label>
                 <input type="text" id="jrecordingCopyDirectoryInput" class="form-control"
                     aria-describedby="recordingCopyDirectoryHelpBlock" v-model="files.recordingCopyDirectory">
                 <div id="recordingCopyDirectoryHelpBlock" class="form-text">
