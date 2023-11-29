@@ -88,7 +88,8 @@ class JobManager():
         """Returns the output file of the job with the given name"""
         for job in self.processing_jobs:
             if job.job_name == job_name:
-                output_file_name = self.config.config['files']['output_video_file']
+                # output_file_name = self.config.config['files']['output_video_file']
+                output_file_name = f"{job.job_name}.mp4"
                 return job.recording_directory.joinpath(output_file_name)
         return 'Job not found'
     
