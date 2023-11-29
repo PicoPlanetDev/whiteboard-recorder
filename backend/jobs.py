@@ -131,5 +131,8 @@ class ProcessingJob():
         self.video_processing.process_recording()
         self.progress_message = 'Stacking output'
         self.video_processing.stack_processed_videos()
+        self.progress_message = 'Copying output'
+        if self.config.config['files']['recording_copy_directory'] != '':
+            os.system(f'cp {self.video_processing.output_file} {self.config.config["files"]["recording_copy_directory"]}')
         self.progress_message = 'Finished'
         self.finished = True

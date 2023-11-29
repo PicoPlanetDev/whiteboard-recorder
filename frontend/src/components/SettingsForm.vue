@@ -86,10 +86,21 @@ import Alert from './Alert.vue';
             <!-- Recording directory input -->
             <div class="mb-3">
                 <label for="recordingDirectoryInput" class="form-label">Recording Directory</label>
-                <input type="text" id="jrecordingDirectoryInput" class="form-control"
+                <input type="text" id="recordingDirectoryInput" class="form-control"
                     aria-describedby="recordingDirectoryHelpBlock" v-model="files.recordingDirectory">
                 <div id="recordingDirectoryHelpBlock" class="form-text">
                     The path to a directory where recordings will be saved. If the directory does not exist, it will be
+                    created when the first recording in the directory is started.
+                </div>
+            </div>
+            <!-- Copy directory input -->
+            <div class="mb-3">
+                <label for="recordingCopyDirectoryInput" class="form-label">Recording Directory</label>
+                <input type="text" id="jrecordingCopyDirectoryInput" class="form-control"
+                    aria-describedby="recordingCopyDirectoryHelpBlock" v-model="files.recordingCopyDirectory">
+                <div id="recordingCopyDirectoryHelpBlock" class="form-text">
+                    The path to a directory where finished recordings will be copied. If the directory does not exist, it
+                    will be
                     created when the first recording in the directory is started.
                 </div>
             </div>
@@ -357,6 +368,7 @@ export default {
             },
             files: {
                 recordingDirectory: '',
+                recordingCopyDirectory: '',
             }
         }
     },
@@ -410,6 +422,7 @@ export default {
                 }
 
                 this.files.recordingDirectory = response.data.files.recording_directory;
+                this.files.recordingCopyDirectory = response.data.files.recording_copy_directory;
 
             }).catch(error => {
                 console.log(error);
@@ -455,6 +468,7 @@ export default {
                 },
                 files: {
                     recording_directory: this.files.recordingDirectory,
+                    recording_copy_directory: this.files.recordingCopyDirectory,
                 }
 
             }).then(response => {

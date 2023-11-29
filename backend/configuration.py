@@ -113,7 +113,8 @@ class Configuration:
                 'temp_audio_file': 'temp_audio.mp3',
                 'output_video_file': 'output_video.mp4',
                 'stacked_video_file': 'stacked_video.mp4',
-                'recording_directory': pathlib.Path('./recordings').as_posix()
+                'recording_directory': pathlib.Path('./recordings').as_posix(),
+                'recording_copy_directory': '',
             }
         }
         self.config = default_config
@@ -165,7 +166,8 @@ class Configuration:
                 'temp_audio_file': self.config['files']['temp_audio_file'],
                 'output_video_file': self.config['files']['output_video_file'],
                 'stacked_video_file': self.config['files']['stacked_video_file'],
-                'recording_directory': pathlib.Path(self.config['files']['recording_directory']).as_posix()
+                'recording_directory': pathlib.Path(self.config['files']['recording_directory']).as_posix(),
+                'recording_copy_directory': pathlib.Path(self.config['files']['recording_copy_directory']).as_posix(),
             }
         }
         return all
@@ -276,6 +278,11 @@ class Configuration:
         if data['files']['recording_directory'] == '':
             raise ValueError(f"Expected files['recording_directory'] to not be empty")
         self.config['files']['recording_directory'] = pathlib.Path(data['files']['recording_directory']).as_posix()
+
+        # Validate recording_copy_directory
+        if not isinstance(data['files']['recording_copy_directory'], str):
+            raise TypeError(f"Expected files['recording_copy_directory'] to be a string")
+        self.config['files']['recording_copy_directory'] = pathlib.Path(data['files']['recording_copy_directory']).as_posix()
 
         self.save_config()
 
