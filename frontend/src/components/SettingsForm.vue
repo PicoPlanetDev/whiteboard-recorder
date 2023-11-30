@@ -122,6 +122,10 @@ import Alert from './Alert.vue';
                     <i class="bi bi-check2 me-1"></i>
                     Save
                 </button>
+                <button type="button" class="btn btn-outline-secondary float-end" @click="restart">
+                    <i class="bi bi-power me-1"></i>
+                    Restart
+                </button>
                 <button type="button" class="btn btn-outline-secondary float-end" @click="shutdown">
                     <i class="bi bi-power me-1"></i>
                     Shutdown
@@ -654,7 +658,10 @@ export default {
             this.scrollToTop();
         },
         shutdown() {
-            axios.post('/shutdown').then(response => {
+            // Post to the shutdown endpoint with data type shutdown
+            axios.post('/shutdown', {
+                type: 'shutdown',
+            }).then(response => {
                 if (response.data.status == 'success') {
                     // Update the alert
                     this.alert.message = 'Shutdown initiated';
@@ -674,6 +681,35 @@ export default {
 
                 // Update the alert
                 this.alert.message = 'Error initiating shutdown';
+                this.alert.icon = 'exclamation-circle';
+                this.alert.color = 'danger';
+                this.alert.show = true;
+            });
+            this.scrollToTop();
+        },
+        restart() {
+            axios.post('/shutdown', {
+                type: 'restart',
+            }).then(response => {
+                if (response.data.status == 'success') {
+                    // Update the alert
+                    this.alert.message = 'Restart initiated';
+                    this.alert.icon = 'check-circle';
+                    this.alert.color = 'success';
+                    this.alert.show = true;
+                } else {
+                    // Update the alert
+                    this.alert.message = response.data.message;
+                    this.alert.icon = 'exclamation-circle';
+                    this.alert.color = 'danger';
+                    this.alert.show = true;
+                }
+
+            }).catch(error => {
+                console.log(error);
+
+                // Update the alert
+                this.alert.message = 'Error initiating restart';
                 this.alert.icon = 'exclamation-circle';
                 this.alert.color = 'danger';
                 this.alert.show = true;

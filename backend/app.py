@@ -210,13 +210,23 @@ def purge_recordings():
 
 @app.route('/api/shutdown', methods=['POST'])
 def shutdown():
-    if os.name == 'nt':
-        os.system("shutdown /s /t 1") # not sure if this works withouth admin privileges
-    elif os.name == 'posix':
-        os.system("systemctl poweroff") # need systemd
-    else:
-        return jsonify({'status': "error", 'message': "OS not supported"})
-    return jsonify({'status': "success"})
+    if request.get_json()['type'] == 'restart':
+        if os.name == 'nt':
+            os.system("shutdown /r /t 1")
+        elif os.name == 'posix':
+            os.system("systemctl reboot")
+        else:
+            return jsonify({'status': "error", 'message': "OS not supported"})
+        return jsonify({'status': "success"})
+    
+    elif request.get_json()['type'] == 'shutdown':
+        if os.name == 'nt':
+            os.system("shutdown /s /t 1") # not sure if this works withouth admin privileges
+        elif os.name == 'posix':
+            os.system("systemctl poweroff") # need systemd
+        else:
+            return jsonify({'status': "error", 'message': "OS not supported"})
+        return jsonify({'status': "success"})
 
 @app.route('/api/update', methods=['POST'])
 def update():
