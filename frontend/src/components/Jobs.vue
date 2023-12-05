@@ -63,6 +63,14 @@
             <div v-else>
                 <p class="fs-5">No jobs found.</p>
             </div>
+            <div v-if="downloadPercent >= 0">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" :style="{ width: downloadPercent + '%' }"
+                        :aria-valuenow="downloadPercent" aria-valuemin="0" aria-valuemax="100">
+                        {{ downloadPercent }}%
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -73,6 +81,7 @@ export default {
     data() {
         return {
             jobs: [],
+            downloadPercent: -1,
         };
     },
     methods: {
@@ -126,7 +135,10 @@ export default {
                 url: '/jobs',
                 method: 'POST',
                 responseType: 'blob', // important
-                data: { action: "download", job_name: name }
+                data: { action: "download", job_name: name },
+                onDownloadProgress: (progressEvent) => {
+                    this.downloadPercent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                }
             }).then((response) => {
                 // witchcraft to download the file
                 const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -135,6 +147,7 @@ export default {
                 link.setAttribute('download', name + '.mp4');
                 document.body.appendChild(link);
                 link.click();
+                this.downloadPercent = -1;
             })
         }
     },
