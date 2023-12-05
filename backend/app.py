@@ -5,6 +5,7 @@ import os
 import qrcode
 import io
 import base64
+import subprocess
 # my modules
 import configuration
 import processing
@@ -71,6 +72,13 @@ def download():
 
 # Gets the local IP address of the machine running the backend
 def get_local_ip():
+    # attempt to get tailscale ip address
+    result = subprocess.check_output(['tailscale', 'ip']).decode("utf-8")
+    if "command not found" not in result:
+        ip = result.split()[0]
+        return ip
+
+    # otherwise, get local ip address
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.settimeout(0)
     try:

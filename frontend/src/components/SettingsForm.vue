@@ -657,7 +657,7 @@ export default {
             });
             this.scrollToTop();
         },
-        shutdown() {
+        shutdown(shutdownType) {
             // Post to the shutdown endpoint with data type shutdown
             axios.post('/shutdown', {
                 type: 'shutdown',
