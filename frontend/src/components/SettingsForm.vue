@@ -52,13 +52,11 @@ import Alert from './Alert.vue';
                 </div>
             </div>
             <!-- Stack order -->
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <span class="input-group-text">First video</span>
-                <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
-                    v-model="configurator.stackOrder[0]">
+                <input type="number" class="form-control" placeholder="0" v-model="stackOrder[0]">
                 <span class="input-group-text">Second video</span>
-                <input type="number" class="form-control" id="corner-tl-y" placeholder="1"
-                    v-model="configurator.stackOrder[1]">
+                <input type="number" class="form-control" placeholder="1" v-model="stackOrder[1]">
             </div>
         </div>
         <!-- Video -->
