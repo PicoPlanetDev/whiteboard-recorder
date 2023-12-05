@@ -79,6 +79,7 @@ class Configuration:
             'end_recording_delay': 1,
             'stack': 'vstack', # 'vstack' or 'hstack'
             'job_name_format': '%m-%d-%Y %H-%M-%S',
+            'stack_order': [0, 1],
             'video0': {
                 'enabled': True,
                 'video_device': default_video_device,
@@ -134,6 +135,7 @@ class Configuration:
             'end_recording_delay': self.config['end_recording_delay'],
             'stack': self.config['stack'],
             'job_name_format': self.config['job_name_format'],
+            'stack_order': self.config['stack_order'],
             'video0': {
                 'video_device': self.config['video0']['video_device'],
                 'resolution': self.config['video0']['resolution'],
@@ -213,6 +215,16 @@ class Configuration:
             if char in data['job_name_format']:
                 raise ValueError(f"Expected job_name_format to not contain {char}")
         self.config['job_name_format'] = data['job_name_format']
+
+        # Validate stack_order
+        if not isinstance(data['stack_order'], list):
+            raise TypeError("Expected stack_order to be a list")
+        if len(data['stack_order']) != 2:
+            raise ValueError("Expected stack_order to be a list of length 2")
+        for i in data['stack_order']:
+            if not isinstance(i, int):
+                raise TypeError("Expected stack_order to be a list of ints")
+        self.config['stack_order'] = data['stack_order']
 
         # Validate video0 and video1
         for video in ['video0', 'video1']:

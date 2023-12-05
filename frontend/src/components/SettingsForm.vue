@@ -51,6 +51,15 @@ import Alert from './Alert.vue';
                     <label class="form-check-label" for="stackDirectionVertical">Vertical</label>
                 </div>
             </div>
+            <!-- Stack order -->
+            <div class="input-group">
+                <span class="input-group-text">First video</span>
+                <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
+                    v-model="configurator.stackOrder[0]">
+                <span class="input-group-text">Second video</span>
+                <input type="number" class="form-control" id="corner-tl-y" placeholder="1"
+                    v-model="configurator.stackOrder[1]">
+            </div>
         </div>
         <!-- Video -->
         <div class="container-fluid">
@@ -326,6 +335,7 @@ export default {
             endRecordingDelay: 1,
             stack: '',
             jobNameFormat: '',
+            stackOrder: [0, 1],
 
             video0: {
                 videoDevice: 0,
@@ -390,6 +400,7 @@ export default {
                 this.endRecordingDelay = response.data.end_recording_delay;
                 this.stack = response.data.stack;
                 this.jobNameFormat = response.data.job_name_format;
+                this.stackOrder = response.data.stack_order;
 
                 this.video0.videoDevice = response.data.video0.video_device[0];
                 this.video0.resolutionX = response.data.video0.resolution[0];
@@ -444,6 +455,7 @@ export default {
                 end_recording_delay: this.endRecordingDelay,
                 stack: this.stack,
                 job_name_format: this.jobNameFormat,
+                stack_order: this.stackOrder,
 
                 video0: {
                     video_device: this.videoDevices[this.video0.videoDevice],

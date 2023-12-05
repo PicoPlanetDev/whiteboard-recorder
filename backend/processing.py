@@ -94,13 +94,14 @@ class Processing():
                             output_video_file])
             return
 
+        stack_order = self.config.config['stack_order'] # list like [0, 1] or [1, 0] defining which video is first
         # Use ffmpeg to stack the processed videos on top of each other
         subprocess.run(['ffmpeg','-hide_banner','-y',
-                        '-i', temp_processed_video_files[0],'-i',temp_processed_video_files[1],
+                        '-i', temp_processed_video_files[stack_order[0]],'-i',temp_processed_video_files[stack_order[1]], # might rely on alphabetical order
                         '-i', temp_audio_file,
                         '-err_detect','ignore_err',
-                        '-filter_complex', self.config.config['stack'],
-                        '-r', str(max(int(self.config.config['video0']['framerate']), int(self.config.config['video1']['framerate']))),
+                        '-filter_complex', self.config.config['stack'], # stack the videos horizontally or vertically
+                        '-r', str(max(int(self.config.config['video0']['framerate']), int(self.config.config['video1']['framerate']))), # choose the highest framerate of the two videos
                         output_video_file])
 
     def get_warp_matrix(self, video_device='video0'):
