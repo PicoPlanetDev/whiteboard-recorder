@@ -1,9 +1,11 @@
+from multiprocessing import process
 import pathlib
 import cv2
 import numpy as np
 import time
 import subprocess
 import os
+import threading
 
 class Processing():
     def __init__(self, config, recording_directory: pathlib.Path, job_name: str = None):
@@ -22,6 +24,8 @@ class Processing():
     def process_recording(self):
         """Processes the video file that was just recorded"""
         start_time = time.time()
+        processing_threads = []
+
         for video_device in self.config.get_enabled_video_devices():
             print(f"Processing video from {video_device}")
             
@@ -29,8 +33,19 @@ class Processing():
             temp_video_file = self.recording_directory.joinpath(self.config.config[video_device]['temp_video_file']).as_posix()
             temp_processed_video_file = self.recording_directory.joinpath(self.config.config[video_device]['temp_processed_video_file']).as_posix()
 
-            self.process_video(temp_video_file, temp_processed_video_file, video_device)
-        # Now we end up with two processed video files, one for each video device
+            # Process the video in separate threads
+            processing_threads.append(threading.Thread(target=self.process_video, args=(temp_video_file, temp_processed_video_file, video_device)))
+            # self.process_video(temp_video_file, temp_processed_video_file, video_device)
+
+        # Start the threads
+        for thread in processing_threads:
+            thread.start()
+        
+        # Wait for the threads to finish
+        for thread in processing_threads:
+            thread.join()
+        
+        # Now both videos are processed and we can stack them
 
         duration = time.time() - start_time
         print(f"Processed recording in {round(duration, 3)} seconds")
