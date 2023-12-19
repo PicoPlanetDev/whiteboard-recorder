@@ -63,7 +63,25 @@
             <div v-else>
                 <p class="fs-5">No jobs found.</p>
             </div>
+            <!-- Download progress bar -->
             <div v-if="downloadPercent >= 0">
+                <!-- Download progress bar -->
+                <div v-if="downloadPercent >= 0">
+                    <div class="col-3">
+                        <span class="mb-2 fs-5">
+                            <i class="bi bi-download me-2"></i>
+                            Downloading
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" :style="{ width: downloadPercent + '%' }"
+                                :aria-valuenow="downloadPercent" aria-valuemin="0" aria-valuemax="100">
+                                {{ downloadPercent }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="progress">
                     <div class="progress-bar" role="progressbar" :style="{ width: downloadPercent + '%' }"
                         :aria-valuenow="downloadPercent" aria-valuemin="0" aria-valuemax="100">
