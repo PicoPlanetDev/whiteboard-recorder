@@ -78,6 +78,13 @@ import Alert from './Alert.vue';
         </div>
         <div class="border rounded mb-3 p-3">
             <div class="fs-5 mb-3">Files</div>
+            <div class="mb-3">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="autoProcessSwitch"
+                        v-model="autoProcessRecordings">
+                    <label class="form-check-label" for="autoProcessSwitch">Automatically process recordings</label>
+                </div>
+            </div>
             <!-- Job name format input -->
             <div class="mb-3">
                 <label for="jobNameFormatInput" class="form-label">Job Name Format</label>
@@ -334,6 +341,7 @@ export default {
             stack: '',
             jobNameFormat: '',
             stackOrder: [0, 1],
+            autoProcessRecordings: false,
 
             video0: {
                 videoDevice: 0,
@@ -399,6 +407,7 @@ export default {
                 this.stack = response.data.stack;
                 this.jobNameFormat = response.data.job_name_format;
                 this.stackOrder = response.data.stack_order;
+                this.autoProcessRecordings = response.data.auto_process_recordings;
 
                 this.video0.videoDevice = response.data.video0.video_device[0];
                 this.video0.resolutionX = response.data.video0.resolution[0];
@@ -454,6 +463,7 @@ export default {
                 stack: this.stack,
                 job_name_format: this.jobNameFormat,
                 stack_order: this.stackOrder,
+                auto_process_recordings: this.autoProcessRecordings,
 
                 video0: {
                     video_device: this.videoDevices[this.video0.videoDevice],

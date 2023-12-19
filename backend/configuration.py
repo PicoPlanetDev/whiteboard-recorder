@@ -80,6 +80,7 @@ class Configuration:
             'stack': 'vstack', # 'vstack' or 'hstack'
             'job_name_format': '%m-%d-%Y %H-%M-%S',
             'stack_order': [0, 1],
+            'auto_process_recordings': True,
             'video0': {
                 'enabled': True,
                 'video_device': default_video_device,
@@ -136,6 +137,7 @@ class Configuration:
             'stack': self.config['stack'],
             'job_name_format': self.config['job_name_format'],
             'stack_order': self.config['stack_order'],
+            'auto_process_recordings': self.config['auto_process_recordings'],
             'video0': {
                 'video_device': self.config['video0']['video_device'],
                 'resolution': self.config['video0']['resolution'],
@@ -225,6 +227,11 @@ class Configuration:
             if not isinstance(i, int):
                 raise TypeError("Expected stack_order to be a list of ints")
         self.config['stack_order'] = data['stack_order']
+
+        # Validate auto process recordings
+        if not isinstance(data['auto_process_recordings'], bool):
+            raise TypeError("Expected auto_process_recordings to be a bool")
+        self.config['auto_process_recordings'] = data['auto_process_recordings']
 
         # Validate video0 and video1
         for video in ['video0', 'video1']:
