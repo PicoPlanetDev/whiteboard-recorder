@@ -30,6 +30,10 @@ class JobManager():
         self.video_recorder.stop_recording()
         self.processing_jobs.append(ProcessingJob(self.config, self.current_recording_job_name, self.current_recording_job_directory))
 
+        # Automatically process the recording if auto_process_recordings is true
+        if self.config.config['auto_process_recordings']:
+            self.run_job(self.current_recording_job_name)
+
     def run_jobs(self):
         """Runs all the jobs in the processing_jobs list"""
         for job in self.processing_jobs:
