@@ -76,6 +76,7 @@ import Alert from './Alert.vue';
                 </button>
             </div>
         </div>
+        <!-- Files -->
         <div class="border rounded mb-3 p-3">
             <div class="fs-5 mb-3">Files</div>
             <div class="mb-3">
@@ -123,6 +124,36 @@ import Alert from './Alert.vue';
                     <i class="bi bi-exclamation-octagon me-1"></i>
                     Purge recordings
                 </button>
+            </div>
+        </div>
+        <!-- Periods -->
+        <div class="border rounded mb-3 p-3">
+            <div class="fs-5 mb-3">Periods</div>
+            <!-- Enabled switch -->
+            <div class="mb-3">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="periodsEnabledSwitch"
+                        v-model="periods.enabled">
+                    <label class="form-check-label" for="periodsEnabledSwitch">Append period names to files</label>
+                </div>
+            </div>
+            <!-- Names input -->
+            <div class="mb-3">
+                <label for="periodNamesInput" class="form-label">Period names</label>
+                <input type="text" id="periodNamesInput" class="form-control"
+                    aria-describedby="periodNamesInputHelpBlock" v-model="periods.names">
+                <div id="periodNamesInputHelpBlock" class="form-text">
+                    A comma-separated list of names for periods. The first name corresponds with the first time, and so on.
+                </div>
+            </div>
+            <!-- Times input -->
+            <div class="mb-3">
+                <label for="periodTimesInput" class="form-label">Period times</label>
+                <input type="text" id="periodTimesInput" class="form-control"
+                    aria-describedby="periodTimesInputHelpBlock" v-model="periods.times">
+                <div id="periodTimesInputHelpBlock" class="form-text">
+                    A comma-separated list of times for periods. Times should be formatted HH:MM in 24-hour time.
+                </div>
             </div>
         </div>
         <!-- Discard and save buttons -->
@@ -389,6 +420,11 @@ export default {
             files: {
                 recordingDirectory: '',
                 recordingCopyDirectory: '',
+            },
+            periods: {
+                enabled: false,
+                names: '',
+                times: '',
             }
         }
     },
