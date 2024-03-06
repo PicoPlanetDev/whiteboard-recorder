@@ -6,6 +6,7 @@ import time
 import pathlib
 import threading
 import shutil
+import datetime
 
 class JobManager():
     def __init__(self, config: configuration.Configuration):
@@ -16,9 +17,36 @@ class JobManager():
         self.current_recording_job_name = ''
         self.current_recording_job_directory = None # TODO: what's a default pathlib path
 
+    def get_period_name(self):
+        # current_time = time.time() # time since epoch
+
+        period_names = str(self.config.config['periods']['names']).split(',') # ordered list of period names
+        period_times = str(self.config.config['periods']['times']).split(',') # ordered list of period times
+
+        period_times_split = [] # convert period_times to list of 2-item lists of hours and minutes
+        for period_time in period_times:
+            split_time = period_time.split(":") # split into hours and minutes
+            period_times_split.append(split_time)
+        
+        # convert each period time to a time in seconds since epoch for today
+        now = datetime.datetime.now()
+        period_datetimes = [now.replace(hour=period_time_split[0], minute=period_time_split[1]) for period_time_split in period_times_split]
+
+        # find the index of the period that the current time is in
+        for i in range(len(period_datetimes)):
+            if now >= period_datetimes[i]:
+                return period_names[i]
+        return None # if no period is found
+
     def start_recording(self):
         # Create a somehwat friendly job name based on the current time
         self.current_recording_job_name = time.strftime(self.config.config['job_name_format'], time.localtime())
+
+        # Append the period name to the job name if periods are enabled
+        if self.config.config['periods']['enabled']:
+            period_name = self.get_period_name()
+            if period_name:
+                self.current_recording_job_name = f"{self.current_recording_job_name}_{period_name}"
 
         # Create a new directory for the job in the config's recording_directory, which might not already exist
         pathlib.Path(self.config.config['files']['recording_directory']).joinpath(pathlib.Path(self.current_recording_job_name)).mkdir(parents=True, exist_ok=True)
