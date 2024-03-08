@@ -141,7 +141,7 @@ import Alert from './Alert.vue';
             <div class="mb-3">
                 <label for="periodNamesInput" class="form-label">Period names</label>
                 <input type="text" id="periodNamesInput" class="form-control"
-                    aria-describedby="periodNamesInputHelpBlock" v-model="periods.names">
+                    aria-describedby="periodNamesInputHelpBlock" v-model="periods.names" :disabled="!periods.enabled">
                 <div id="periodNamesInputHelpBlock" class="form-text">
                     A comma-separated list of names for periods. The first name corresponds with the first time, and so on.
                 </div>
@@ -149,8 +149,8 @@ import Alert from './Alert.vue';
             <!-- Times input -->
             <div class="mb-3">
                 <label for="periodTimesInput" class="form-label">Period times</label>
-                <input type="text" id="periodTimesInput" class="form-control"
-                    aria-describedby="periodTimesInputHelpBlock" v-model="periods.times">
+                <input type="text" id="periodTimesInput" class="form-control":disabled="!periods.enabled">
+                    aria-describedby="periodTimesInputHelpBlock" v-model="periods.times" >
                 <div id="periodTimesInputHelpBlock" class="form-text">
                     A comma-separated list of times for periods. Times should be formatted HH:MM in 24-hour time.
                 </div>
@@ -482,6 +482,10 @@ export default {
                 this.files.recordingDirectory = response.data.files.recording_directory;
                 this.files.recordingCopyDirectory = response.data.files.recording_copy_directory;
 
+                this.periods.enabled = response.data.periods.enabled;
+                this.periods.names = response.data.periods.names;
+                this.periods.times = response.data.periods.times;
+
             }).catch(error => {
                 console.log(error);
             });
@@ -529,7 +533,12 @@ export default {
                 files: {
                     recording_directory: this.files.recordingDirectory,
                     recording_copy_directory: this.files.recordingCopyDirectory,
-                }
+                },
+                periods: {
+                    enabled: this.periods.enabled,
+                    names: this.periods.names,
+                    times: this.periods.times,
+                },
 
             }).then(response => {
                 if (response.data.status == 'success') {
