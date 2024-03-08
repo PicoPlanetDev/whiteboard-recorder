@@ -320,12 +320,12 @@ class Configuration:
         # Validate period names
         if not isinstance(data['periods']['names'], str):
             raise TypeError(f"Expected periods['names'] to be a comma-separated string")
-        self.config['periods']['names'] = data['periods']['names']
+        self.config['periods']['names'] = str(data['periods']['names']).strip()
 
         # Validate period times
         if not isinstance(data['periods']['times'], str):
             raise TypeError(f"Expected periods['times'] to be a comma-separated string")
-        self.config['periods']['times'] = data['periods']['times']
+        self.config['periods']['times'] = str(data['periods']['times']).strip()
 
         self.save_config()
 

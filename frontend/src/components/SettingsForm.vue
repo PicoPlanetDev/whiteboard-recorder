@@ -149,7 +149,7 @@ import Alert from './Alert.vue';
             <!-- Times input -->
             <div class="mb-3">
                 <label for="periodTimesInput" class="form-label">Period times</label>
-                <input type="text" id="periodTimesInput" class="form-control":disabled="!periods.enabled">
+                <input type="text" id="periodTimesInput" class="form-control" :disabled="!periods.enabled"
                     aria-describedby="periodTimesInputHelpBlock" v-model="periods.times" >
                 <div id="periodTimesInputHelpBlock" class="form-text">
                     A comma-separated list of times for periods. Times should be formatted HH:MM in 24-hour time.
