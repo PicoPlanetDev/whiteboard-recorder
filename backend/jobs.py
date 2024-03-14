@@ -34,7 +34,7 @@ class JobManager():
 
         # find the index of the period that the current time is in
         for i in range(len(period_datetimes)):
-            if now >= period_datetimes[i]:
+            if now >= period_datetimes[i] and now <= period_datetimes[(i+1) % len(period_datetimes)]: # unsure if this works
                 return period_names[i]
         return None # if no period is found
 
