@@ -19,6 +19,7 @@ class Configuration:
             # Must be entered manually
             self.av_splits = []
             self.video_devices = [[0, '/dev/video0']] # an actual thing
+            # TODO: for device in /dev/video* get the name I guess is an option
             self.audio_devices = [[0, 'default']] # Not an actual thing
         else:
             raise Exception('OS not supported')
