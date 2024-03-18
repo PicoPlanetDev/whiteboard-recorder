@@ -163,8 +163,10 @@ class Preview():
                 cap = cv2.VideoCapture(self.config.get_video_device_index(video_device), cv2.CAP_DSHOW) # windows is slow if you don't use dshow
             else:
                 cap = cv2.VideoCapture(self.config.get_video_device_index(video_device))
-            cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.config[video_device]['resolution'][0]) # set the X resolution
-            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.config[video_device]['resolution'][1]) # set the Y resolution
+            #cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.config[video_device]['resolution'][0]) # set the X resolution
+            #cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.config[video_device]['resolution'][1]) # set the Y resolution
+            cap.set(cv2.CAP_PROP_FRAME_WIDTH, 10000)
+            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 10000)
 
             while True:
                 ret, frame = cap.read()
