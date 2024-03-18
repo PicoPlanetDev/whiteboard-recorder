@@ -171,6 +171,7 @@ class Preview():
             while True:
                 ret, frame = cap.read()
                 if ret:
+                    print(frame.shape)
                     cap.release()
                     self.frame = frame
                     return frame
