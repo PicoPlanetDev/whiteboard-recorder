@@ -263,10 +263,10 @@ import Alert from './Alert.vue';
                                 <div class="input-group">
                                     <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
-                                        v-model="configurator.corners[0][0]">
+                                        v-model="configurator.corners[0][0]" @input="cornerUpdated">
                                     <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
-                                        v-model="configurator.corners[0][1]">
+                                        v-model="configurator.corners[0][1]" @input="cornerUpdated">
                                 </div>
                             </div>
                             <div class="col">
@@ -281,10 +281,10 @@ import Alert from './Alert.vue';
                                 <div class="input-group">
                                     <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
-                                        v-model="configurator.corners[1][0]">
+                                        v-model="configurator.corners[1][0]" @input="cornerUpdated">
                                     <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
-                                        v-model="configurator.corners[1][1]">
+                                        v-model="configurator.corners[1][1]" @input="cornerUpdated">
                                 </div>
                             </div>
                         </div>
@@ -301,10 +301,10 @@ import Alert from './Alert.vue';
                                 <div class="input-group">
                                     <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
-                                        v-model="configurator.corners[2][0]">
+                                        v-model="configurator.corners[2][0]" @input="cornerUpdated">
                                     <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
-                                        v-model="configurator.corners[2][1]">
+                                        v-model="configurator.corners[2][1]" @input="cornerUpdated">
                                 </div>
                             </div>
                             <div class="col">
@@ -319,10 +319,10 @@ import Alert from './Alert.vue';
                                 <div class="input-group">
                                     <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
-                                        v-model="configurator.corners[3][0]">
+                                        v-model="configurator.corners[3][0]" @input="cornerUpdated">
                                     <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
-                                        v-model="configurator.corners[3][1]">
+                                        v-model="configurator.corners[3][1]" @input="cornerUpdated">
                                 </div>
                             </div>
                         </div>
@@ -601,6 +601,11 @@ export default {
             this.configurator.crosshairPositions[currentCorner] = this.crosshairOffset([x, y]);
             this.configurator.crosshairVisibility[currentCorner] = 'visible';
             this.configurator.corners[currentCorner] = [x, y];
+        },
+        cornerUpdated() {
+            for (var i = 0; i < this.configurator.corners.length; i++) {
+                this.configurator.crosshairPositions[i] = this.crosshairOffset(this.configurator.corners[i]);
+            }
         },
         getVideoAspectRatio(video_device) {
             if (video_device == 0) {
