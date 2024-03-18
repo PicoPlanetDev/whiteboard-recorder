@@ -167,6 +167,8 @@ class Preview():
             #cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.config[video_device]['resolution'][1]) # set the Y resolution
             cap.set(cv2.CAP_PROP_FRAME_WIDTH, 10000)
             cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 10000)
+            cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m','j','p','g'))
+            cap.set(cv2.CAP_PROP_FPS, 30)
 
             while True:
                 ret, frame = cap.read()
