@@ -11,6 +11,7 @@ import configuration
 import processing
 import jobs
 import recorder
+import aruco
 
 # Flask setup
 app = Flask(__name__)
@@ -242,7 +243,18 @@ def update():
     os.system("git stash && git fetch && git pull && git stash pop && sudo systemctl restart whiteboard-recorder-backend.service")
     return jsonify({'status': "success"})
 
+@app.route('/api/detect_corners', methods=['POST'])
+def detect_corners():
+    video_device = request.get_json()['video_device']
+    global config
+    global preview
+    frame = preview.capture_frame(video_device)
+    if frame is None: return jsonify({'status': "error", 'message': "Failed to capture frame"})
 
+    try: aruco.set_video_corners(video_device, frame, config)
+    except Exception as e: return jsonify({'status': "error", 'message': str(e)})
+
+    return jsonify({'status': "success"})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
