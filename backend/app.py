@@ -239,8 +239,10 @@ def shutdown():
 @app.route('/api/update', methods=['POST'])
 def update():
     # This is a sketchy way to update the backend
-    os.system("git stash && git fetch && git pull && git stash pop && sudo systemctl restart whiteboard-recorder")
+    os.system("git stash && git fetch && git pull && git stash pop && sudo systemctl restart whiteboard-recorder-backend.service")
     return jsonify({'status': "success"})
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
