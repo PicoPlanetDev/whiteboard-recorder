@@ -78,7 +78,7 @@
 
                 <div class="form-text" id="videoFocusHelpBlock">Auto-focus is enabled if set to -1</div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col">
                     <!-- Video 0 Input Format -->
                     <div class="mb-3">
@@ -87,7 +87,8 @@
                             aria-describedby="inputFormatInputHelpBlock" v-model="videoData.inputFormat"
                             @input="updateVideo">
                         <div id="inputFormatInputHelpBlock" class="form-text">
-                            Video device input format, disabled if blank, commonly <span class="font-monospace">mjpeg</span>
+                            Video device input format, disabled if blank, commonly <span
+                                class="font-monospace">mjpeg</span>
                             or <span class="font-monospace">yuyv422</span>.
                         </div>
                     </div>
@@ -106,11 +107,20 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Detect corners (ArUco) button -->
+            <div class="">
+                <button type="button" class="btn btn-primary" @click="">
+                    Detect corners (ArUco)
+                </button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: "VideoSettings",
     props: {
@@ -135,6 +145,15 @@ export default {
     methods: {
         updateVideo() {
             this.$emit('update-video', this.videoData);
+        },
+        detectCorners() {
+            axios.post('/detect_corners', {
+                video_device: "video" + str(this.videoNumber),
+            }).then(response => {
+                console.log(response.data);
+            }).catch(error => {
+                console.error(error);
+            });
         }
     },
 }
