@@ -146,7 +146,7 @@ export default {
             this.$emit('update-video', this.videoData);
         },
         detectCorners() {
-            axios.post('/detect_corners', {
+            axios.post('/detect_aruco_corners', {
                 video_device: "video" + str(this.videoNumber),
             }).then(response => {
                 console.log(response.data);

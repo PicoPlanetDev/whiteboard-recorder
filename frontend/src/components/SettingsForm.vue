@@ -213,14 +213,19 @@ import Alert from './Alert.vue';
                                 </div>
                             </form>
                         </div>
-                        <div class="col"><button type="reset" class="btn btn-primary me-2" @click="captureFrame">
+                        <div class="col"><button class="btn btn-primary me-2" @click="captureFrame">
                                 <i class="bi bi-camera me-1"></i>
                                 Capture frame
                             </button>
                         </div>
-                        <div class="col"><button type="reset" class="btn btn-primary me-2" @click="previewWarped">
+                        <div class="col"><button class="btn btn-primary me-2" @click="previewWarped">
                                 <i class="bi bi-bounding-box me-1"></i>
                                 Preview warped
+                            </button>
+                        </div>
+                        <div class="col"><button class="btn btn-primary me-2" @click="detectAndPreviewAruco">
+                                <i class="bi bi-bounding-box me-1"></i>
+                                Detect & preview corners (ArUco)
                             </button>
                         </div>
                     </div>
@@ -814,6 +819,18 @@ export default {
                 console.log(error);
             });
         },
+        detectAndPreviewAruco() {
+            this.configurator.spinnerVisibility = 'visible';
+            axios.post('/detect_and_preview_aruco', {
+                video_device: 'video' + this.configurator.currentVideoDevice,
+            }).then(response => {
+                this.configurator.spinnerVisibility = 'hidden';
+                this.configurator.capturedFrame = response.data;
+
+            }).catch(error => {
+                console.log(error);
+            });
+        }
     },
     mounted() {
         this.resetForm();

@@ -243,8 +243,8 @@ def update():
     os.system("git stash && git fetch && git pull && git stash pop && sudo systemctl restart whiteboard-recorder-backend.service")
     return jsonify({'status': "success"})
 
-@app.route('/api/detect_corners', methods=['POST'])
-def detect_corners():
+@app.route('/api/detect_aruco_corners', methods=['POST'])
+def detect_aruco_corners():
     video_device = request.get_json()['video_device']
     global config
     global preview
@@ -255,6 +255,22 @@ def detect_corners():
     except Exception as e: return jsonify({'status': "error", 'message': str(e)})
 
     return jsonify({'status': "success"})
+
+@app.route('/api/preview_aruco_corners', methods=['POST'])
+def preview_aruco_corners():
+    video_device = request.get_json()['video_device']
+    global config
+    global preview
+    frame = preview.capture_frame(video_device)
+    if frame is None: return jsonify({'status': "error", 'message': "Failed to capture frame"})
+
+    try: 
+        debug_frame = aruco.set_video_corners(video_device, frame, config)
+    except Exception as e:
+        return jsonify({'status': "error", 'message': str(e)})
+    
+    frame_jpeg = processing.convert_to_jpeg(preview.warp_frame(video_device))
+    return "data:image/png;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
