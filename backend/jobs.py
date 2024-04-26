@@ -17,7 +17,8 @@ class JobManager():
         self.current_recording_job_directory = None # TODO: what's a default pathlib path
 
     def start_recording(self):
-        # Create a somehwat friendly job name based on the current time
+        """Starts a new recording job"""
+        # Create a somewhat friendly job name based on the current time
         self.current_recording_job_name = time.strftime(self.config.config['job_name_format'], time.localtime())
 
         # Create a new directory for the job in the config's recording_directory, which might not already exist
@@ -27,6 +28,7 @@ class JobManager():
         self.video_recorder.start_recording(self.current_recording_job_directory)
 
     def stop_recording(self):
+        """Stops the current recording job and adds it to the list of jobs to process"""
         self.video_recorder.stop_recording()
         self.processing_jobs.append(ProcessingJob(self.config, self.current_recording_job_name, self.current_recording_job_directory))
 
