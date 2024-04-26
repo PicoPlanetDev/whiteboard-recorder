@@ -149,7 +149,7 @@ class Preview():
         self.frame = None
         self.processing = Processing(config, pathlib.Path(self.config.config['files']['recording_directory']))
 
-    def capture_frame(self, video_device='video0'):
+    def capture_frame(self, video_device='video0', attempts=10):
             """
             Captures a frame from the specified video device.
 
@@ -159,19 +159,25 @@ class Preview():
             Returns:
                 numpy.ndarray: The captured frame as a numpy array.
             """
-            if os.name == 'nt':
+            if os.name == 'nt': # windows
                 cap = cv2.VideoCapture(self.config.get_video_device_index(video_device), cv2.CAP_DSHOW) # windows is slow if you don't use dshow
-            else:
+            else: # linux
                 cap = cv2.VideoCapture(self.config.get_video_device_index(video_device))
+                cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m','j','p','g'))
+                cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M','J','P','G'))
             cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.config[video_device]['resolution'][0]) # set the X resolution
             cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.config[video_device]['resolution'][1]) # set the Y resolution
 
-            while True:
+            for i in range(attempts):
                 ret, frame = cap.read()
-                if ret:
-                    cap.release()
-                    self.frame = frame
-                    return frame
+            cap.release()
+
+            if not ret:
+                print(f"Failed to capture frame from {video_device}") # if it fails after ten frames
+                return None
+
+            self.frame = frame
+            return frame
             
     def warp_frame(self, video_device='video0'):
         # Debug

@@ -76,6 +76,7 @@ import Alert from './Alert.vue';
                 </button>
             </div>
         </div>
+        <!-- Files -->
         <div class="border rounded mb-3 p-3">
             <div class="fs-5 mb-3">Files</div>
             <div class="mb-3">
@@ -123,6 +124,36 @@ import Alert from './Alert.vue';
                     <i class="bi bi-exclamation-octagon me-1"></i>
                     Purge recordings
                 </button>
+            </div>
+        </div>
+        <!-- Periods -->
+        <div class="border rounded mb-3 p-3">
+            <div class="fs-5 mb-3">Periods</div>
+            <!-- Enabled switch -->
+            <div class="mb-3">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="periodsEnabledSwitch"
+                        v-model="periods.enabled">
+                    <label class="form-check-label" for="periodsEnabledSwitch">Append period names to files</label>
+                </div>
+            </div>
+            <!-- Names input -->
+            <div class="mb-3">
+                <label for="periodNamesInput" class="form-label">Period names</label>
+                <input type="text" id="periodNamesInput" class="form-control"
+                    aria-describedby="periodNamesInputHelpBlock" v-model="periods.names" :disabled="!periods.enabled">
+                <div id="periodNamesInputHelpBlock" class="form-text">
+                    A comma-separated list of names for periods. The first name corresponds with the first time, and so on.
+                </div>
+            </div>
+            <!-- Times input -->
+            <div class="mb-3">
+                <label for="periodTimesInput" class="form-label">Period times</label>
+                <input type="text" id="periodTimesInput" class="form-control" :disabled="!periods.enabled"
+                    aria-describedby="periodTimesInputHelpBlock" v-model="periods.times" >
+                <div id="periodTimesInputHelpBlock" class="form-text">
+                    A comma-separated list of times for periods. Times should be formatted HH:MM in 24-hour time.
+                </div>
             </div>
         </div>
         <!-- Discard and save buttons -->
@@ -232,10 +263,10 @@ import Alert from './Alert.vue';
                                 <div class="input-group">
                                     <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
-                                        v-model="configurator.corners[0][0]">
+                                        v-model="configurator.corners[0][0]" @input="cornerUpdated">
                                     <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
-                                        v-model="configurator.corners[0][1]">
+                                        v-model="configurator.corners[0][1]" @input="cornerUpdated">
                                 </div>
                             </div>
                             <div class="col">
@@ -250,10 +281,10 @@ import Alert from './Alert.vue';
                                 <div class="input-group">
                                     <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
-                                        v-model="configurator.corners[1][0]">
+                                        v-model="configurator.corners[1][0]" @input="cornerUpdated">
                                     <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
-                                        v-model="configurator.corners[1][1]">
+                                        v-model="configurator.corners[1][1]" @input="cornerUpdated">
                                 </div>
                             </div>
                         </div>
@@ -270,10 +301,10 @@ import Alert from './Alert.vue';
                                 <div class="input-group">
                                     <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
-                                        v-model="configurator.corners[2][0]">
+                                        v-model="configurator.corners[2][0]" @input="cornerUpdated">
                                     <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
-                                        v-model="configurator.corners[2][1]">
+                                        v-model="configurator.corners[2][1]" @input="cornerUpdated">
                                 </div>
                             </div>
                             <div class="col">
@@ -288,10 +319,10 @@ import Alert from './Alert.vue';
                                 <div class="input-group">
                                     <span class="input-group-text">X</span>
                                     <input type="number" class="form-control" id="corner-tl-x" placeholder="0"
-                                        v-model="configurator.corners[3][0]">
+                                        v-model="configurator.corners[3][0]" @input="cornerUpdated">
                                     <span class="input-group-text">Y</span>
                                     <input type="number" class="form-control" id="corner-tl-y" placeholder="0"
-                                        v-model="configurator.corners[3][1]">
+                                        v-model="configurator.corners[3][1]" @input="cornerUpdated">
                                 </div>
                             </div>
                         </div>
@@ -389,6 +420,11 @@ export default {
             files: {
                 recordingDirectory: '',
                 recordingCopyDirectory: '',
+            },
+            periods: {
+                enabled: false,
+                names: '',
+                times: '',
             }
         }
     },
@@ -446,6 +482,10 @@ export default {
                 this.files.recordingDirectory = response.data.files.recording_directory;
                 this.files.recordingCopyDirectory = response.data.files.recording_copy_directory;
 
+                this.periods.enabled = response.data.periods.enabled;
+                this.periods.names = response.data.periods.names;
+                this.periods.times = response.data.periods.times;
+
             }).catch(error => {
                 console.log(error);
             });
@@ -493,7 +533,12 @@ export default {
                 files: {
                     recording_directory: this.files.recordingDirectory,
                     recording_copy_directory: this.files.recordingCopyDirectory,
-                }
+                },
+                periods: {
+                    enabled: this.periods.enabled,
+                    names: this.periods.names,
+                    times: this.periods.times,
+                },
 
             }).then(response => {
                 if (response.data.status == 'success') {
@@ -556,6 +601,11 @@ export default {
             this.configurator.crosshairPositions[currentCorner] = this.crosshairOffset([x, y]);
             this.configurator.crosshairVisibility[currentCorner] = 'visible';
             this.configurator.corners[currentCorner] = [x, y];
+        },
+        cornerUpdated() {
+            for (var i = 0; i < this.configurator.corners.length; i++) {
+                this.configurator.crosshairPositions[i] = this.crosshairOffset(this.configurator.corners[i]);
+            }
         },
         getVideoAspectRatio(video_device) {
             if (video_device == 0) {

@@ -19,6 +19,7 @@ class Configuration:
             # Must be entered manually
             self.av_splits = []
             self.video_devices = [[0, '/dev/video0']] # an actual thing
+            # TODO: for device in /dev/video* get the name I guess is an option
             self.audio_devices = [[0, 'default']] # Not an actual thing
         else:
             raise Exception('OS not supported')
@@ -117,6 +118,11 @@ class Configuration:
                 'stacked_video_file': 'stacked_video.mp4',
                 'recording_directory': pathlib.Path('./recordings').as_posix(),
                 'recording_copy_directory': '',
+            },
+            'periods': {
+                'enabled': False,
+                'names': '',
+                'times': ''
             }
         }
         self.config = default_config
@@ -172,6 +178,11 @@ class Configuration:
                 'stacked_video_file': self.config['files']['stacked_video_file'],
                 'recording_directory': pathlib.Path(self.config['files']['recording_directory']).as_posix(),
                 'recording_copy_directory': self.config['files']['recording_copy_directory'],
+            },
+            'periods': {
+                'enabled': self.config['periods']['enabled'],
+                'names': self.config['periods']['names'],
+                'times': self.config['periods']['times']
             }
         }
         return all
@@ -302,6 +313,20 @@ class Configuration:
         if not isinstance(data['files']['recording_copy_directory'], str):
             raise TypeError(f"Expected files['recording_copy_directory'] to be a string")
         self.config['files']['recording_copy_directory'] = data['files']['recording_copy_directory']
+
+        if not isinstance(data['periods']['enabled'], bool):
+            raise TypeError(f"Expected periods['enabled'] to be a boolean")
+        self.config['periods']['enabled'] = data['periods']['enabled']
+
+        # Validate period names
+        if not isinstance(data['periods']['names'], str):
+            raise TypeError(f"Expected periods['names'] to be a comma-separated string")
+        self.config['periods']['names'] = str(data['periods']['names']).strip()
+
+        # Validate period times
+        if not isinstance(data['periods']['times'], str):
+            raise TypeError(f"Expected periods['times'] to be a comma-separated string")
+        self.config['periods']['times'] = str(data['periods']['times']).strip()
 
         self.save_config()
 

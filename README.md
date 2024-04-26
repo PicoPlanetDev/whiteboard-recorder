@@ -95,8 +95,3 @@ sudo systemctl enable whiteboard-recorder-frontend.service
 sudo systemctl start whiteboard-recorder-backend.service
 sudo systemctl start whiteboard-recorder-frontend.service
 ```
-
-## TODO
-
-[ ] Build for a production release
-[ ] Screenshots for instructions
