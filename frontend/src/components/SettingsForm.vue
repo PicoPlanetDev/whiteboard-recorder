@@ -70,8 +70,8 @@ import Alert from './Alert.vue';
 
             <!-- Modal launcher button -->
             <div class="row mb-3">
-                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
-                    data-bs-target="#videoConfigurator" @click="getCorners">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoConfigurator"
+                    @click="getCorners">
                     Launch video configurator
                 </button>
             </div>
@@ -93,8 +93,8 @@ import Alert from './Alert.vue';
                     aria-describedby="jobNameFormatHelpBlock" v-model="jobNameFormat">
                 <div id="jobNameFormatHelpBlock" class="form-text">
                     <span class="font-monospace">time.strftime</span> string for naming jobs based on the current time.
-                    See the <a href="https://docs.python.org/3/library/time.html#time.strftime" target="_blank">Python <span
-                            class="font-monospace">time</span>
+                    See the <a href="https://docs.python.org/3/library/time.html#time.strftime" target="_blank">Python
+                        <span class="font-monospace">time</span>
                         docs</a> for more information.
                 </div>
             </div>
@@ -114,7 +114,8 @@ import Alert from './Alert.vue';
                 <input type="text" id="jrecordingCopyDirectoryInput" class="form-control"
                     aria-describedby="recordingCopyDirectoryHelpBlock" v-model="files.recordingCopyDirectory">
                 <div id="recordingCopyDirectoryHelpBlock" class="form-text">
-                    The path to a directory where finished recordings will be copied. If the directory does not exist, it
+                    The path to a directory where finished recordings will be copied. If the directory does not exist,
+                    it
                     will be
                     created when the first recording in the directory is started.
                 </div>
@@ -143,14 +144,15 @@ import Alert from './Alert.vue';
                 <input type="text" id="periodNamesInput" class="form-control"
                     aria-describedby="periodNamesInputHelpBlock" v-model="periods.names" :disabled="!periods.enabled">
                 <div id="periodNamesInputHelpBlock" class="form-text">
-                    A comma-separated list of names for periods. The first name corresponds with the first time, and so on.
+                    A comma-separated list of names for periods. The first name corresponds with the first time, and so
+                    on.
                 </div>
             </div>
             <!-- Times input -->
             <div class="mb-3">
                 <label for="periodTimesInput" class="form-label">Period times</label>
                 <input type="text" id="periodTimesInput" class="form-control" :disabled="!periods.enabled"
-                    aria-describedby="periodTimesInputHelpBlock" v-model="periods.times" >
+                    aria-describedby="periodTimesInputHelpBlock" v-model="periods.times">
                 <div id="periodTimesInputHelpBlock" class="form-text">
                     A comma-separated list of times for periods. Times should be formatted HH:MM in 24-hour time.
                 </div>
@@ -198,14 +200,15 @@ import Alert from './Alert.vue';
                             <form>
                                 <div>Edit video config:</div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="video0Radio"
-                                        value="0" checked v-model="configurator.currentVideoDevice"
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                        id="video0Radio" value="0" checked v-model="configurator.currentVideoDevice"
                                         @change="resetConfigurator">
                                     <label class="form-check-label" for="video0Radio">Video 0</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="video1Radio"
-                                        value="1" v-model="configurator.currentVideoDevice" @change="resetConfigurator">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                        id="video1Radio" value="1" v-model="configurator.currentVideoDevice"
+                                        @change="resetConfigurator">
                                     <label class="form-check-label" for="video1Radio">Video 1</label>
                                 </div>
                             </form>
@@ -255,8 +258,8 @@ import Alert from './Alert.vue';
                                 <label for="corner-tl-x" class="form-label">Top left</label>
 
                                 <!-- Select corner buttons -->
-                                <input type="radio" class="btn-check" id="radio-tl" name="pointer-radio" autocomplete="off"
-                                    value="0" v-model="configurator.currentCorner" checked>
+                                <input type="radio" class="btn-check" id="radio-tl" name="pointer-radio"
+                                    autocomplete="off" value="0" v-model="configurator.currentCorner" checked>
                                 <label for="radio-tl" class="ms-2 btn btn-sm btn-outline-primary"><i
                                         class="bi bi-cursor-fill"></i></label>
 
@@ -273,8 +276,8 @@ import Alert from './Alert.vue';
                                 <label for="corner-tr-x" class="form-label">Top right</label>
 
                                 <!-- Select corner buttons -->
-                                <input type="radio" class="btn-check" id="radio-tr" name="pointer-radio" autocomplete="off"
-                                    value="1" v-model="configurator.currentCorner">
+                                <input type="radio" class="btn-check" id="radio-tr" name="pointer-radio"
+                                    autocomplete="off" value="1" v-model="configurator.currentCorner">
                                 <label for="radio-tr" class="ms-2 btn btn-sm btn-outline-success"><i
                                         class="bi bi-cursor-fill"></i></label>
 
@@ -293,8 +296,8 @@ import Alert from './Alert.vue';
                                 <label for="corner-bl-x" class="form-label">Bottom left</label>
 
                                 <!-- Select corner buttons -->
-                                <input type="radio" class="btn-check" id="radio-bl" name="pointer-radio" autocomplete="off"
-                                    value="2" v-model="configurator.currentCorner">
+                                <input type="radio" class="btn-check" id="radio-bl" name="pointer-radio"
+                                    autocomplete="off" value="2" v-model="configurator.currentCorner">
                                 <label for="radio-bl" class="ms-2 btn btn-sm btn-outline-warning"><i
                                         class="bi bi-cursor-fill"></i></label>
 
@@ -311,8 +314,8 @@ import Alert from './Alert.vue';
                                 <label for="corner-br-x" class="form-label">Bottom right</label>
 
                                 <!-- Select corner buttons -->
-                                <input type="radio" class="btn-check" id="radio-br" name="pointer-radio" autocomplete="off"
-                                    value="3" v-model="configurator.currentCorner">
+                                <input type="radio" class="btn-check" id="radio-br" name="pointer-radio"
+                                    autocomplete="off" value="3" v-model="configurator.currentCorner">
                                 <label for="radio-br" class="ms-2 btn btn-sm btn-outline-danger"><i
                                         class="bi bi-cursor-fill"></i></label>
 
