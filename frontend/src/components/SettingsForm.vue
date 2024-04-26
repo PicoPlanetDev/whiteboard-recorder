@@ -70,8 +70,8 @@ import Alert from './Alert.vue';
 
             <!-- Modal launcher button -->
             <div class="row mb-3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoConfigurator"
-                    @click="getCorners">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                    data-bs-target="#videoConfigurator" @click="getCorners">
                     Launch video configurator
                 </button>
             </div>

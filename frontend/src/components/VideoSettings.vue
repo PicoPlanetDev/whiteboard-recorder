@@ -13,7 +13,7 @@
         </div>
 
         <div class="row" v-if="videoData.enabled">
-            <!-- Video 0 Device -->
+            <!-- Device -->
             <div class="mb-3">
                 Video device
                 <select class="form-select" v-model="videoData.videoDevice" @select="updateVideo">
@@ -23,7 +23,7 @@
                     </option>
                 </select>
             </div>
-            <!-- Video 0 Custom Devices -->
+            <!-- Custom Devices -->
             <div class="mb-3">
                 Custom video device (disabled if blank)
                 <div class="input-group">
@@ -35,7 +35,7 @@
                         v-model="videoData.customVideoDeviceIndex" @input="updateVideo">
                 </div>
             </div>
-            <!-- Video 0 Stream copy -->
+            <!-- Stream copy -->
             <div class="mb-2">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="videoStreamCopyCheckSwitch"
@@ -43,7 +43,7 @@
                     <label class="form-check-label" for="videoStreamCopyCheckSwitch">Stream copy</label>
                 </div>
             </div>
-            <!-- Video 0 resolution -->
+            <!-- Resolution -->
             <div class="mb-3">
                 <label for="resolution-x" class="form-label">Video resolution</label>
                 <div class="input-group">
@@ -55,13 +55,13 @@
                         v-model="videoData.resolutionY" @input="updateVideo">
                 </div>
             </div>
-            <!-- Video 0 Framerate -->
+            <!-- Framerate -->
             <div class="mb-3">
                 <label for="videoFramerateInput" class="form-label">Framerate</label>
                 <input type="number" id="videoFramerateInput" class="form-control" v-model="videoData.framerate"
                     @input="updateVideo">
             </div>
-            <!-- Video 0 Framerate -->
+            <!-- Focus -->
             <div class="mb-3">
                 <label for="videoFocusRange" class="form-label">Focus</label>
                 <div class="row">
@@ -74,13 +74,12 @@
                             v-model="videoData.focus" @input="updateVideo">
                     </div>
                 </div>
-
-
                 <div class="form-text" id="videoFocusHelpBlock">Auto-focus is enabled if set to -1</div>
             </div>
-            <div class="row mb-3">
+
+            <div class="row">
                 <div class="col">
-                    <!-- Video 0 Input Format -->
+                    <!-- Input Format -->
                     <div class="mb-3">
                         <label for="inputFormatInput" class="form-label">Input format</label>
                         <input type="text" id="inputFormatInput" class="form-control"
@@ -94,7 +93,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <!-- Video 0 Pixel Format -->
+                    <!-- Pixel format -->
                     <div class="mb-3">
                         <label for="pixelFormatInput" class="form-label">Pixel format</label>
                         <input type="text" id="pixelFormatInput" class="form-control"
@@ -109,9 +108,9 @@
             </div>
 
             <!-- Detect corners (ArUco) button -->
-            <div class="">
-                <button type="button" class="btn btn-primary" @click="">
-                    Detect corners (ArUco)
+            <div class="mb-3">
+                <button type="button" class="btn btn-warning" @click="">
+                    Detect corners (ArUco) <strong>(experimental)</strong>
                 </button>
             </div>
         </div>
