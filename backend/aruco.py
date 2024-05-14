@@ -11,9 +11,11 @@ import configuration
 # 2               3    6                7
 
 def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: configuration.Configuration) -> cv2.typing.MatLike:
+    print(f"Setting corners for {video_device}")
     debug_frame = frame.copy()
 
     boundingBoxes, ids = get_markers(frame)
+    print(f"Found {len(ids)} markers from {video_device}")
     if len(ids) != 4: raise Exception(f"Expected 4 markers, found {len(ids)} markers from {video_device}")
     
     boundingBoxes = {ids[i][0]: boundingBoxes[i] for i in range(len(ids))} # create a dictionary of the bounding boxes and ids
