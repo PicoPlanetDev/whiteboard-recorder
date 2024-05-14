@@ -225,7 +225,7 @@ import Alert from './Alert.vue';
                         </div>
                         <div class="col"><button class="btn btn-primary me-2" @click="detectAndPreviewAruco">
                                 <i class="bi bi-bounding-box me-1"></i>
-                                Detect & preview corners (ArUco)
+                                Detect ArUco
                             </button>
                         </div>
                     </div>
