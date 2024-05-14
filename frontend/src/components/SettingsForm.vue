@@ -821,7 +821,7 @@ export default {
         },
         detectAndPreviewAruco() {
             this.configurator.spinnerVisibility = 'visible';
-            axios.post('/detect_and_preview_aruco', {
+            axios.post('/preview_aruco_corners', {
                 video_device: 'video' + this.configurator.currentVideoDevice,
             }).then(response => {
                 this.configurator.spinnerVisibility = 'hidden';
