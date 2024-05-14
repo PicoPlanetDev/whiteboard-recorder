@@ -28,6 +28,7 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
         config.config["stack_order"] = [1, 0]
         corners = [get_bounding_box_corners(boundingBoxes[i]) for i in range(4,8)]
     else:
+        print(f"Invalid marker ids for {video_device}. ids: {ids}")
         raise Exception(f"Invalid marker ids for {video_device}")
 
     # get the outer corners of the markers
