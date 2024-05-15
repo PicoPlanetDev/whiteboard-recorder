@@ -19,12 +19,16 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
     if len(ids) != 4: raise Exception(f"Expected 4 markers, found {len(ids)} markers from {video_device}")
     print(f"Found marker ids: {ids}")
 
-    try:
-        boundingBoxesDict = {ids[i][0]: boundingBoxes[i] for i in range(len(ids))} # create a dictionary of the bounding boxes and ids
-    except Exception as e:
-        print(f"Error creating bounding box dictionary: {e}")
+    boundingBoxesDict = {ids[i][0]: boundingBoxes[i] for i in range(len(ids))} # create a dictionary of the bounding boxes and ids
 
-    print(f"Bounding boxes: {boundingBoxesDict}")
+    # iterate through keys and values of the dictionary
+    for key, value in boundingBoxesDict.items():
+        # draw the bounding box
+        cv2.polylines(debug_frame, [np.int32(value)], True, (0, 255, 0), 2)
+        # draw the id
+        cv2.putText(debug_frame, str(key), (value[0][0], value[0][1]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+    
+    return debug_frame
 
     # figure out if the video is left or right for video order based on if the keys include 0,1,2,3  or 4,5,6,7
     if 0 in boundingBoxesDict and 1 in boundingBoxesDict and 2 in boundingBoxesDict and 3 in boundingBoxesDict: # left
