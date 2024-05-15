@@ -25,7 +25,7 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
         # draw the bounding box
         cv2.polylines(debug_frame, [np.int32(value)], True, (0, 255, 0), 2)
         
-    return debug_frame
+    # return debug_frame
 
     # figure out if the video is left or right for video order based on if the keys include 0,1,2,3  or 4,5,6,7
     if 0 in boundingBoxesDict and 1 in boundingBoxesDict and 2 in boundingBoxesDict and 3 in boundingBoxesDict: # left
