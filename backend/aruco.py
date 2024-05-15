@@ -43,7 +43,7 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
     # get the outer corners of the markers
     # 0a 0b
     # 0c 0d    we want 0a, 1b, 2c, and 3d
-    outer_corners = [corners[0][0], corners[1][1], corners[2][2], corners[3][3]]
+    outer_corners = [corners[0][0], corners[1][1], corners[3][3], corners[2][2]]
     config.config[video_device]['corners'] = outer_corners
 
     config.save_config()
@@ -51,7 +51,7 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
     # draw the outer corners
     for i, outer_corner in enumerate(outer_corners):
         cv2.circle(debug_frame, outer_corner, 5, (0, 0, 255), -1)
-        cv2.putText(debug_frame, str(i), outer_corner, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+        cv2.putText(debug_frame, str(i), outer_corner, cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 0, 255), 2, cv2.LINE_AA)
 
     return debug_frame
 
