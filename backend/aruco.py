@@ -26,7 +26,7 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
         # draw the bounding box
         cv2.polylines(debug_frame, [np.int32(value)], True, (0, 255, 0), 2)
         # draw the id
-        cv2.putText(debug_frame, str(key), (value[0][0], value[0][1]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        cv2.putText(debug_frame, str(key), (int(value[0][0]), int(value[0][1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
     
     return debug_frame
 
