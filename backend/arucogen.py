@@ -36,4 +36,4 @@ def generate_marker(id: int, size: int = 4, borderBits: int = 1, whiteBorderBits
 if __name__ == "__main__":
     print("Generating ArUco markers. Press any key to generate the next marker.")
     for i in range(0,8): # generate markers 0-7 for two whiteboards
-        generate_marker(i,1024,1,1) # generate a 1024x1024 marker with a 1 bit wide black border and 1 bit wide white border
+        generate_marker(id=i,size=1024,borderBits=1,whiteBorderBits=1) # generate a 1024x1024 marker with a 1 bit wide black border and 1 bit wide white border

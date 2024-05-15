@@ -75,6 +75,39 @@ This will be updated once the built webapp is released and I make a simple start
 9. End the recording by clicking the **Stop recording** button.
 10. The recording is processed automatically, then will be available by clicking the **Download recording** button.
 
+### Detect corners using ArUco markers
+
+If you place ArUco markers on the corners of each whiteboard in the following pattern, Whiteboard Recorder can automatically detect the corners of the whiteboards.
+The practical upshot of this is that even if cameras are bumped or jostled between recording sessions, the system can auto-calibrate without the need for more human interaction.
+
+**ArUco marker layout**
+```
+0               1    4                5
+ ______________        ______________
+ |            |        |            |
+ |    LEFT    |        |   RIGHT    |
+ |____________|        |____________|
+2               3    6                7
+```
+
+You'll need the first eight (id 0-7) ArUco markers from the 4x4 dictionary to be printed at a reasonable scale that details are clearly visible to the cameras.
+
+A printable template I created for this purpose is available here:
+[Printable ArUco Markers for Whiteboard Recorder](https://docs.google.com/document/d/1pYTUfZgqdmznR3uBIGijUz3qgU8xhxlHK0d828I7Mfw/edit?usp=drive_link)
+
+Alternatively, you may generate your own marker images using an online generator (remember to keep whitespace around the marker), or using the supplied Python script in the `backend` directory.
+
+1. Ensure that all dependencies are already installed (Whiteboard Recorder is already up and running)
+2. Change to the `backend` directory: `cd PATH/TO/whiteboard-recorder/backend`
+3. Activate the virtual environment: `source venv/bin/activate`
+4. Run the script with `python3 arucogen.py`
+5. Repeatedly press any key to iterate through the necessary IDs
+
+To customize `arucogen.py`, consider editing the `range(0,8)` statement to change which IDs are included. Or, to edit the markers themselves, change the arguments to the `generate_marker(...` function call as per the docstring for the function included above in the script.
+
+The following screenshot is cropped for obfuscation but otherwise unaltered, demonstrating the utility of ArUco markers for corner detection.
+![ArUco demo image](screenshots/aruco.png)
+
 ### Run on boot
 
 1. Edit `whiteboard-recorder-backend.service` and `whiteboard-recorder-frontend.service` to match your username and path to the `whiteboard-recorder` directory
