@@ -264,13 +264,8 @@ def preview_aruco_corners():
     frame = preview.capture_frame(video_device)
     if frame is None: return jsonify({'status': "error", 'message': "Failed to capture frame"})
 
-    try: 
-        debug_frame = aruco.set_video_corners(video_device, frame, config)
-        print(debug_frame)
-        frame_jpeg = processing.convert_to_jpeg(debug_frame)
-        print(frame_jpeg)
-    except Exception as e:
-        return jsonify({'status': "error", 'message': str(e)})
+    debug_frame = aruco.set_video_corners(video_device, frame, config)
+    frame_jpeg = processing.convert_to_jpeg(debug_frame)
     return "data:image/jpg;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 
 if __name__ == '__main__':
