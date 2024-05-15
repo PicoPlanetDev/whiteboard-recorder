@@ -32,7 +32,7 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
         print("Found left whiteboard markers")
         config.config["stack_order"] = [0, 1]
         corners = [get_bounding_box_corners(boundingBoxesDict[i]) for i in range(0,4)]
-    if 4 in boundingBoxesDict and 5 in boundingBoxesDict and 6 in boundingBoxesDict and 7 in boundingBoxesDict: # right
+    elif 4 in boundingBoxesDict and 5 in boundingBoxesDict and 6 in boundingBoxesDict and 7 in boundingBoxesDict: # right
         print("Found right whiteboard markers")
         config.config["stack_order"] = [1, 0]
         corners = [get_bounding_box_corners(boundingBoxesDict[i]) for i in range(4,8)]
