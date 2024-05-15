@@ -447,7 +447,7 @@ export default {
                 names: '',
                 times: '',
             },
-            customCrosshairOffset: [3, 75],
+            customCrosshairOffset: [-1, 74],
         }
     },
     computed: {
