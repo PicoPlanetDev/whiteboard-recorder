@@ -820,13 +820,13 @@ export default {
             });
         },
         detectAndPreviewAruco() {
-            this.configurator.spinnerVisibility = 'visible';
+            this.configurator.spinnerVisibility = 'visible'; // Show loading spinner
             axios.post('/preview_aruco_corners', {
                 video_device: 'video' + this.configurator.currentVideoDevice,
             }).then(response => {
-                this.configurator.spinnerVisibility = 'hidden';
-                this.configurator.capturedFrame = response.data;
-
+                this.configurator.spinnerVisibility = 'hidden'; // Hide loading spinner
+                this.configurator.capturedFrame = response.data; // Display new image
+                this.getCorners(); // Get and display new corners
             }).catch(error => {
                 console.log(error);
             });
