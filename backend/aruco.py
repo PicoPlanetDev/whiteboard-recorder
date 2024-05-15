@@ -18,18 +18,20 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
     print(f"Found {len(ids)} markers from {video_device}")
     if len(ids) != 4: raise Exception(f"Expected 4 markers, found {len(ids)} markers from {video_device}")
     print(f"Found marker ids: {ids}")
-    
-    boundingBoxes = {ids[i][0]: boundingBoxes[i] for i in range(len(ids))} # create a dictionary of the bounding boxes and ids
+
+    boundingBoxesDict = {ids[i][0]: boundingBoxes[i] for i in range(len(ids))} # create a dictionary of the bounding boxes and ids
+
+    print(f"Bounding boxes: {boundingBoxesDict}")
 
     # figure out if the video is left or right for video order based on if the keys include 0,1,2,3  or 4,5,6,7
-    if 0 in boundingBoxes and 1 in boundingBoxes and 2 in boundingBoxes and 3 in boundingBoxes: # left
+    if 0 in boundingBoxesDict and 1 in boundingBoxesDict and 2 in boundingBoxesDict and 3 in boundingBoxesDict: # left
         print("Found left whiteboard markers")
         config.config["stack_order"] = [0, 1]
-        corners = [get_bounding_box_corners(boundingBoxes[i]) for i in range(0,4)]
-    if 4 in boundingBoxes and 5 in boundingBoxes and 6 in boundingBoxes and 7 in boundingBoxes: # right
+        corners = [get_bounding_box_corners(boundingBoxesDict[i]) for i in range(0,4)]
+    if 4 in boundingBoxesDict and 5 in boundingBoxesDict and 6 in boundingBoxesDict and 7 in boundingBoxesDict: # right
         print("Found right whiteboard markers")
         config.config["stack_order"] = [1, 0]
-        corners = [get_bounding_box_corners(boundingBoxes[i]) for i in range(4,8)]
+        corners = [get_bounding_box_corners(boundingBoxesDict[i]) for i in range(4,8)]
     else:
         print(f"Invalid marker ids: {ids}")
         raise Exception(f"Invalid marker ids for {video_device}")
