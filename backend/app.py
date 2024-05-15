@@ -137,7 +137,7 @@ def capture_frame():
     global video_recorder
     video_recorder.focus_camera(video_device)
     frame_jpeg = processing.convert_to_jpeg(preview.capture_frame(video_device))
-    return "data:image/png;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
+    return "data:image/jpg;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 
 @app.route('/api/corners', methods=['GET','POST'])
 def corners():
@@ -182,7 +182,7 @@ def preview_warped():
     video_device = request.get_json()['video_device']
     global preview
     frame_jpeg = processing.convert_to_jpeg(preview.warp_frame(video_device))
-    return "data:image/png;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
+    return "data:image/jpg;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 
 @app.route('/api/jobs', methods=['GET', 'POST'])
 def jobs_route():
@@ -267,7 +267,7 @@ def preview_aruco_corners():
     try: 
         debug_frame = aruco.set_video_corners(video_device, frame, config)
         frame_jpeg = processing.convert_to_jpeg(debug_frame)
-        return "data:image/jpeg;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
+        return "data:image/jpg;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
     except Exception as e:
         return jsonify({'status': "error", 'message': str(e)})
 
