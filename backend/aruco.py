@@ -19,7 +19,10 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
     if len(ids) != 4: raise Exception(f"Expected 4 markers, found {len(ids)} markers from {video_device}")
     print(f"Found marker ids: {ids}")
 
-    boundingBoxesDict = {ids[i][0]: boundingBoxes[i] for i in range(len(ids))} # create a dictionary of the bounding boxes and ids
+    try:
+        boundingBoxesDict = {ids[i][0]: boundingBoxes[i] for i in range(len(ids))} # create a dictionary of the bounding boxes and ids
+    except Exception as e:
+        print(f"Error creating bounding box dictionary: {e}")
 
     print(f"Bounding boxes: {boundingBoxesDict}")
 
