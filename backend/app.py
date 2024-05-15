@@ -266,10 +266,12 @@ def preview_aruco_corners():
 
     try: 
         debug_frame = aruco.set_video_corners(video_device, frame, config)
+        print(debug_frame)
         frame_jpeg = processing.convert_to_jpeg(debug_frame)
-        return "data:image/jpg;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
+        print(frame_jpeg)
     except Exception as e:
         return jsonify({'status': "error", 'message': str(e)})
+    return "data:image/jpg;base64," + base64.b64encode(frame_jpeg).decode('utf-8')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
