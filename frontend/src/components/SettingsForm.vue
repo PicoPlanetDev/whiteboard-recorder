@@ -589,7 +589,8 @@ export default {
             });
         },
         crosshairOffset([x, y]) {
-            return [x - 3, y + 48];
+            // return [x - 3, y + 48];
+            return [x,y];
         },
         // This is very hacky, and I can't even say it works
         // imageClicked(event) {
