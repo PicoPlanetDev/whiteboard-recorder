@@ -334,6 +334,19 @@ import Alert from './Alert.vue';
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                Crosshair offset:
+                            </div>
+                            <div class="col">
+                                <div class="input-group">
+                                    <span class="input-group-text">X</span>
+                                    <input type="number" class="form-control" placeholder="0" v-model="crosshairOffset[0]">
+                                    <span class="input-group-text">Y</span>
+                                    <input type="number" class="form-control" placeholder="0" v-model="crosshairOffset[1]">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -433,7 +446,8 @@ export default {
                 enabled: false,
                 names: '',
                 times: '',
-            }
+            },
+            crosshairOffset: [3, 75],
         }
     },
     computed: {
@@ -589,7 +603,7 @@ export default {
             });
         },
         crosshairOffset([x, y]) {
-            return [x - 3, y + 100];
+            return [x + parseInt(this.crosshairOffset[0]), y + parseInt(this.crosshairOffset[1])];
         },
         // This is very hacky, and I can't even say it works
         // imageClicked(event) {
