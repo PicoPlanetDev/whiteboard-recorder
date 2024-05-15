@@ -176,3 +176,6 @@ qrcode.png
 
 # ffmpeg binary
 ffmpeg.exe
+
+# generated ArUco markers
+markers/
