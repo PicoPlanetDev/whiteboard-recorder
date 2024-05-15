@@ -58,9 +58,8 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
 def get_markers(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    parameters = cv2.aruco.DetectorParameters_create()
     arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
-    boundingBoxes, ids, rejected = cv2.aruco.detectMarkers(gray, arucoDict, parameters=parameters)
+    boundingBoxes, ids, rejected = cv2.aruco.detectMarkers(gray, arucoDict)
 
     return boundingBoxes, ids
 
