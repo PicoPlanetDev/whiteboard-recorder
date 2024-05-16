@@ -39,11 +39,11 @@ def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: conf
     # figure out if the video is left or right for video order based on if the keys include 0,1,2,3  or 4,5,6,7
     if 0 in boundingBoxesDict and 1 in boundingBoxesDict and 2 in boundingBoxesDict and 3 in boundingBoxesDict: # left
         # print("Found left whiteboard markers")
-        config.config["stack_order"] = [0, 1]
+        config.config["stack_order"] = [1, 0]
         corners = [get_bounding_box_corners(boundingBoxesDict[i]) for i in range(0,4)]
     elif 4 in boundingBoxesDict and 5 in boundingBoxesDict and 6 in boundingBoxesDict and 7 in boundingBoxesDict: # right
         # print("Found right whiteboard markers")
-        config.config["stack_order"] = [1, 0]
+        config.config["stack_order"] = [0, 1]
         corners = [get_bounding_box_corners(boundingBoxesDict[i]) for i in range(4,8)]
     else:
         # print(f"Invalid marker ids: {ids}")
