@@ -96,7 +96,7 @@ class Configuration:
                 'temp_processed_video_file': 'temp_processed_video0.mp4',
                 'pixel_format': '',
                 'focus': -1,
-                'autodetect_corners': True,
+                'autodetect_corners': False,
             },
             'video1': {
                 'enabled': False,
@@ -112,7 +112,7 @@ class Configuration:
                 'temp_processed_video_file': 'temp_processed_video1.mp4',
                 'pixel_format': '',
                 'focus': -1,
-                'autodetect_corners': True,
+                'autodetect_corners': False,
             },
             'files': {
                 'temp_audio_file': 'temp_audio.mp3',
