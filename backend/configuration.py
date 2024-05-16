@@ -304,7 +304,10 @@ class Configuration:
             self.config[video]['pixel_format'] = data[video]['pixel_format']
 
             # Convert focus to int
-            self.config[video]['focus'] = int(data[video]['focus'])
+            try:
+                self.config[video]['focus'] = int(data[video]['focus'])
+            except ValueError as e:
+                raise TypeError(f"Expected {video}['focus'] to convert to an int ({e})")
 
             # Validate autodetect_corners
             if not isinstance(data[video]['autodetect_corners'], bool):
