@@ -96,6 +96,7 @@ class Configuration:
                 'temp_processed_video_file': 'temp_processed_video0.mp4',
                 'pixel_format': '',
                 'focus': -1,
+                'autodetect_corners': True,
             },
             'video1': {
                 'enabled': False,
@@ -111,6 +112,7 @@ class Configuration:
                 'temp_processed_video_file': 'temp_processed_video1.mp4',
                 'pixel_format': '',
                 'focus': -1,
+                'autodetect_corners': True,
             },
             'files': {
                 'temp_audio_file': 'temp_audio.mp3',
@@ -157,6 +159,7 @@ class Configuration:
                 'temp_processed_video_file': self.config['video0']['temp_processed_video_file'],
                 'pixel_format': self.config['video0']['pixel_format'],
                 'focus': self.config['video0']['focus'],
+                'autodetect_corners': self.config['video0']['autodetect_corners'],
             },
             'video1': {
                 'video_device': self.config['video1']['video_device'],
@@ -171,6 +174,7 @@ class Configuration:
                 'temp_processed_video_file': self.config['video1']['temp_processed_video_file'],
                 'pixel_format': self.config['video1']['pixel_format'],
                 'focus': self.config['video1']['focus'],
+                'autodetect_corners': self.config['video1']['autodetect_corners'],
             },
             'files': {
                 'temp_audio_file': self.config['files']['temp_audio_file'],
@@ -301,6 +305,11 @@ class Configuration:
 
             # Convert focus to int
             self.config[video]['focus'] = int(data[video]['focus'])
+
+            # Validate autodetect_corners
+            if not isinstance(data[video]['autodetect_corners'], bool):
+                raise TypeError(f"Expected {video}['autodetect_corners'] to be a bool")
+            self.config[video]['autodetect_corners'] = data[video]['autodetect_corners']
 
         # Validate recording_directory
         if not isinstance(data['files']['recording_directory'], str):
