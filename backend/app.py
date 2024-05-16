@@ -20,7 +20,7 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 config = configuration.Configuration()
 preview = processing.Preview(config)
-job_manager = jobs.JobManager(config)
+job_manager = jobs.JobManager(config, preview)
 video_recorder = recorder.VideoRecorder(config)
 
 is_recording = False # nasty global variable

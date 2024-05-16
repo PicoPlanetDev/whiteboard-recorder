@@ -7,19 +7,19 @@ import pathlib
 import threading
 import shutil
 import datetime
+import aruco
 
 class JobManager():
-    def __init__(self, config: configuration.Configuration):
+    def __init__(self, config: configuration.Configuration, preview: processing.Preview):
         self.config = config
         self.video_recorder = recorder.VideoRecorder(config)
+        self.preview = preview
         # self.processing_jobs = [ProcessingJob(config, 'test', pathlib.Path('recordings/test'))] # Test job
         self.processing_jobs = []
         self.current_recording_job_name = ''
         self.current_recording_job_directory = None # TODO: what's a default pathlib path
 
     def get_period_name(self):
-        # current_time = time.time() # time since epoch
-
         period_names = str(self.config.config['periods']['names']).split(',') # ordered list of period names
         period_times = str(self.config.config['periods']['times']).split(',') # ordered list of period times
 
@@ -40,6 +40,19 @@ class JobManager():
 
     def start_recording(self):
         """Starts a new recording job"""
+        # Autodetect corners if needed
+        for video_device in ['video0', 'video1']:
+            if self.config.config[video_device]['enabled'] and self.config.config[video_device]['autodetect_corners']:
+                frame = self.preview.capture_frame(video_device)
+                if frame is None:
+                    print(f"Failed to capture frame to set corners for {video_device}")
+                    continue
+                try:
+                    aruco.set_video_corners(video_device, frame, self.config)
+                except ValueError as e:
+                    print(f"Failed to set corners for {video_device} because of {e}")
+                    continue
+
         # Create a somewhat friendly job name based on the current time
         self.current_recording_job_name = time.strftime(self.config.config['job_name_format'], time.localtime())
 
