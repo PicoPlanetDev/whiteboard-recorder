@@ -296,7 +296,7 @@ import Alert from './Alert.vue';
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mb-2">
                             <div class="col">
                                 <label for="corner-bl-x" class="form-label">Bottom left</label>
 
