@@ -11,6 +11,17 @@ import configuration
 # 2               3    6                7
 
 def set_video_corners(video_device: str, frame: cv2.typing.MatLike, config: configuration.Configuration) -> cv2.typing.MatLike:
+    """
+    Sets the corners of the video device based on the ArUco markers in the frame. Allows for automatic recalibration
+    if the cameras have been bumped or moved slightly.
+
+    Args:
+        video_device (str): The name of the video device to set the corners for. Either 'video0' or 'video1'.
+        frame (numpy.ndarray): The frame to detect the ArUco markers in. Get this from the preview object's capture_frame method.
+        config (configuration.Configuration): The configuration object to save the corners to.
+    Returns:
+        numpy.ndarray: The debug frame with the detected ArUco markers drawn on it. Can be thrown away if not needed.
+    """
     # print(f"Setting corners for {video_device}")
     debug_frame = frame.copy()
 
