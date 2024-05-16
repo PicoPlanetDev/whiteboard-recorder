@@ -334,6 +334,7 @@ import Alert from './Alert.vue';
                                 </div>
                             </div>
                         </div>
+                        <hr>
                         <div class="row">
                             <div class="col">
                                 Crosshair offset:
