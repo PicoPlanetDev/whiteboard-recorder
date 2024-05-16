@@ -113,6 +113,15 @@
                     Detect corners (ArUco) <strong>(experimental)</strong>
                 </button>
             </div>
+
+            <!-- Autodetect corners -->
+            <div class="mb-2">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="autodetectCornersCheckSwitch"
+                        v-model="videoData.autodetectCorners" @input="updateVideo">
+                    <label class="form-check-label" for="autodetectCornersCheckSwitch">Detect corners on recording start</label>
+                </div>
+            </div>
         </div>
     </div>
 </template>
