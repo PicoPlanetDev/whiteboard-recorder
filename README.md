@@ -12,7 +12,7 @@ It provides a non-intrusive solution for archiving lessons and lectures to aid s
 - Python 3
 - Network connection for installation only
 
-### Reccomended hardware
+### Recommended hardware
 
 - A capable computer with the software requirements installed
 - A webcam with a decently high resolution (preferably 1920x1080 or better)
